@@ -1,0 +1,37 @@
+Daily Storage Tank Analytical Result (F/QCO-001)
+Excel export summary
+Range: 20 September 2026 through 19 October 2026 (30 days)
+Source: https://logsheet-builder.gamasap.com/report/index/9e1e978f-18c0-42dc-a558-e28e65bdf5ce
+
+Result
+- Downloaded: 4 days
+- Skipped (no data): 26 days
+- Failed: 0 days
+
+A day was downloaded only when the Excel for that date contains at least one tank whose Analysis Date is that day.
+20 September through 13 October returned Total Ticket 0 and an empty sheet ("No data available for the selected date").
+17 and 18 October repeat the 16 October snapshot and have no analysis dated that day.
+
+The logsheet date filter keeps the latest result for each tank up to the selected date.
+Files from 15 October onward therefore also list tanks last analysed on an earlier day.
+The "Tanks analysed" column below counts only the rows dated that day.
+
+Files are in this folder, named F-QCO-001_YYYY-MM-DD.xlsx.
+
+Downloaded
+Date         Tanks analysed  Snapshot tickets  File
+2026-10-14   5               5                 F-QCO-001_2026-10-14.xlsx
+2026-10-15   5               7                 F-QCO-001_2026-10-15.xlsx
+2026-10-16   4               9                 F-QCO-001_2026-10-16.xlsx
+2026-10-19   3               9                 F-QCO-001_2026-10-19.xlsx
+
+Tanks analysed that day
+2026-10-14   T.04 PFAD, T.11 CPO, T.22 RPO/RBDPO, T.23 RPO/RBDPO, T.24 RPO/RBDPO
+2026-10-15   T.12 CPO, T.22 RPO/RBDPO, T.23 RPO/RBDPO, T.24 RPO/RBDPO, T.27 CPO
+2026-10-16   T.15 RPS/RBDPS, T.22 RPO/RBDPO, T.24 RPO/RBDPO, T.28 RPL/RPOL
+2026-10-19   T.12 CPO, T.23 RPO/RBDPO, T.24 RPO/RBDPO
+
+Skipped because there was no data
+2026-09-20 through 2026-10-13 (24 days)
+2026-10-17
+2026-10-18

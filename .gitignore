@@ -1,6 +1,6 @@
-# Checkpoint: code only. Plant documents and reports stay local.
-Docs/
+# Spreadsheets and PDFs stay local. Markdown, text, images, and other docs are tracked.
 *.pdf
+*.xlsx
 
 # Dependencies and build output
 node_modules/

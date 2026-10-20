@@ -1,0 +1,31 @@
+{
+  "ranAt": "2026-10-19T09:16:07.765Z",
+  "from": "2026-10-17",
+  "to": "2026-10-19",
+  "downloaded": [
+    {
+      "day": "2026-10-19",
+      "tickets": 9,
+      "tanks": [
+        "T.12",
+        "T.23",
+        "T.24"
+      ],
+      "bytes": 27163,
+      "file": "D:\\Cursor\\Plant Information Dashboard\\Docs\\exports\\daily-storage-tank-analytical\\F-QCO-001_2026-10-19.xlsx"
+    }
+  ],
+  "skipped": [
+    {
+      "day": "2026-10-17",
+      "tickets": 9,
+      "reason": "no analysis dated that day"
+    },
+    {
+      "day": "2026-10-18",
+      "tickets": 9,
+      "reason": "no analysis dated that day"
+    }
+  ],
+  "failed": []
+}

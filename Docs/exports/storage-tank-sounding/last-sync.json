@@ -1,0 +1,15 @@
+{
+  "ranAt": "2026-10-19T08:46:58.638Z",
+  "from": "2026-10-19",
+  "to": "2026-10-19",
+  "downloaded": [
+    {
+      "day": "2026-10-19",
+      "tickets": 27,
+      "bytes": 55900,
+      "file": "D:\\Cursor\\Plant Information Dashboard\\Docs\\exports\\storage-tank-sounding\\F-TNF-003_2026-10-19.xlsx"
+    }
+  ],
+  "skipped": [],
+  "failed": []
+}
