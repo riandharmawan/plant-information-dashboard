@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { ChevronRight } from 'lucide-react'
 import { useCalibration } from '../../data/CalibrationContext.tsx'
 import { useRepository } from '../../data/OperationsContext.tsx'
 import { useLocale } from '../../i18n/LocaleContext.tsx'
@@ -14,6 +15,7 @@ import { QuantityHistoryDialog } from './QuantityHistoryDialog.tsx'
 import type { HistoryMetric } from './quantitySeries.ts'
 import { isCritical, isEmptyTank } from './tankAlerts.ts'
 import { MassUnitContext, useMassUnitState } from './massUnit.ts'
+import { KpiDetailDialog, type KpiKind } from './KpiDetailDialog.tsx'
 
 type TankView = 'table' | 'grid'
 
@@ -32,6 +34,7 @@ export function LiveOpsPage() {
   const [tankView, setTankView] = useState<TankView>('table')
   const [history, setHistory] = useState<{ tankId: string; metric: HistoryMetric; commodity: string } | null>(null)
   const [massUnit, setMassUnit] = useMassUnitState()
+  const [kpiDetail, setKpiDetail] = useState<KpiKind | null>(null)
   const range = usePeriodRange(meta?.periodLabel ?? null, 1)
   const day = range.ready ? range.end : ''
   const lookbackStart = day ? addDays(day, -(LOOKBACK_DAYS - 1)) : ''
@@ -84,6 +87,12 @@ export function LiveOpsPage() {
   const emptyCount = visible.filter(isEmptyTank).length
   const activeCount = visible.length - emptyCount
   const critical = visible.filter((tank) => isCritical(tank, tempValue))
+  const kpiTitles: Record<KpiKind, string> = {
+    utilization: t.storageUtilization,
+    activeEmpty: t.activeVsEmpty,
+    alerts: t.criticalAlerts,
+    approval: judged.length > 0 ? `${t.approvalRate} · ${t.incomingCpo}` : t.approvalRate,
+  }
 
   return (
     <MassUnitContext value={massUnit}>
@@ -116,23 +125,30 @@ export function LiveOpsPage() {
           <div className="live-ops__primary">
             <section className="prod-kpis" aria-label="Summary">
               <Kpi
-                label={t.storageUtilization}
+                label={kpiTitles.utilization}
                 value={utilization == null ? t.unavailable : `${(utilization * 100).toFixed(1)}%`}
                 track={utilization}
+                onOpen={() => setKpiDetail('utilization')}
               />
               <Kpi
-                label={t.activeVsEmpty}
+                label={kpiTitles.activeEmpty}
                 value={visible.length === 0 ? t.unavailable : `${activeCount} / ${emptyCount}`}
                 sub={t.activeEmptySub}
+                onOpen={() => setKpiDetail('activeEmpty')}
               />
               <Kpi
-                label={t.criticalAlerts}
+                label={kpiTitles.alerts}
                 value={visible.length === 0 ? t.unavailable : String(critical.length)}
                 sub={critical.length > 0 ? critical.map((tank) => tankLabel(tank.tankId)).join(', ') : t.criticalAlertsSub}
-                title={t.criticalAlertsSub}
                 tone={critical.length > 0 ? 'alert' : undefined}
+                onOpen={() => setKpiDetail('alerts')}
               />
-              <Kpi label={judged.length > 0 ? `${t.approvalRate} · ${t.incomingCpo}` : t.approvalRate} value={approval} tone={judged.length > 0 ? 'yield' : undefined} />
+              <Kpi
+                label={kpiTitles.approval}
+                value={approval}
+                tone={judged.length > 0 ? 'yield' : undefined}
+                onOpen={() => setKpiDetail('approval')}
+              />
             </section>
             <CommodityStock tanks={tanks} day={day} averageTemperature={tempValue} />
             <section className="prod-panel">
@@ -168,6 +184,16 @@ export function LiveOpsPage() {
             onClose={() => setHistory(null)}
           />
         )}
+        <KpiDetailDialog
+          kind={kpiDetail}
+          title={kpiDetail ? kpiTitles[kpiDetail] : ''}
+          tanks={visible}
+          averageTemperature={tempValue}
+          judged={judged}
+          day={day}
+          windowStart={lookbackStart}
+          onClose={() => setKpiDetail(null)}
+        />
       </div>
     </MassUnitContext>
   )
@@ -192,20 +218,22 @@ function Kpi({
   value,
   tone,
   sub,
-  title,
   track,
+  onOpen,
 }: {
   label: string
   value: string
   tone?: 'yield' | 'alert'
   sub?: string
-  title?: string
   track?: number | null
+  onOpen: () => void
 }) {
-  const className = ['prod-kpi', tone ? `prod-kpi--${tone}` : ''].filter(Boolean).join(' ')
+  const { t } = useLocale()
+  const className = ['prod-kpi', 'prod-kpi--button', tone ? `prod-kpi--${tone}` : ''].filter(Boolean).join(' ')
   const percent = track == null ? null : Math.min(100, Math.max(0, track * 100))
   return (
-    <article className={className} title={title}>
+    <button type="button" className={className} title={t.kpiDetailHint} onClick={onOpen}>
+      <ChevronRight className="prod-kpi__go" size={16} aria-hidden="true" />
       <strong>{value}</strong>
       <span>{label}</span>
       {sub && <small className="prod-kpi__sub">{sub}</small>}
@@ -214,6 +242,6 @@ function Kpi({
           <span className="prod-kpi__fill" style={{ width: `${percent}%` }} />
         </span>
       )}
-    </article>
+    </button>
   )
 }

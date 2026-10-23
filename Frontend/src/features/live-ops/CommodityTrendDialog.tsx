@@ -8,6 +8,7 @@ import type { SoundingPoint, TankLive } from '../../domain/types.ts'
 import { useLocale } from '../../i18n/LocaleContext.tsx'
 import { DateRangeFilter } from '../daily-production/DateRangeFilter.tsx'
 import { addDays } from '../usePeriodRange.ts'
+import { LevelCue } from './LevelCue.tsx'
 import { useMass } from './massUnit.ts'
 import { commodityDayReading, commodityQuantitySeries, type HistoryDay } from './quantitySeries.ts'
 import { isOverfilled, isTempAnomaly } from './tankAlerts.ts'
@@ -357,18 +358,4 @@ function sumKnown(values: Array<number | null>): number | null {
   const nums = values.filter((value): value is number => value != null)
   if (nums.length === 0) return null
   return nums.reduce((sum, value) => sum + value, 0)
-}
-
-function LevelCue({ ratio, blank }: { ratio: number | null; blank: string }) {
-  if (ratio == null) return blank
-  const percent = Math.min(100, Math.max(0, ratio * 100))
-  const tone = percent >= 85 ? 'high' : percent >= 50 ? 'mid' : 'low'
-  return (
-    <span className={`level-cue level-cue--${tone}`}>
-      <span className="level-cue__track" aria-hidden="true">
-        <span className="level-cue__fill" style={{ width: `${percent}%` }} />
-      </span>
-      <span className="level-cue__value">{percent.toFixed(1)}%</span>
-    </span>
-  )
 }

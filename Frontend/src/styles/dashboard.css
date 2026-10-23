@@ -1206,6 +1206,135 @@ button.qty-link.qty-link--alert {
   color: var(--color-brand-red);
 }
 
+.prod-kpi--button {
+  position: relative;
+  width: 100%;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform var(--duration-fast) var(--easing-default),
+    box-shadow var(--duration-fast) var(--easing-default),
+    border-color var(--duration-fast) var(--easing-default);
+}
+
+.prod-kpi--button:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--color-sea-deep) 35%, white);
+  box-shadow: 0 6px 16px rgba(17, 76, 90, 0.12);
+}
+
+.prod-kpi--button:focus-visible {
+  outline: 2px solid var(--color-sea-deep);
+  outline-offset: 2px;
+}
+
+.prod-kpi__go {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: var(--color-text-steel);
+  transition: transform var(--duration-fast) var(--easing-default), color var(--duration-fast) var(--easing-default);
+}
+
+.prod-kpi--button:hover .prod-kpi__go {
+  transform: translateX(2px);
+  color: var(--color-sea-deep);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prod-kpi--button,
+  .prod-kpi__go {
+    transition: none;
+  }
+}
+
+.kpi-dialog {
+  max-height: calc(100vh - 32px);
+  padding: var(--spacing-3);
+}
+
+.kpi-dialog h2 {
+  font-size: var(--font-size-lg);
+}
+
+.kpi-dialog .qty-stats {
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.kpi-dialog .qty-stats div {
+  padding: 4px 8px;
+}
+
+.kpi-dialog .qty-stats dd {
+  margin-top: 0;
+  font-size: var(--font-size-sm);
+}
+
+.kpi-dialog .stock-dialog__scroll {
+  max-height: min(58vh, 520px);
+  margin-top: 8px;
+}
+
+.kpi-dialog .stock-dialog__kicker {
+  margin: 8px 0 0;
+}
+
+.kpi-dialog .stock-dialog__table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--color-bg-white);
+}
+
+.kpi-dialog .stock-dialog__table th,
+.kpi-dialog .stock-dialog__table td {
+  padding: 4px 8px;
+  font-size: var(--font-size-small);
+}
+
+.kpi-dialog .stock-dialog__actions {
+  margin-top: 8px;
+}
+
+.kpi-detail__split {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: var(--spacing-3);
+}
+
+@media (max-width: 720px) {
+  .kpi-detail__split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.kpi-detail__rule {
+  margin: 8px 0;
+  color: var(--color-text-steel);
+  font-size: var(--font-size-sm);
+}
+
+.kpi-detail__reasons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.kpi-detail__mode {
+  margin-left: 6px;
+  color: var(--color-text-steel);
+  font-size: var(--font-size-xs);
+}
+
+.stock-dialog__table td.kpi-detail__remark {
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .page--ops .prod-kpi--alert {
   background: #fef2f2;
   border-color: color-mix(in srgb, var(--color-brand-red) 30%, white);

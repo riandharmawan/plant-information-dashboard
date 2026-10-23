@@ -70,6 +70,19 @@ export interface Messages {
   massUnit: string
   unitTon: string
   unitKg: string
+  kpiDetailHint: string
+  activeTanks: string
+  emptyTanks: string
+  reasonOverfill: string
+  reasonHotTemp: string
+  noCriticalAlerts: string
+  alertRule: string
+  gateSamplesWindow: string
+  vehicle: string
+  sampleDay: string
+  modeVessel: string
+  modeTruck: string
+  noRows: string
   throughput: string
   approvalRate: string
   unavailable: string
@@ -560,6 +573,19 @@ export const MESSAGES: Record<Locale, Messages> = {
     massUnit: 'Quantity unit',
     unitTon: 'Ton',
     unitKg: 'Kg',
+    kpiDetailHint: 'Show details',
+    activeTanks: 'Active tanks',
+    emptyTanks: 'Empty tanks',
+    reasonOverfill: 'Over 95% full ({value})',
+    reasonHotTemp: '{value} against the {avg} average',
+    noCriticalAlerts: 'No tank is over 95% full or running hot.',
+    alertRule: 'A tank is critical when it is more than 95% full, or more than 30% hotter than the farm average temperature ({avg}).',
+    gateSamplesWindow: 'Judged incoming CPO samples, {start} – {end}',
+    vehicle: 'Vessel / truck',
+    sampleDay: 'Sampled',
+    modeVessel: 'Vessel',
+    modeTruck: 'Truck',
+    noRows: 'Nothing to show.',
     throughput: 'Throughput (mass)',
     approvalRate: 'Lab approval rate',
     unavailable: '—',
@@ -1048,6 +1074,19 @@ export const MESSAGES: Record<Locale, Messages> = {
     massUnit: 'Satuan kuantitas',
     unitTon: 'Ton',
     unitKg: 'Kg',
+    kpiDetailHint: 'Lihat detail',
+    activeTanks: 'Tangki aktif',
+    emptyTanks: 'Tangki kosong',
+    reasonOverfill: 'Isi di atas 95% ({value})',
+    reasonHotTemp: '{value} terhadap rata-rata {avg}',
+    noCriticalAlerts: 'Tidak ada tangki di atas 95% atau bersuhu tinggi.',
+    alertRule: 'Tangki kritis bila isinya di atas 95%, atau suhunya lebih dari 30% di atas rata-rata suhu tangki ({avg}).',
+    gateSamplesWindow: 'Sampel CPO masuk yang sudah dinilai, {start} – {end}',
+    vehicle: 'Kapal / truk',
+    sampleDay: 'Disampling',
+    modeVessel: 'Kapal',
+    modeTruck: 'Truk',
+    noRows: 'Tidak ada data.',
     throughput: 'Throughput (massa)',
     approvalRate: 'Tingkat kelulusan lab',
     unavailable: '—',

@@ -3,6 +3,7 @@ import { Info } from 'lucide-react'
 import { useLocale } from '../../i18n/LocaleContext.tsx'
 import type { TankLive } from '../../domain/types.ts'
 import { formatDay, formatMeasure, parameter, tankLabel } from '../../domain/format.ts'
+import { LevelCue } from './LevelCue.tsx'
 import { useMass } from './massUnit.ts'
 import type { HistoryMetric } from './quantitySeries.ts'
 import { isEmptyTank, isTempAnomaly } from './tankAlerts.ts'
@@ -194,18 +195,4 @@ function qualityAgeTitle(tank: TankLive, template: string, locale: 'en' | 'id'):
   const day = tank.quality?.analysisDate
   if (age == null || !day) return undefined
   return template.replace('{age}', String(age)).replace('{day}', formatDay(day, locale))
-}
-
-function LevelCue({ ratio, blank }: { ratio: number | null; blank: string }) {
-  if (ratio == null) return blank
-  const percent = Math.min(100, Math.max(0, ratio * 100))
-  const tone = percent >= 85 ? 'high' : percent >= 50 ? 'mid' : 'low'
-  return (
-    <span className={`level-cue level-cue--${tone}`}>
-      <span className="level-cue__track" aria-hidden="true">
-        <span className="level-cue__fill" style={{ width: `${percent}%` }} />
-      </span>
-      <span className="level-cue__value">{percent.toFixed(1)}%</span>
-    </span>
-  )
 }
