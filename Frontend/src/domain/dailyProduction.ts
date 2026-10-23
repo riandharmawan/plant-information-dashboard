@@ -155,10 +155,10 @@ function blankDay(id: string): ProductionDay {
 }
 
 /** Inclusive sum of every logged day from start through end. Yield is recomputed by the caller. */
-export function productionForRange(start: string, end: string): ProductionDay {
+export function productionForRange(start: string, end: string, source: readonly ProductionDay[] = PRODUCTION_DAYS): ProductionDay {
   const from = start <= end ? start : end
   const to = start <= end ? end : start
-  const days = PRODUCTION_DAYS.filter((day) => day.id >= from && day.id <= to)
+  const days = source.filter((day) => day.id >= from && day.id <= to)
   const total = blankDay(`${from}:${to}`)
   for (const key of PLANT_KEYS) {
     const next = key === 'fract400' || key === 'fract500' ? fractionation({}) : empty()
@@ -206,24 +206,52 @@ export function lossYield(plant: PlantDay): Qty {
 
 export type StockCode = 'CPO' | 'RBDPO' | 'PFAD' | 'OLEIN' | 'RBDPS'
 
-/** Latest sounding per tank, converted with the same stockOf path Live Ops uses. */
-export function closingStockKg(): Record<StockCode, number | null> {
-  const rows = (logsheets as { soundings: RawSounding[] }).soundings
+const SOUNDINGS = (logsheets as { soundings: RawSounding[] }).soundings
+
+function blankStock(): Record<StockCode, number | null> {
+  return { CPO: null, RBDPO: null, PFAD: null, OLEIN: null, RBDPS: null }
+}
+
+function stockKg(rows: RawSounding[]): Record<StockCode, number | null> {
+  const stock = commodityStock(rows.map((row) => presentTank(row, undefined, new Date())))
+  const result = blankStock()
+  for (const row of stock) {
+    if (row.code in result) result[row.code as StockCode] = row.quantityKg
+  }
+  return result
+}
+
+/** Last round of each tank, using the same kilogram path as closing. */
+function latestRound(rows: RawSounding[]): RawSounding[] {
   const byTank = new Map<string, RawSounding>()
   for (const row of rows) {
     const current = byTank.get(row.tankId)
     if (!current || row.roundIndex >= current.roundIndex) byTank.set(row.tankId, row)
   }
-  const stock = commodityStock([...byTank.values()].map((row) => presentTank(row, undefined, new Date())))
-  const result: Record<StockCode, number | null> = {
-    CPO: null,
-    RBDPO: null,
-    PFAD: null,
-    OLEIN: null,
-    RBDPS: null,
-  }
-  for (const row of stock) {
-    if (row.code in result) result[row.code as StockCode] = row.quantityKg
-  }
-  return result
+  return [...byTank.values()]
+}
+
+/** Calendar day before an ISO date. */
+export function dayBefore(iso: string): string {
+  const [year, month, day] = iso.split('-').map(Number)
+  const date = new Date(year, (month || 1) - 1, day || 1)
+  date.setDate(date.getDate() - 1)
+  const nextMonth = String(date.getMonth() + 1).padStart(2, '0')
+  const nextDay = String(date.getDate()).padStart(2, '0')
+  return `${date.getFullYear()}-${nextMonth}-${nextDay}`
+}
+
+/** Latest sounding per tank, converted with the same stockOf path Live Ops uses. */
+export function closingStockKg(): Record<StockCode, number | null> {
+  return stockKg(latestRound(SOUNDINGS))
+}
+
+/**
+ * Opening for a report range: the latest round on this date, in kilograms.
+ * A date with no sounding stays blank.
+ */
+export function openingStockKg(on: string): Record<StockCode, number | null> {
+  const rows = SOUNDINGS.filter((row) => row.recordedOn === on)
+  if (rows.length === 0) return blankStock()
+  return stockKg(latestRound(rows))
 }

@@ -1,0 +1,131 @@
+Monitor Masuk dan Keluar Minyak (F/TNF-004)
+Status: OK
+Ran at: 2026-10-20 15:31:49 WIB
+Range: 2026-09-21 through 2026-10-20 (30 days)
+Source: https://logsheet-builder.gamasap.com/report/index/200e78d6-a1d6-4cfe-b01c-69b02909d345
+
+The sync finished. Days with tickets were saved as workbooks.
+
+Result
+- Downloaded: 23 days
+- Skipped (no tickets): 7 days
+- Failed: 0 days
+
+A day is downloaded when Total Ticket is greater than 0.
+This job saves the workbook only. It does not insert rows into the database.
+
+Downloaded
+Date         Tickets  Bytes   Workbook
+2026-09-22   16       55908   F-TNF-004_2026-09-22.xlsx
+2026-09-23   4        55286   F-TNF-004_2026-09-23.xlsx
+2026-09-24   12       55779   F-TNF-004_2026-09-24.xlsx
+2026-09-25   5        55388   F-TNF-004_2026-09-25.xlsx
+2026-09-26   9        55644   F-TNF-004_2026-09-26.xlsx
+2026-09-28   9        55658   F-TNF-004_2026-09-28.xlsx
+2026-09-29   10       55643   F-TNF-004_2026-09-29.xlsx
+2026-09-30   2        55156   F-TNF-004_2026-09-30.xlsx
+2026-10-01   5        55409   F-TNF-004_2026-10-01.xlsx
+2026-10-02   9        55636   F-TNF-004_2026-10-02.xlsx
+2026-10-03   7        55517   F-TNF-004_2026-10-03.xlsx
+2026-10-05   2        55144   F-TNF-004_2026-10-05.xlsx
+2026-10-06   1        55069   F-TNF-004_2026-10-06.xlsx
+2026-10-07   2        55144   F-TNF-004_2026-10-07.xlsx
+2026-10-08   2        55143   F-TNF-004_2026-10-08.xlsx
+2026-10-09   1        55067   F-TNF-004_2026-10-09.xlsx
+2026-10-10   1        55068   F-TNF-004_2026-10-10.xlsx
+2026-10-15   20       56324   F-TNF-004_2026-10-15.xlsx
+2026-10-16   42       28029   F-TNF-004_2026-10-16.xlsx
+2026-10-17   22       56475   F-TNF-004_2026-10-17.xlsx
+2026-10-18   19       26809   F-TNF-004_2026-10-18.xlsx
+2026-10-19   8        55575   F-TNF-004_2026-10-19.xlsx
+2026-10-20   5        55409   F-TNF-004_2026-10-20.xlsx
+
+Skipped because Total Ticket was 0
+2026-09-21   tickets 0
+2026-09-27   tickets 0
+2026-10-04   tickets 0
+2026-10-11   tickets 0
+2026-10-12   tickets 0
+2026-10-13   tickets 0
+2026-10-14   tickets 0
+
+---
+Monitor Masuk dan Keluar Minyak (F/TNF-004)
+Status: OK
+Ran at: 2026-10-20 15:55:26 WIB
+Range: 2026-09-21 through 2026-10-20 (30 days)
+Source: https://logsheet-builder.gamasap.com/report/index/200e78d6-a1d6-4cfe-b01c-69b02909d345
+
+The sync finished. Downloaded days were written to the database.
+
+Result
+- Downloaded: 23 days
+- Skipped (no tickets): 7 days
+- Failed: 0 days
+- Database visits written: 211
+
+A day is downloaded when Total Ticket is greater than 0.
+Vehicle visits are stored in Postgres. The workbook stays as the downloaded source.
+
+Downloaded
+Date         Tickets  Visits  Workbook
+2026-09-22   16       16      F-TNF-004_2026-09-22.xlsx
+2026-09-23   4        4       F-TNF-004_2026-09-23.xlsx
+2026-09-24   12       11      F-TNF-004_2026-09-24.xlsx
+2026-09-25   5        5       F-TNF-004_2026-09-25.xlsx
+2026-09-26   9        9       F-TNF-004_2026-09-26.xlsx
+2026-09-28   9        9       F-TNF-004_2026-09-28.xlsx
+2026-09-29   10       10      F-TNF-004_2026-09-29.xlsx
+2026-09-30   2        2       F-TNF-004_2026-09-30.xlsx
+2026-10-01   5        5       F-TNF-004_2026-10-01.xlsx
+2026-10-02   9        9       F-TNF-004_2026-10-02.xlsx
+2026-10-03   7        7       F-TNF-004_2026-10-03.xlsx
+2026-10-05   2        2       F-TNF-004_2026-10-05.xlsx
+2026-10-06   1        1       F-TNF-004_2026-10-06.xlsx
+2026-10-07   2        2       F-TNF-004_2026-10-07.xlsx
+2026-10-08   2        2       F-TNF-004_2026-10-08.xlsx
+2026-10-09   1        1       F-TNF-004_2026-10-09.xlsx
+2026-10-10   1        1       F-TNF-004_2026-10-10.xlsx
+2026-10-15   20       19      F-TNF-004_2026-10-15.xlsx
+2026-10-16   42       42      F-TNF-004_2026-10-16.xlsx
+2026-10-17   22       22      F-TNF-004_2026-10-17.xlsx
+2026-10-18   19       19      F-TNF-004_2026-10-18.xlsx
+2026-10-19   8        8       F-TNF-004_2026-10-19.xlsx
+2026-10-20   5        5       F-TNF-004_2026-10-20.xlsx
+
+Skipped because Total Ticket was 0
+2026-09-21   tickets 0
+2026-09-27   tickets 0
+2026-10-04   tickets 0
+2026-10-11   tickets 0
+2026-10-12   tickets 0
+2026-10-13   tickets 0
+2026-10-14   tickets 0
+
+---
+Monitor Masuk dan Keluar Minyak (F/TNF-004)
+Status: OK
+Ran at: 2026-10-23 08:59:46 WIB
+Range: 2026-10-21 through 2026-10-23 (3 days)
+Source: https://logsheet-builder.gamasap.com/report/index/200e78d6-a1d6-4cfe-b01c-69b02909d345
+
+The sync finished. Downloaded days were written to the database.
+
+Result
+- Downloaded: 2 days
+- Skipped (no tickets): 1 day
+- Failed: 0 days
+- Database visits written: 5
+
+A day is downloaded when Total Ticket is greater than 0.
+Vehicle visits are stored in Postgres. The workbook stays as the downloaded source.
+
+Downloaded
+Date         Tickets  Visits  Workbook
+2026-10-22   1        1       F-TNF-004_2026-10-22.xlsx
+2026-10-23   4        4       F-TNF-004_2026-10-23.xlsx
+
+Skipped because Total Ticket was 0
+2026-10-21   tickets 0
+
+---

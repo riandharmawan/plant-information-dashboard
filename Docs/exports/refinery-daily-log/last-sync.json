@@ -1,0 +1,40 @@
+{
+  "ranAt": "2026-10-23 08:59:51 WIB",
+  "from": "2026-10-21",
+  "to": "2026-10-23",
+  "downloaded": [
+    {
+      "day": "2026-10-21",
+      "tickets": 1,
+      "bytes": 27614,
+      "file": "D:\\Cursor\\Plant Information Dashboard\\Docs\\exports\\refinery-daily-log\\F-RFA-004A_2026-10-21.xlsx",
+      "processUnit": "refinery150"
+    },
+    {
+      "day": "2026-10-22",
+      "tickets": 2,
+      "bytes": 27722,
+      "file": "D:\\Cursor\\Plant Information Dashboard\\Docs\\exports\\refinery-daily-log\\F-RFA-004A_2026-10-22.xlsx",
+      "processUnit": "refinery150"
+    }
+  ],
+  "skipped": [
+    {
+      "day": "2026-10-23",
+      "tickets": 0
+    }
+  ],
+  "failed": [],
+  "ingested": {
+    "formCode": "F/RFA-004(A)",
+    "downloaded": 2,
+    "skipped": 1,
+    "days": 2,
+    "flows": 8,
+    "materials": 4,
+    "utilities": 4,
+    "remarks": 0,
+    "unknownUnits": []
+  },
+  "status": "OK"
+}

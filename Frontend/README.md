@@ -7,7 +7,7 @@ npm install
 npm run dev
 ```
 
-`VITE_DATA_SOURCE=local` (the default) reads `LocalOperationsRepository`. Set it to `api` and point `VITE_API_URL` at Express when the backend exists. Screens call `OperationsRepository` either way. See `.env.example`.
+`VITE_DATA_SOURCE=api` reads the database through Express at `VITE_API_URL`. The dev server stays on port 5176. See `.env.example`.
 
 The API the backend should implement:
 

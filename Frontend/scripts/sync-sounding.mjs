@@ -2,6 +2,7 @@ import { spawnSync } from 'node:child_process'
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import XLSX from 'xlsx'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const frontend = path.resolve(here, '..')
@@ -46,6 +47,25 @@ function plantToday() {
     month: '2-digit',
     day: '2-digit',
   }).format(new Date())
+}
+
+function countLabel(count, singular) {
+  return `${count} ${singular}${count === 1 ? '' : 's'}`
+}
+
+function plantStamp() {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Jakarta',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hourCycle: 'h23',
+  }).formatToParts(new Date())
+  const get = (type) => parts.find((part) => part.type === type)?.value ?? '00'
+  return `${get('year')}-${get('month')}-${get('day')} ${get('hour')}:${get('minute')}:${get('second')} WIB`
 }
 
 function addDays(iso, days) {
@@ -171,18 +191,132 @@ async function downloadExcel(jar, day) {
 function saveWorkbook(day, bytes) {
   fs.mkdirSync(exportDir, { recursive: true })
   const file = path.join(exportDir, `F-TNF-003_${day}.xlsx`)
+  const existed = fs.existsSync(file)
   fs.writeFileSync(file, bytes)
-  return file
+  return { file, existed }
 }
 
-function refreshDashboard() {
-  const result = spawnSync(process.execPath, [path.join(here, 'parse-logsheets.mjs')], {
-    cwd: frontend,
+function sheetText(value) {
+  return String(value ?? '').replace(/\s+/g, ' ').trim()
+}
+
+function sheetNumber(value) {
+  if (value == null || value === '') return null
+  if (typeof value === 'number') return Number.isFinite(value) ? value : null
+  let raw = sheetText(value)
+  if (!raw || raw === '-' || raw === '—' || raw === '✓' || raw === '√') return null
+  raw = raw.replace(/\s/g, '').replace(/\.$/, '')
+  const commas = (raw.match(/,/g) || []).length
+  const dots = (raw.match(/\./g) || []).length
+  if (commas === 1 && dots >= 1) raw = raw.replace(/\./g, '').replace(',', '.')
+  else if (commas === 1) raw = raw.replace(',', '.')
+  else if (dots > 1) raw = raw.replace(/\./g, '')
+  const parsed = Number(raw)
+  return Number.isFinite(parsed) ? parsed : null
+}
+
+function canonicalTank(value) {
+  const raw = sheetText(value)
+  const numbered = raw.match(/^t\.?\s*0*(\d+)\b/i)
+  if (numbered) return `T${numbered[1].padStart(2, '0')}`
+  return raw.toUpperCase()
+}
+
+function parseWorkbook(file) {
+  const workbook = XLSX.readFile(file, { cellDates: false })
+  const sheet = workbook.Sheets[workbook.SheetNames[0]]
+  const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, raw: false, defval: '' })
+  const headerAt = rows.findIndex((row) => row.some((cell) => /nama tangki/i.test(sheetText(cell))))
+  if (headerAt < 0) throw new Error(`No tank table in ${path.basename(file)}`)
+  const byTank = new Map()
+  for (const row of rows.slice(headerAt + 1)) {
+    const tankCode = canonicalTank(row[1])
+    if (!tankCode || /leader|sect|dokumen/i.test(sheetText(row[0]))) continue
+    if (!/^T\d+$/.test(tankCode) && !/BAK /.test(tankCode)) continue
+    byTank.set(tankCode, {
+      tankCode,
+      productName: sheetText(row[2]),
+      levelM: sheetNumber(row[3]),
+      temperatureC: sheetNumber(row[4]),
+      operationalStatus: sheetText(row[5]).toUpperCase(),
+    })
+  }
+  return [...byTank.values()]
+}
+
+function writeSyncLog(report) {
+  const failed = report.failed ?? []
+  const downloaded = report.downloaded ?? []
+  const skipped = report.skipped ?? []
+  const status = failed.length === 0 ? 'OK' : 'FAILED'
+  const unknown = report.ingested?.unknownTanks ?? []
+  const lines = [
+    'Storage Tank Sounding Report (F/TNF-003)',
+    `Status: ${status}`,
+    `Ran at: ${report.ranAt}`,
+    report.from && report.to
+      ? `Range: ${report.from} through ${report.to} (${countLabel(daysFrom(report.from, report.to).length, 'day')})`
+      : 'Range: the job stopped before a date range was chosen',
+    `Source: ${baseUrl()}/report/index/${reportId()}`,
+    '',
+    status === 'OK' && downloaded.length > 0
+      ? 'The sync finished. Downloaded days were written to the database.'
+      : status === 'OK'
+        ? 'The sync finished. No sheet in this range had tickets, so nothing was written.'
+        : 'The sync did not finish cleanly. The failed days below were not stored.',
+    '',
+    'Result',
+    `- Downloaded: ${countLabel(downloaded.length, 'day')}`,
+    `- Skipped (no tickets): ${countLabel(skipped.length, 'day')}`,
+    `- Failed: ${countLabel(failed.length, 'day')}`,
+    `- Database soundings written: ${report.ingested?.soundings ?? 0}`,
+    `- Unknown tanks left off the sounding table: ${unknown.length}`,
+    '',
+    'A day is downloaded when Total Ticket is greater than 0.',
+    'Tank rows are stored in Postgres. This job does not rewrite the local dashboard JSON.',
+    '',
+  ]
+  if (downloaded.length > 0) {
+    lines.push('Downloaded', 'Date         Tickets  Tanks  Workbook')
+    for (const item of downloaded) {
+      lines.push(`${item.day}   ${String(item.tickets).padEnd(7)}  ${String(item.tanks).padEnd(5)}  ${path.basename(item.file)}`)
+    }
+    lines.push('')
+  }
+  if (unknown.length > 0) {
+    lines.push('Unknown tanks (kept on the submission, not inserted as soundings)')
+    for (const item of unknown) lines.push(`${item.day}   ${item.tankCode}`)
+    lines.push('')
+  }
+  if (skipped.length > 0) {
+    lines.push('Skipped because Total Ticket was 0')
+    for (const item of skipped) lines.push(`${item.day}   tickets ${item.tickets}`)
+    lines.push('')
+  }
+  if (failed.length > 0) {
+    lines.push('Failed')
+    for (const item of failed) lines.push(`${item.day}   ${item.reason}`)
+    lines.push('')
+  }
+  const text = `${lines.join('\n')}\n`
+  fs.mkdirSync(exportDir, { recursive: true })
+  fs.writeFileSync(path.join(exportDir, 'sync-report.txt'), text)
+  fs.appendFileSync(path.join(exportDir, 'sync.log'), `${text}---\n`)
+  return text
+}
+
+function ingestSoundings(payload) {
+  const backend = path.resolve(here, '../../Backend')
+  const result = spawnSync(process.execPath, [path.join(backend, 'scripts/ingest-sounding-day.js')], {
+    cwd: backend,
+    input: JSON.stringify(payload),
     encoding: 'utf8',
   })
   if (result.status !== 0) {
-    throw new Error(result.stderr || result.stdout || 'parse-logsheets failed')
+    throw new Error((result.stderr || result.stdout || 'sounding ingest failed').trim())
   }
+  const line = result.stdout.trim().split(/\r?\n/).at(-1)
+  return line ? JSON.parse(line) : null
 }
 
 async function main() {
@@ -212,6 +346,8 @@ async function main() {
   const downloaded = []
   const skipped = []
   const failed = []
+  const days = []
+  const written = []
   for (const day of daysFrom(from, to)) {
     try {
       const tickets = await ticketCount(jar, day)
@@ -224,21 +360,70 @@ async function main() {
         continue
       }
       const bytes = await downloadExcel(jar, day)
-      const file = saveWorkbook(day, bytes)
-      downloaded.push({ day, tickets, bytes: bytes.length, file })
+      const saved = saveWorkbook(day, bytes)
+      let rows
+      try {
+        rows = parseWorkbook(saved.file)
+        if (rows.length === 0) throw new Error(`No tank rows in ${path.basename(saved.file)}`)
+      } catch (error) {
+        if (!saved.existed) fs.unlinkSync(saved.file)
+        throw error
+      }
+      written.push(saved)
+      days.push({ recordedOn: day, rows })
+      downloaded.push({ day, tickets, bytes: bytes.length, file: saved.file, tanks: rows.length })
     } catch (error) {
       failed.push({ day, reason: error instanceof Error ? error.message : String(error) })
     }
   }
-  if (downloaded.length > 0) refreshDashboard()
-  const report = { from, to, downloaded, skipped, failed }
+  let ingested = null
+  if (days.length > 0) {
+    try {
+      ingested = ingestSoundings({
+        from: days[0].recordedOn,
+        to: days.at(-1).recordedOn,
+        downloaded: downloaded.length,
+        skipped: skipped.length,
+        days,
+      })
+    } catch (error) {
+      for (const saved of written) {
+        if (!saved.existed) fs.unlinkSync(saved.file)
+      }
+      failed.push({ day: `${days[0].recordedOn}..${days.at(-1).recordedOn}`, reason: error instanceof Error ? error.message : String(error) })
+    }
+  }
+  const report = {
+    ranAt: plantStamp(),
+    from,
+    to,
+    downloaded,
+    skipped,
+    failed,
+    ingested,
+  }
   fs.mkdirSync(exportDir, { recursive: true })
-  fs.writeFileSync(path.join(exportDir, 'last-sync.json'), JSON.stringify({ ranAt: new Date().toISOString(), ...report }, null, 2))
-  console.log(JSON.stringify(report, null, 2))
+  fs.writeFileSync(path.join(exportDir, 'last-sync.json'), JSON.stringify({ ...report, status: failed.length === 0 ? 'OK' : 'FAILED' }, null, 2))
+  const text = writeSyncLog(report)
+  console.log(text)
+  console.log(`Report: ${path.join(exportDir, 'sync-report.txt')}`)
+  console.log(`Log: ${path.join(exportDir, 'sync.log')}`)
   if (failed.length > 0) process.exitCode = 1
 }
 
 main().catch((error) => {
-  console.error(error instanceof Error ? error.message : error)
+  const message = error instanceof Error ? error.message : String(error)
+  try {
+    const text = writeSyncLog({
+      ranAt: plantStamp(),
+      downloaded: [],
+      skipped: [],
+      failed: [{ day: '-', reason: message }],
+      ingested: null,
+    })
+    console.log(text)
+  } catch {
+    console.error(message)
+  }
   process.exitCode = 1
 })

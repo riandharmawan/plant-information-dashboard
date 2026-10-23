@@ -1,0 +1,14 @@
+Status: OK
+Finished: 2026-10-23 09:01:11 WIB
+Duration: 100s
+
+Jobs
+sounding            OK      exit 0     11s
+tnf004              OK      exit 0     4s
+rfa004a             OK      exit 0     5s
+rfa004b             OK      exit 0     3s
+analytical          OK      exit 0     4s
+refinery-quality    OK      exit 0     9s
+utility             OK      exit 0     64s
+
+---

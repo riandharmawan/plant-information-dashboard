@@ -1,3 +1,4 @@
+import { parameter } from './format.ts'
 import type { TankLive } from './types.ts'
 
 /**
@@ -46,6 +47,14 @@ export interface CommodityStockRow {
   capacityKg: number | null
   /** Quantity divided by capacity. Null when the group has no capacity. */
   utilization: number | null
+  /** Tanks in the group that have a capacity. */
+  tankCount: number
+  /** Tanks in the group with stock above zero. */
+  holdingTanks: number
+  /** Simple means over the holding tanks. Null when none has a value. */
+  avgTemperatureC: number | null
+  avgFfa: number | null
+  avgMi: number | null
 }
 
 export function stockGroupOf(productName: string): StockGroup | null {
@@ -80,9 +89,16 @@ function compareTankIds(left: string, right: string): number {
   return left.localeCompare(right)
 }
 
+interface Bucket {
+  quantityKg: number
+  capacityKg: number
+  tankCount: number
+  holding: TankLive[]
+}
+
 export function commodityStock(tanks: TankLive[]): CommodityStockRow[] {
-  const totals = new Map<StockGroup, { quantityKg: number; capacityKg: number }>()
-  for (const code of GROUPS) totals.set(code, { quantityKg: 0, capacityKg: 0 })
+  const totals = new Map<StockGroup, Bucket>()
+  for (const code of GROUPS) totals.set(code, { quantityKg: 0, capacityKg: 0, tankCount: 0, holding: [] })
 
   for (const tank of tanks) {
     const code = stockGroupFor(tank)
@@ -91,16 +107,29 @@ export function commodityStock(tanks: TankLive[]): CommodityStockRow[] {
     if (!bucket) continue
     bucket.capacityKg += tank.capacityKg
     bucket.quantityKg += tank.quantityKg ?? 0
+    bucket.tankCount += 1
+    if (tank.quantityKg != null && tank.quantityKg > 0) bucket.holding.push(tank)
   }
 
   return GROUPS.map((code) => {
-    const bucket = totals.get(code) ?? { quantityKg: 0, capacityKg: 0 }
+    const bucket = totals.get(code) ?? { quantityKg: 0, capacityKg: 0, tankCount: 0, holding: [] }
     const hasCapacity = bucket.capacityKg > 0
     return {
       code,
       quantityKg: hasCapacity ? bucket.quantityKg : null,
       capacityKg: hasCapacity ? bucket.capacityKg : null,
       utilization: hasCapacity ? bucket.quantityKg / bucket.capacityKg : null,
+      tankCount: bucket.tankCount,
+      holdingTanks: bucket.holding.length,
+      avgTemperatureC: mean(bucket.holding.map((tank) => tank.temperatureC)),
+      avgFfa: mean(bucket.holding.map((tank) => parameter(tank.quality?.parameters, 'FFA'))),
+      avgMi: mean(bucket.holding.map((tank) => parameter(tank.quality?.parameters, 'MI'))),
     }
   })
+}
+
+function mean(values: Array<number | null | undefined>): number | null {
+  const nums = values.filter((value): value is number => value != null && !Number.isNaN(value))
+  if (nums.length === 0) return null
+  return nums.reduce((sum, value) => sum + value, 0) / nums.length
 }

@@ -6,6 +6,19 @@ export interface Messages {
   brandMark: string
   brandTitle: string
   brandSub: string
+  corpName: string
+  loginPitch: string
+  welcomeBack: string
+  signInContinue: string
+  loginUsername: string
+  loginUsernamePlaceholder: string
+  loginPassword: string
+  loginPasswordPlaceholder: string
+  showPassword: string
+  hidePassword: string
+  signIn: string
+  loginRequired: string
+  copyright: string
   liveOps: string
   opsAnalytics: string
   analyticsTitle: string
@@ -46,10 +59,23 @@ export interface Messages {
   totalQuantity: string
   avgLevel: string
   avgTemp: string
+  storageUtilization: string
+  activeVsEmpty: string
+  activeEmptySub: string
+  criticalAlerts: string
+  criticalAlertsSub: string
+  tanksHolding: string
+  avgQuality: string
+  selectDay: string
+  massUnit: string
+  unitTon: string
+  unitKg: string
   throughput: string
   approvalRate: string
   unavailable: string
   period: string
+  periodDaily: string
+  periodMonthly: string
   tank: string
   status: string
   levelTemp: string
@@ -250,6 +276,31 @@ export interface Messages {
   qcVessel: string
   qcTruck: string
   qcMovements: string
+  refineryQuality: string
+  hoursLogged: string
+  finishedFfa: string
+  feedFfa: string
+  byproductFfa: string
+  streamsTitle: string
+  readingsTitle: string
+  declaredNotTested: string
+  rangeLow: string
+  rangeHigh: string
+  time: string
+  fromTank: string
+  flowRate: string
+  finishedOil: string
+  feedOil: string
+  colour: string
+  toTank: string
+  rawMaterial: string
+  bleachingOil: string
+  finishedGood: string
+  byProduct: string
+  spentEarth: string
+  bleachRed: string
+  spentEarthOc: string
+  noSample: string
   tanksLogged: string
   retestDue: string
   oilTypes: string
@@ -304,6 +355,138 @@ export interface Messages {
   resultValue: string
   incomplete: string
   noSampleDate: string
+  needsAttention: string
+  nothingNeedsAttention: string
+  moreItems: string
+  overMax: string
+  watch: string
+  noSpec: string
+  notRecorded: string
+  rangeFor: string
+  tooFewToCompare: string
+  tanksWithoutResult: string
+  tankCount: string
+  tankCountOne: string
+  retestCount: string
+  contractMax: string
+  floorAbove: string
+  watchBand: string
+  dailyLowHigh: string
+  groupSample: string
+  groupCore: string
+  groupOxidation: string
+  groupComposition: string
+  groupNotes: string
+  tankFill: string
+  productsInTanks: string
+  passMix: string
+  dayFlow: string
+  ffaPct: string
+  moisturePct: string
+  tempC: string
+  colourRLov: string
+  colourYLov: string
+  truckScatter: string
+  vesselScatter: string
+  palkaStrip: string
+  ffaBySnapshot: string
+  dailyBandCaption: string
+  hourlyCaption: string
+  reasonOver: string
+  reasonRetest: string
+  reasonWatch: string
+  view: string
+  ageDaysShort: string
+  legend: string
+  loading: string
+  loginInvalid: string
+  signingIn: string
+  administration: string
+  adminMenuTitle: string
+  adminIntro: string
+  userManagement: string
+  userManagementBlurb: string
+  roleManagement: string
+  roleManagementBlurb: string
+  backToAdmin: string
+  users: string
+  user: string
+  addUser: string
+  editUser: string
+  username: string
+  displayName: string
+  email: string
+  password: string
+  newPasswordOptional: string
+  active: string
+  roles: string
+  siteAccess: string
+  search: string
+  allStatuses: string
+  activeStatus: string
+  inactiveStatus: string
+  noUsers: string
+  noMatch: string
+  userSaved: string
+  userDeleted: string
+  deleteUserConfirm: string
+  saving: string
+  systemSuffix: string
+  rolesHelp: string
+  sitesHelp: string
+  searchSite: string
+  selectVisible: string
+  clearVisible: string
+  noRoles: string
+  noSites: string
+  accessNotConfigured: string
+  noSiteBody: string
+  accessDenied: string
+  accessDeniedBody: string
+  changePassword: string
+  signOut: string
+  currentPassword: string
+  newPassword: string
+  confirmPassword: string
+  passwordUpdated: string
+  permissionView: string
+  permissionEdit: string
+  permissionDelete: string
+  roleSaved: string
+  roleDeleted: string
+  deleteRoleConfirm: string
+  addRole: string
+  editRole: string
+  roleName: string
+  description: string
+  usersCount: string
+  noRolesYet: string
+  pages: string
+  operationsGroup: string
+  masterGroup: string
+  refineryFractionation: string
+  utility: string
+  coverage: string
+  logsheetCatalog: string
+  qualityRules: string
+  requestFailed: string
+  usernameRequired: string
+  passwordRequired: string
+  passwordShort: string
+  usernameTaken: string
+  emailTaken: string
+  lastAdmin: string
+  selfDeactivate: string
+  selfDelete: string
+  currentPasswordRequired: string
+  newPasswordRequired: string
+  samePassword: string
+  badCurrentPassword: string
+  confirmMismatch: string
+  roleNameRequired: string
+  roleNameTaken: string
+  systemRoleLocked: string
+  roleInUse: string
 }
 
 export const MESSAGES: Record<Locale, Messages> = {
@@ -313,6 +496,19 @@ export const MESSAGES: Record<Locale, Messages> = {
     brandMark: 'PI',
     brandTitle: 'Plant Information',
     brandSub: 'Dashboard',
+    corpName: 'KPN CORP',
+    loginPitch: 'Watch tank stock, quality, and daily production from one place.',
+    welcomeBack: 'Welcome back',
+    signInContinue: 'Sign in to continue to Plant Information Dashboard',
+    loginUsername: 'Username or email',
+    loginUsernamePlaceholder: 'Enter username or email',
+    loginPassword: 'Password',
+    loginPasswordPlaceholder: 'Enter password',
+    showPassword: 'Show password',
+    hidePassword: 'Hide password',
+    signIn: 'Sign In',
+    loginRequired: 'Enter your username and password.',
+    copyright: '© {{year}} KPN Corporation. All rights reserved.',
     liveOps: 'Tank & Stock Dashboard',
     opsAnalytics: 'Tank Level & Temperature',
     analyticsTitle: 'Tank Level & Temperature',
@@ -353,10 +549,23 @@ export const MESSAGES: Record<Locale, Messages> = {
     totalQuantity: 'Total quantity',
     avgLevel: 'Average tank level',
     avgTemp: 'Avg temp',
+    storageUtilization: 'Overall storage utilization',
+    activeVsEmpty: 'Active vs empty tanks',
+    activeEmptySub: 'active / empty',
+    criticalAlerts: 'Critical alerts',
+    criticalAlertsSub: 'Over 95% full or temperature anomaly',
+    tanksHolding: '{held} of {total} tanks',
+    avgQuality: 'Avg quality',
+    selectDay: 'Day',
+    massUnit: 'Quantity unit',
+    unitTon: 'Ton',
+    unitKg: 'Kg',
     throughput: 'Throughput (mass)',
     approvalRate: 'Lab approval rate',
     unavailable: '—',
     period: 'Period',
+    periodDaily: 'Daily',
+    periodMonthly: 'Monthly',
     tank: 'Tank',
     status: 'Status',
     levelTemp: 'Tank level & temperature',
@@ -557,6 +766,31 @@ export const MESSAGES: Record<Locale, Messages> = {
     qcVessel: 'Incoming by Vessel',
     qcTruck: 'Incoming by Truck',
     qcMovements: 'Oil in and out',
+    refineryQuality: 'Refinery quality',
+    hoursLogged: 'Hours logged',
+    finishedFfa: 'Finished FFA',
+    feedFfa: 'Feed FFA',
+    byproductFfa: 'By-product FFA',
+    streamsTitle: 'Streams',
+    readingsTitle: 'Readings',
+    declaredNotTested: 'Declared, not tested',
+    rangeLow: 'Low',
+    rangeHigh: 'High',
+    time: 'Time',
+    fromTank: 'From tank',
+    flowRate: 'Flow',
+    finishedOil: 'Finished oil',
+    feedOil: 'Feed oil',
+    colour: 'Colour',
+    toTank: 'To tank',
+    rawMaterial: 'Raw material',
+    bleachingOil: 'Bleaching',
+    finishedGood: 'Finished good',
+    byProduct: 'By-product',
+    spentEarth: 'Spent earth',
+    bleachRed: 'Bleach R',
+    spentEarthOc: 'Spent earth OC',
+    noSample: 'No sample',
     tanksLogged: 'Tanks logged',
     retestDue: 'Retest due',
     oilTypes: 'Oil types',
@@ -567,7 +801,7 @@ export const MESSAGES: Record<Locale, Messages> = {
     vesselTickets: 'Vessel tickets',
     palkaSamples: 'Palka samples',
     movementCount: 'Movements',
-    gatePeriodNote: 'Gate counts cover the full printed period {period}, not the date range above.',
+    gatePeriodNote: 'Counts follow the date range above. The sheet spans {period}.',
     analysisDate: 'Analysis date',
     ageDays: 'Age (days)',
     slipPoint: 'Slip point',
@@ -611,6 +845,138 @@ export const MESSAGES: Record<Locale, Messages> = {
     resultValue: 'Value',
     incomplete: 'Incomplete',
     noSampleDate: 'No sampling date',
+    needsAttention: 'Needs attention',
+    nothingNeedsAttention: 'Nothing needs attention in this range.',
+    moreItems: '+{count} more',
+    overMax: 'Over max',
+    watch: 'Watch',
+    noSpec: 'No spec',
+    notRecorded: 'Not recorded',
+    rangeFor: 'Range for {product}, {from}–{to} · {count} results',
+    tooFewToCompare: 'Too few results to compare',
+    tanksWithoutResult: '{count} tanks without a result',
+    tankCount: '{count} tanks',
+    tankCountOne: '1 tank',
+    retestCount: '{count} retest',
+    contractMax: 'max {value}',
+    floorAbove: 'above {value}',
+    watchBand: 'watch band {low}–{high}',
+    dailyLowHigh: 'daily low–high',
+    groupSample: 'Sample',
+    groupCore: 'Core',
+    groupOxidation: 'Oxidation',
+    groupComposition: 'Composition',
+    groupNotes: 'Notes',
+    tankFill: 'Fill',
+    productsInTanks: 'Products in tanks',
+    passMix: 'Pass mix',
+    dayFlow: 'Product flow',
+    ffaPct: 'FFA %',
+    moisturePct: 'M&I %',
+    tempC: 'Temp °C',
+    colourRLov: 'R (Lovibond)',
+    colourYLov: 'Y (Lovibond)',
+    truckScatter: 'FFA % against M&I % · one dot per truck · lines at the contract max',
+    vesselScatter: 'Composite FFA % against M&I % · one dot per ticket · lines at the contract max',
+    palkaStrip: 'FFA % per hold sample · line at the contract max',
+    ffaBySnapshot: 'FFA % by snapshot · shaded band is the product range',
+    dailyBandCaption: 'Shaded band runs from the daily low to the daily high. Click a day to open its hours.',
+    hourlyCaption: 'Finished FFA % by hour. Shading marks each finished-product run.',
+    reasonOver: '{param} {value} over max {max}',
+    reasonRetest: 'Analysis {days} days old',
+    reasonWatch: '{param} {value} outside the watch band',
+    view: 'View',
+    ageDaysShort: '{days} d',
+    legend: 'Legend',
+    loading: 'Loading…',
+    loginInvalid: 'Invalid username or password.',
+    signingIn: 'Signing in…',
+    administration: 'Administration',
+    adminMenuTitle: 'Administration',
+    adminIntro: 'Manage who can sign in, which sites they see, and what each role may do.',
+    userManagement: 'User Management',
+    userManagementBlurb: 'Create users, assign roles, and assign sites.',
+    roleManagement: 'Role Management',
+    roleManagementBlurb: 'Define roles and the pages they can view, edit, or delete.',
+    backToAdmin: '← Back to Administration',
+    users: 'Users',
+    user: 'User',
+    addUser: 'Add User',
+    editUser: 'Edit User',
+    username: 'Username',
+    displayName: 'Display name',
+    email: 'Email',
+    password: 'Password',
+    newPasswordOptional: 'New password (optional)',
+    active: 'Active',
+    roles: 'Roles',
+    siteAccess: 'Site access',
+    search: 'Search',
+    allStatuses: 'All statuses',
+    activeStatus: 'Active',
+    inactiveStatus: 'Inactive',
+    noUsers: 'No users yet.',
+    noMatch: 'No entries match the current filters.',
+    userSaved: 'User saved. {n} site(s) assigned.',
+    userDeleted: 'User deleted.',
+    deleteUserConfirm: 'Delete this user? They will no longer be able to sign in.',
+    saving: 'Saving…',
+    systemSuffix: '(system)',
+    rolesHelp: 'Roles control which pages this user can view, edit, or delete.',
+    sitesHelp: 'A user with no site assigned cannot open operational or master data.',
+    searchSite: 'Search site…',
+    selectVisible: 'Select visible',
+    clearVisible: 'Clear visible',
+    noRoles: 'No roles found.',
+    noSites: 'No sites found.',
+    accessNotConfigured: 'Access not configured',
+    noSiteBody: 'No site assigned. Contact a Plant Information Dashboard administrator.',
+    accessDenied: 'Access denied',
+    accessDeniedBody: 'You do not have permission to view this page.',
+    changePassword: 'Change password',
+    signOut: 'Sign out',
+    currentPassword: 'Current password',
+    newPassword: 'New password',
+    confirmPassword: 'Confirm password',
+    passwordUpdated: 'Your password has been updated.',
+    permissionView: 'View',
+    permissionEdit: 'Edit',
+    permissionDelete: 'Delete',
+    roleSaved: 'Role saved.',
+    roleDeleted: 'Role deleted.',
+    deleteRoleConfirm: 'Delete this role?',
+    addRole: 'Add Role',
+    editRole: 'Edit Role',
+    roleName: 'Role name',
+    description: 'Description',
+    usersCount: 'Users',
+    noRolesYet: 'No roles yet.',
+    pages: 'Page',
+    operationsGroup: 'Operations',
+    masterGroup: 'Master data',
+    refineryFractionation: 'Refinery and fractionation',
+    utility: 'Utility',
+    coverage: 'Coverage',
+    logsheetCatalog: 'Logsheet catalog',
+    qualityRules: 'Quality rules',
+    requestFailed: 'The request could not be completed.',
+    usernameRequired: 'Username is required.',
+    passwordRequired: 'Password is required for a new user.',
+    passwordShort: 'Password must be at least 6 characters.',
+    usernameTaken: 'Username is already in use.',
+    emailTaken: 'Email is already in use.',
+    lastAdmin: 'At least one active administrator must remain.',
+    selfDeactivate: 'You cannot deactivate your own account.',
+    selfDelete: 'You cannot delete your own account.',
+    currentPasswordRequired: 'Current password is required.',
+    newPasswordRequired: 'New password is required.',
+    samePassword: 'New password must be different from your current password.',
+    badCurrentPassword: 'Invalid current password.',
+    confirmMismatch: 'New password and confirmation do not match.',
+    roleNameRequired: 'Role name is required.',
+    roleNameTaken: 'Role name is already in use.',
+    systemRoleLocked: 'A system role cannot be deleted.',
+    roleInUse: 'This role is still assigned to a user.',
   },
   id: {
     appTitle: 'Dasbor Informasi Pabrik',
@@ -618,6 +984,19 @@ export const MESSAGES: Record<Locale, Messages> = {
     brandMark: 'PI',
     brandTitle: 'Informasi Pabrik',
     brandSub: 'Dasbor',
+    corpName: 'KPN CORP',
+    loginPitch: 'Pantau stok tangki, kualitas, dan produksi harian dari satu tempat.',
+    welcomeBack: 'Selamat datang kembali',
+    signInContinue: 'Masuk untuk melanjutkan ke Dasbor Informasi Pabrik',
+    loginUsername: 'Nama pengguna atau email',
+    loginUsernamePlaceholder: 'Masukkan nama pengguna atau email',
+    loginPassword: 'Kata sandi',
+    loginPasswordPlaceholder: 'Masukkan kata sandi',
+    showPassword: 'Tampilkan kata sandi',
+    hidePassword: 'Sembunyikan kata sandi',
+    signIn: 'Masuk',
+    loginRequired: 'Masukkan nama pengguna dan kata sandi.',
+    copyright: '© {{year}} KPN Corporation. Hak cipta dilindungi.',
     liveOps: 'Dasbor Tangki & Stok',
     opsAnalytics: 'Level & Suhu Tangki',
     analyticsTitle: 'Level & Suhu Tangki',
@@ -658,10 +1037,23 @@ export const MESSAGES: Record<Locale, Messages> = {
     totalQuantity: 'Total kuantitas',
     avgLevel: 'Rata-rata level tangki',
     avgTemp: 'Suhu rata-rata',
+    storageUtilization: 'Utilisasi penyimpanan',
+    activeVsEmpty: 'Tangki aktif vs kosong',
+    activeEmptySub: 'aktif / kosong',
+    criticalAlerts: 'Peringatan kritis',
+    criticalAlertsSub: 'Isi di atas 95% atau anomali suhu',
+    tanksHolding: '{held} dari {total} tangki',
+    avgQuality: 'Rata-rata mutu',
+    selectDay: 'Tanggal',
+    massUnit: 'Satuan kuantitas',
+    unitTon: 'Ton',
+    unitKg: 'Kg',
     throughput: 'Throughput (massa)',
     approvalRate: 'Tingkat kelulusan lab',
     unavailable: '—',
     period: 'Periode',
+    periodDaily: 'Harian',
+    periodMonthly: 'Bulanan',
     tank: 'Tangki',
     status: 'Status',
     levelTemp: 'Level tangki & suhu',
@@ -862,6 +1254,31 @@ export const MESSAGES: Record<Locale, Messages> = {
     qcVessel: 'Masuk Kapal',
     qcTruck: 'Masuk Truk',
     qcMovements: 'Minyak masuk dan keluar',
+    refineryQuality: 'Mutu refinery',
+    hoursLogged: 'Jam tercatat',
+    finishedFfa: 'FFA produk jadi',
+    feedFfa: 'FFA bahan baku',
+    byproductFfa: 'FFA produk samping',
+    streamsTitle: 'Aliran',
+    readingsTitle: 'Pembacaan',
+    declaredNotTested: 'Dinyatakan, belum diuji',
+    rangeLow: 'Terendah',
+    rangeHigh: 'Tertinggi',
+    time: 'Waktu',
+    fromTank: 'Dari tangki',
+    flowRate: 'Aliran',
+    finishedOil: 'Minyak jadi',
+    feedOil: 'Minyak bahan baku',
+    colour: 'Warna',
+    toTank: 'Ke tangki',
+    rawMaterial: 'Bahan baku',
+    bleachingOil: 'Pemucatan',
+    finishedGood: 'Produk jadi',
+    byProduct: 'Produk samping',
+    spentEarth: 'Spent earth',
+    bleachRed: 'R pemucatan',
+    spentEarthOc: 'OC spent earth',
+    noSample: 'Tidak ada sampel',
     tanksLogged: 'Tangki tercatat',
     retestDue: 'Perlu uji ulang',
     oilTypes: 'Jenis minyak',
@@ -872,7 +1289,7 @@ export const MESSAGES: Record<Locale, Messages> = {
     vesselTickets: 'Tiket kapal',
     palkaSamples: 'Sampel palka',
     movementCount: 'Pergerakan',
-    gatePeriodNote: 'Angka gerbang mencakup seluruh periode tercetak {period}, bukan rentang tanggal di atas.',
+    gatePeriodNote: 'Angka mengikuti rentang tanggal di atas. Lembar mencakup {period}.',
     analysisDate: 'Tanggal analisa',
     ageDays: 'Umur (hari)',
     slipPoint: 'Slip point',
@@ -916,5 +1333,137 @@ export const MESSAGES: Record<Locale, Messages> = {
     resultValue: 'Nilai',
     incomplete: 'Belum lengkap',
     noSampleDate: 'Tanpa tanggal sampling',
+    needsAttention: 'Perlu tindakan',
+    nothingNeedsAttention: 'Tidak ada yang perlu ditindaklanjuti pada rentang ini.',
+    moreItems: '+{count} lainnya',
+    overMax: 'Melewati batas',
+    watch: 'Pantau',
+    noSpec: 'Tanpa spek',
+    notRecorded: 'Tidak dicatat',
+    rangeFor: 'Rentang {product}, {from}–{to} · {count} hasil',
+    tooFewToCompare: 'Hasil terlalu sedikit untuk dibandingkan',
+    tanksWithoutResult: '{count} tangki tanpa hasil',
+    tankCount: '{count} tangki',
+    tankCountOne: '1 tangki',
+    retestCount: '{count} uji ulang',
+    contractMax: 'maks {value}',
+    floorAbove: 'di atas {value}',
+    watchBand: 'pita pantau {low}–{high}',
+    dailyLowHigh: 'rendah–tinggi harian',
+    groupSample: 'Sampel',
+    groupCore: 'Utama',
+    groupOxidation: 'Oksidasi',
+    groupComposition: 'Komposisi',
+    groupNotes: 'Catatan',
+    tankFill: 'Isi',
+    productsInTanks: 'Produk di tangki',
+    passMix: 'Komposisi hasil',
+    dayFlow: 'Alur produk',
+    ffaPct: 'FFA %',
+    moisturePct: 'M&I %',
+    tempC: 'Suhu °C',
+    colourRLov: 'R (Lovibond)',
+    colourYLov: 'Y (Lovibond)',
+    truckScatter: 'FFA % terhadap M&I % · satu titik per truk · garis pada batas kontrak',
+    vesselScatter: 'FFA % komposit terhadap M&I % · satu titik per tiket · garis pada batas kontrak',
+    palkaStrip: 'FFA % per sampel palka · garis pada batas kontrak',
+    ffaBySnapshot: 'FFA % per snapshot · pita arsir adalah rentang produk',
+    dailyBandCaption: 'Pita arsir dari nilai terendah ke tertinggi harian. Klik hari untuk membuka per jam.',
+    hourlyCaption: 'FFA % produk jadi per jam. Arsiran menandai tiap jalannya produk.',
+    reasonOver: '{param} {value} melewati maks {max}',
+    reasonRetest: 'Analisa berumur {days} hari',
+    reasonWatch: '{param} {value} di luar pita pantau',
+    view: 'Lihat',
+    ageDaysShort: '{days} h',
+    legend: 'Keterangan',
+    loading: 'Memuat…',
+    loginInvalid: 'Nama pengguna atau kata sandi salah.',
+    signingIn: 'Masuk…',
+    administration: 'Administrasi',
+    adminMenuTitle: 'Administrasi',
+    adminIntro: 'Kelola siapa yang dapat masuk, site yang mereka lihat, dan apa yang boleh dilakukan setiap peran.',
+    userManagement: 'Manajemen Pengguna',
+    userManagementBlurb: 'Buat pengguna, tetapkan peran, dan tetapkan site.',
+    roleManagement: 'Manajemen Peran',
+    roleManagementBlurb: 'Atur peran dan halaman yang dapat dilihat, diubah, atau dihapus.',
+    backToAdmin: '← Kembali ke Administrasi',
+    users: 'Pengguna',
+    user: 'Pengguna',
+    addUser: 'Tambah Pengguna',
+    editUser: 'Ubah Pengguna',
+    username: 'Nama pengguna',
+    displayName: 'Nama tampilan',
+    email: 'Email',
+    password: 'Kata sandi',
+    newPasswordOptional: 'Kata sandi baru (opsional)',
+    active: 'Aktif',
+    roles: 'Peran',
+    siteAccess: 'Akses site',
+    search: 'Cari',
+    allStatuses: 'Semua status',
+    activeStatus: 'Aktif',
+    inactiveStatus: 'Nonaktif',
+    noUsers: 'Belum ada pengguna.',
+    noMatch: 'Tidak ada data yang sesuai dengan filter.',
+    userSaved: 'Pengguna disimpan. {n} site ditetapkan.',
+    userDeleted: 'Pengguna dihapus.',
+    deleteUserConfirm: 'Hapus pengguna ini? Mereka tidak akan bisa masuk lagi.',
+    saving: 'Menyimpan…',
+    systemSuffix: '(sistem)',
+    rolesHelp: 'Peran mengatur halaman yang dapat dilihat, diubah, atau dihapus pengguna ini.',
+    sitesHelp: 'Pengguna tanpa site tidak dapat membuka data operasional maupun data master.',
+    searchSite: 'Cari site…',
+    selectVisible: 'Pilih yang tampil',
+    clearVisible: 'Hapus yang tampil',
+    noRoles: 'Tidak ada peran.',
+    noSites: 'Tidak ada site.',
+    accessNotConfigured: 'Akses belum dikonfigurasi',
+    noSiteBody: 'Tidak ada site yang ditetapkan. Hubungi administrator Plant Information Dashboard.',
+    accessDenied: 'Akses ditolak',
+    accessDeniedBody: 'Anda tidak memiliki izin untuk melihat halaman ini.',
+    changePassword: 'Ubah kata sandi',
+    signOut: 'Keluar',
+    currentPassword: 'Kata sandi saat ini',
+    newPassword: 'Kata sandi baru',
+    confirmPassword: 'Konfirmasi kata sandi',
+    passwordUpdated: 'Kata sandi Anda telah diperbarui.',
+    permissionView: 'Lihat',
+    permissionEdit: 'Ubah',
+    permissionDelete: 'Hapus',
+    roleSaved: 'Peran disimpan.',
+    roleDeleted: 'Peran dihapus.',
+    deleteRoleConfirm: 'Hapus peran ini?',
+    addRole: 'Tambah Peran',
+    editRole: 'Ubah Peran',
+    roleName: 'Nama peran',
+    description: 'Deskripsi',
+    usersCount: 'Pengguna',
+    noRolesYet: 'Belum ada peran.',
+    pages: 'Halaman',
+    operationsGroup: 'Operasi',
+    masterGroup: 'Data master',
+    refineryFractionation: 'Refinery dan fraksinasi',
+    utility: 'Utilitas',
+    coverage: 'Cakupan',
+    logsheetCatalog: 'Katalog logsheet',
+    qualityRules: 'Aturan mutu',
+    requestFailed: 'Permintaan tidak dapat diselesaikan.',
+    usernameRequired: 'Nama pengguna wajib diisi.',
+    passwordRequired: 'Kata sandi wajib diisi untuk pengguna baru.',
+    passwordShort: 'Kata sandi minimal 6 karakter.',
+    usernameTaken: 'Nama pengguna sudah digunakan.',
+    emailTaken: 'Email sudah digunakan.',
+    lastAdmin: 'Minimal satu administrator aktif harus tetap ada.',
+    selfDeactivate: 'Anda tidak dapat menonaktifkan akun Anda sendiri.',
+    selfDelete: 'Anda tidak dapat menghapus akun Anda sendiri.',
+    currentPasswordRequired: 'Kata sandi saat ini wajib diisi.',
+    newPasswordRequired: 'Kata sandi baru wajib diisi.',
+    samePassword: 'Kata sandi baru harus berbeda dari kata sandi saat ini.',
+    badCurrentPassword: 'Kata sandi saat ini salah.',
+    confirmMismatch: 'Kata sandi baru dan konfirmasi tidak cocok.',
+    roleNameRequired: 'Nama peran wajib diisi.',
+    roleNameTaken: 'Nama peran sudah digunakan.',
+    systemRoleLocked: 'Peran sistem tidak dapat dihapus.',
+    roleInUse: 'Peran ini masih ditetapkan ke pengguna.',
   },
 }

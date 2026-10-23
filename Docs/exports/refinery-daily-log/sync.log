@@ -1,0 +1,163 @@
+Refinery daily log (F/RFA-004(A))
+Status: OK
+Ran at: 2026-10-20 14:05:04 WIB
+Range: 2026-09-21 through 2026-10-20 (30 days)
+Source: https://logsheet-builder.gamasap.com/report/index/b1d7e44d-e90d-447f-9772-ffecba657b1e
+
+The sync finished. Days with tickets were saved as workbooks.
+
+Result
+- Downloaded: 2 days
+- Skipped (no tickets): 28 days
+- Failed: 0 days
+
+A day is downloaded when Total Ticket is greater than 0.
+This job saves the workbook only. It does not insert rows into the database.
+
+Downloaded
+Date         Tickets  Bytes   Workbook
+2026-10-19   5        57634   F-RFA-004A_2026-10-19.xlsx
+2026-10-20   4        28103   F-RFA-004A_2026-10-20.xlsx
+
+Skipped because Total Ticket was 0
+2026-09-21   tickets 0
+2026-09-22   tickets 0
+2026-09-23   tickets 0
+2026-09-24   tickets 0
+2026-09-25   tickets 0
+2026-09-26   tickets 0
+2026-09-27   tickets 0
+2026-09-28   tickets 0
+2026-09-29   tickets 0
+2026-09-30   tickets 0
+2026-10-01   tickets 0
+2026-10-02   tickets 0
+2026-10-03   tickets 0
+2026-10-04   tickets 0
+2026-10-05   tickets 0
+2026-10-06   tickets 0
+2026-10-07   tickets 0
+2026-10-08   tickets 0
+2026-10-09   tickets 0
+2026-10-10   tickets 0
+2026-10-11   tickets 0
+2026-10-12   tickets 0
+2026-10-13   tickets 0
+2026-10-14   tickets 0
+2026-10-15   tickets 0
+2026-10-16   tickets 0
+2026-10-17   tickets 0
+2026-10-18   tickets 0
+
+---
+Refinery daily log (F/RFA-004(A))
+Status: OK
+Ran at: 2026-10-20 15:52:20 WIB
+Range: 2026-10-19 through 2026-10-20 (2 days)
+Source: https://logsheet-builder.gamasap.com/report/index/b1d7e44d-e90d-447f-9772-ffecba657b1e
+
+The sync finished. Days with tickets were saved and written to production days.
+
+Result
+- Downloaded: 2 days
+- Skipped (no tickets): 0 days
+- Failed: 0 days
+- Production days written: 2
+- Flows: 16
+- Materials: 7
+- Utilities: 12
+- Remarks: 2
+
+A day is downloaded when Total Ticket is greater than 0.
+Each downloaded day replaces that process unit’s production day. This job does not rewrite the local dashboard JSON.
+
+Downloaded
+Date         Tickets  Unit          Workbook
+2026-10-19   5        refinery150   F-RFA-004A_2026-10-19.xlsx
+2026-10-20   4        refinery150   F-RFA-004A_2026-10-20.xlsx
+
+---
+Refinery daily log (F/RFA-004(A))
+Status: OK
+Ran at: 2026-10-20 15:53:52 WIB
+Range: 2026-10-19 through 2026-10-20 (2 days)
+Source: https://logsheet-builder.gamasap.com/report/index/b1d7e44d-e90d-447f-9772-ffecba657b1e
+
+The sync finished. Days with tickets were saved and written to production days.
+
+Result
+- Downloaded: 2 days
+- Skipped (no tickets): 0 days
+- Failed: 0 days
+- Production days written: 2
+- Flows: 16
+- Materials: 7
+- Utilities: 12
+- Remarks: 2
+
+A day is downloaded when Total Ticket is greater than 0.
+Each downloaded day replaces that process unit’s production day. This job does not rewrite the local dashboard JSON.
+
+Downloaded
+Date         Tickets  Unit          Workbook
+2026-10-19   5        refinery150   F-RFA-004A_2026-10-19.xlsx
+2026-10-20   4        refinery150   F-RFA-004A_2026-10-20.xlsx
+
+---
+Refinery daily log (F/RFA-004(A))
+Status: OK
+Ran at: 2026-10-20 15:56:46 WIB
+Range: 2026-10-19 through 2026-10-20 (2 days)
+Source: https://logsheet-builder.gamasap.com/report/index/b1d7e44d-e90d-447f-9772-ffecba657b1e
+
+The sync finished. Days with tickets were saved and written to production days.
+
+Result
+- Downloaded: 2 days
+- Skipped (no tickets): 0 days
+- Failed: 0 days
+- Production days written: 2
+- Flows: 16
+- Materials: 7
+- Utilities: 12
+- Remarks: 2
+
+A day is downloaded when Total Ticket is greater than 0.
+Each downloaded day replaces that process unit’s production day. This job does not rewrite the local dashboard JSON.
+
+Downloaded
+Date         Tickets  Unit          Workbook
+2026-10-19   5        refinery150   F-RFA-004A_2026-10-19.xlsx
+2026-10-20   4        refinery150   F-RFA-004A_2026-10-20.xlsx
+
+---
+Refinery daily log (F/RFA-004(A))
+Status: OK
+Ran at: 2026-10-23 08:59:51 WIB
+Range: 2026-10-21 through 2026-10-23 (3 days)
+Source: https://logsheet-builder.gamasap.com/report/index/b1d7e44d-e90d-447f-9772-ffecba657b1e
+
+The sync finished. Days with tickets were saved and written to production days.
+
+Result
+- Downloaded: 2 days
+- Skipped (no tickets): 1 day
+- Failed: 0 days
+- Production days written: 2
+- Flows: 8
+- Materials: 4
+- Utilities: 4
+- Remarks: 0
+
+A day is downloaded when Total Ticket is greater than 0.
+Each downloaded day replaces that process unit’s production day. This job does not rewrite the local dashboard JSON.
+
+Downloaded
+Date         Tickets  Unit          Workbook
+2026-10-21   1        refinery150   F-RFA-004A_2026-10-21.xlsx
+2026-10-22   2        refinery150   F-RFA-004A_2026-10-22.xlsx
+
+Skipped because Total Ticket was 0
+2026-10-23   tickets 0
+
+---

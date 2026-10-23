@@ -1,0 +1,33 @@
+{
+  "ranAt": "2026-10-23T02:00:06.943Z",
+  "status": "OK",
+  "from": "2026-10-21",
+  "to": "2026-10-23",
+  "inserted": [
+    {
+      "day": "2026-10-21",
+      "tickets": 28,
+      "processUnit": "refinery150",
+      "readings": 24,
+      "source": "download",
+      "database": "match"
+    },
+    {
+      "day": "2026-10-22",
+      "tickets": 24,
+      "processUnit": "refinery150",
+      "readings": 24,
+      "source": "download",
+      "database": "match"
+    }
+  ],
+  "skipped": [
+    {
+      "day": "2026-10-23",
+      "tickets": 0,
+      "reason": "no tickets"
+    }
+  ],
+  "failed": [],
+  "stopped": null
+}

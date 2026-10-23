@@ -1,0 +1,32 @@
+# API server only (remote PostgreSQL / ApsaraDB RDS).
+#
+#   docker compose --env-file Backend/.env -f docker-compose.backend-api-only.yml up -d --build
+#
+# Requires in Backend/.env: DB_HOST, DB_PORT, POSTGRES_*, JWT_SECRET, CORS_ORIGIN
+# See Docs/Guide/STAGING-3-SERVER-DEPLOY-RUNBOOK.md
+#
+# If POSTGRES_PASSWORD contains # or @, set DATABASE_URL explicitly in Backend/.env
+# (URL-encoded password) or use deploy script notes — compose interpolation can break URLs.
+
+services:
+  pid-api:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    container_name: pid-api
+    restart: unless-stopped
+    ports:
+      - "3010:3010"
+    environment:
+      APP_ENV: ${APP_ENV:-testing}
+      NODE_ENV: production
+      PORT: 3010
+      DATABASE_URL: ${DATABASE_URL:-postgresql://${POSTGRES_USER:-pid_user}:${POSTGRES_PASSWORD}@${DB_HOST:?Set DB_HOST in Backend/.env}:${DB_PORT:-5432}/${POSTGRES_DB:-pid_db}}
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in Backend/.env}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-8h}
+      CORS_ORIGIN: ${CORS_ORIGIN:?Set CORS_ORIGIN to the APP origin users use in the browser}
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+      LOGSHEET_BASE: ${LOGSHEET_BASE:-}
+      LOGSHEET_IDENTIFIER: ${LOGSHEET_IDENTIFIER:-}
+      LOGSHEET_PASSWORD: ${LOGSHEET_PASSWORD:-}
+    command: ["npm", "run", "start"]

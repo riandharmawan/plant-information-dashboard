@@ -100,6 +100,8 @@ export interface CommodityDayReading {
   emptySpaceKg: number | null
   loadableKg: number | null
   levelRatio: number | null
+  temperatureC: number | null
+  operationalStatus: string
 }
 
 /** Total quantity of the tanks in one commodity. A day with no sounding stays empty. */
@@ -143,5 +145,7 @@ export function commodityDayReading(tankId: string, points: SoundingPoint[], day
     emptySpaceKg: stock.emptySpaceKg,
     loadableKg: stock.loadableKg,
     levelRatio: stock.levelRatio,
+    temperatureC: point.temperatureC,
+    operationalStatus: point.operationalStatus,
   }
 }

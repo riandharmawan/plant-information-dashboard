@@ -1,0 +1,48 @@
+Storage Tank Sounding Report (F/TNF-003)
+Status: OK
+Ran at: 2026-10-20 13:50:23 WIB
+Range: 2026-10-20 through 2026-10-20 (1 day)
+Source: https://logsheet-builder.gamasap.com/report/index/f80caa03-a6b0-4ad7-b823-459b2f828ce3
+
+The sync finished. Downloaded days were written to the database.
+
+Result
+- Downloaded: 1 day
+- Skipped (no tickets): 0 days
+- Failed: 0 days
+- Database soundings written: 27
+- Unknown tanks left off the sounding table: 0
+
+A day is downloaded when Total Ticket is greater than 0.
+Tank rows are stored in Postgres. This job does not rewrite the local dashboard JSON.
+
+Downloaded
+Date         Tickets  Tanks  Workbook
+2026-10-20   27       27     F-TNF-003_2026-10-20.xlsx
+
+---
+Storage Tank Sounding Report (F/TNF-003)
+Status: OK
+Ran at: 2026-10-23 08:59:42 WIB
+Range: 2026-10-21 through 2026-10-23 (3 days)
+Source: https://logsheet-builder.gamasap.com/report/index/f80caa03-a6b0-4ad7-b823-459b2f828ce3
+
+The sync finished. Downloaded days were written to the database.
+
+Result
+- Downloaded: 3 days
+- Skipped (no tickets): 0 days
+- Failed: 0 days
+- Database soundings written: 81
+- Unknown tanks left off the sounding table: 0
+
+A day is downloaded when Total Ticket is greater than 0.
+Tank rows are stored in Postgres. This job does not rewrite the local dashboard JSON.
+
+Downloaded
+Date         Tickets  Tanks  Workbook
+2026-10-21   27       27     F-TNF-003_2026-10-21.xlsx
+2026-10-22   27       27     F-TNF-003_2026-10-22.xlsx
+2026-10-23   27       27     F-TNF-003_2026-10-23.xlsx
+
+---

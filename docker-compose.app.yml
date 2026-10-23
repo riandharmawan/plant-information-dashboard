@@ -1,0 +1,30 @@
+# App server only (frontend + nginx reverse proxy to backend private IP).
+# Run on the APP ECS. See Docs/Guide/STAGING-3-SERVER-DEPLOY-RUNBOOK.md
+#
+# Prerequisites:
+# - Edit Frontend/nginx.alicloud-app.conf: set upstream server to BACKEND private IP:3010.
+# - Root .env (same directory) must define VITE_DATA_SOURCE, VITE_API_URL, PID_FE_PORT.
+#
+# Example:
+#   PID_FE_PORT=3090
+#   VITE_DATA_SOURCE=api
+#   VITE_API_URL=/api/v1
+#
+# Deploy:
+#   docker compose --env-file .env -f docker-compose.app.yml up -d --build
+
+services:
+  pid-web:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_DATA_SOURCE: ${VITE_DATA_SOURCE:?Set VITE_DATA_SOURCE in .env}
+        VITE_API_URL: ${VITE_API_URL:?Set VITE_API_URL in .env}
+        VITE_GIT_SHA: ${VITE_GIT_SHA:-}
+    ports:
+      - "${PID_FE_PORT:-3090}:80"
+    container_name: pid-web
+    restart: unless-stopped
+    volumes:
+      - ./Frontend/nginx.alicloud-app.conf:/etc/nginx/conf.d/default.conf:ro

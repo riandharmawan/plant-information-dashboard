@@ -25,6 +25,19 @@ export function formatKg(value: number | null): string {
   return value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 }
 
+/** Short kilograms for cards, such as 6.35M or 840K. */
+export function formatKgCompact(value: number | null): string {
+  if (value == null || Number.isNaN(value)) return '—'
+  const size = Math.abs(value)
+  if (size >= 1_000_000) return `${trimZeros((value / 1_000_000).toFixed(2))}M`
+  if (size >= 1_000) return `${trimZeros((value / 1_000).toFixed(1))}K`
+  return trimZeros(value.toFixed(0))
+}
+
+function trimZeros(text: string): string {
+  return text.includes('.') ? text.replace(/\.?0+$/, '') : text
+}
+
 export function formatDay(iso: string | null, locale: 'en' | 'id'): string {
   if (!iso) return '—'
   const [year, month, day] = iso.split('-').map(Number)

@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { CalendarRange, ChevronLeft, ChevronRight } from 'lucide-react'
+import { CalendarDays, CalendarRange, ChevronLeft, ChevronRight } from 'lucide-react'
 import { DATA_DATES } from '../../domain/dailyProduction.ts'
 import { useLocale } from '../../i18n/LocaleContext.tsx'
 
@@ -30,17 +30,37 @@ function weeksOf(year: number, month: number): Date[][] {
   return weeks
 }
 
+function monthBounds(iso: string): { start: string; end: string } {
+  const date = parseIso(iso)
+  const start = new Date(date.getFullYear(), date.getMonth(), 1)
+  const end = new Date(date.getFullYear(), date.getMonth() + 1, 0)
+  return { start: isoOf(start), end: isoOf(end) }
+}
+
+function isWholeMonth(start: string, end: string): boolean {
+  const from = start <= end ? start : end
+  const to = start <= end ? end : start
+  const bounds = monthBounds(from)
+  return bounds.start === from && bounds.end === to
+}
+
 export function DateRangeFilter({
   start,
   end,
   onChange,
   dataDates,
+  monthChoice = false,
+  single = false,
 }: {
   start: string
   end: string
   onChange: (start: string, end: string) => void
   /** Days that show the logsheet dot. Defaults to the daily-production dates. */
   dataDates?: readonly string[]
+  /** Daily production summary: switch between a day calendar and a month. */
+  monthChoice?: boolean
+  /** Pick one day. `onChange` gets the same day twice. */
+  single?: boolean
 }) {
   const { t, locale } = useLocale()
   const marked = useMemo(() => new Set(dataDates ?? DATA_DATES), [dataDates])
@@ -51,6 +71,7 @@ export function DateRangeFilter({
   const [picking, setPicking] = useState(false)
   const [hover, setHover] = useState<string | null>(null)
   const [view, setView] = useState(() => parseIso(start))
+  const [mode, setMode] = useState<'day' | 'month'>(() => (monthChoice && isWholeMonth(start, end) ? 'month' : 'day'))
 
   useLayoutEffect(() => {
     if (!open || !rootRef.current) return
@@ -85,17 +106,33 @@ export function DateRangeFilter({
     month: 'short',
     year: 'numeric',
   })
-  const chip = start === end ? formatDay(start) : `${formatDay(start)} – ${formatDay(end)}`
+  const formatMonth = (iso: string) => parseIso(iso).toLocaleDateString(dateLocale, {
+    month: 'long',
+    year: 'numeric',
+  })
+  const fromDate = start <= end ? start : end
+  const toDate = start <= end ? end : start
+  const chip = mode === 'month'
+    ? formatMonth(fromDate)
+    : single || fromDate === toDate ? formatDay(toDate) : `${formatDay(fromDate)} – ${formatDay(toDate)}`
   const weekday = (index: number) => {
     const monday = new Date(2026, 0, 5 + index)
     return monday.toLocaleDateString(dateLocale, { weekday: 'short' }).replace('.', '').slice(0, 2)
   }
 
-  const from = picking && hover ? (start < hover ? start : hover) : (start < end ? start : end)
-  const to = picking && hover ? (start < hover ? hover : start) : (start < end ? end : start)
+  const from = single ? toDate : picking && hover ? (start < hover ? start : hover) : fromDate
+  const to = single ? toDate : picking && hover ? (start < hover ? hover : start) : toDate
   const weeks = weeksOf(view.getFullYear(), view.getMonth())
+  const selectedMonth = parseIso(fromDate).getMonth()
+  const selectedYear = parseIso(fromDate).getFullYear()
 
   const choose = (iso: string) => {
+    if (single) {
+      onChange(iso, iso)
+      setHover(null)
+      setOpen(false)
+      return
+    }
     if (!picking) {
       onChange(iso, iso)
       setPicking(true)
@@ -108,26 +145,128 @@ export function DateRangeFilter({
     setOpen(false)
   }
 
+  const chooseMonth = (month: number) => {
+    const first = isoOf(new Date(view.getFullYear(), month, 1))
+    const bounds = monthBounds(first)
+    onChange(bounds.start, bounds.end)
+    setOpen(false)
+  }
+
+  const selectMode = (next: 'day' | 'month') => {
+    setPicking(false)
+    setHover(null)
+    setView(parseIso(fromDate))
+    if (next === mode) {
+      setOpen(true)
+      return
+    }
+    setMode(next)
+    setOpen(false)
+    if (next === 'month') {
+      const bounds = monthBounds(fromDate)
+      if (bounds.start !== fromDate || bounds.end !== toDate) onChange(bounds.start, bounds.end)
+      return
+    }
+    if (isWholeMonth(fromDate, toDate)) {
+      const prefix = fromDate.slice(0, 7)
+      const firstMarked = [...marked].filter((iso) => iso.startsWith(prefix)).sort()[0]
+      onChange(firstMarked ?? fromDate, firstMarked ?? fromDate)
+    }
+  }
+
+  const monthHasData = (month: number) => {
+    const prefix = `${view.getFullYear()}-${String(month + 1).padStart(2, '0')}`
+    return [...marked].some((iso) => iso.startsWith(prefix))
+  }
+
   return (
     <div className="range-filter" ref={rootRef}>
+      {monthChoice && (
+        <div className="range-mode" role="group" aria-label={t.period}>
+          <button
+            type="button"
+            className={mode === 'day' ? 'range-mode__btn range-mode__btn--on' : 'range-mode__btn'}
+            aria-pressed={mode === 'day'}
+            onClick={() => selectMode('day')}
+          >
+            {t.periodDaily}
+          </button>
+          <button
+            type="button"
+            className={mode === 'month' ? 'range-mode__btn range-mode__btn--on' : 'range-mode__btn'}
+            aria-pressed={mode === 'month'}
+            onClick={() => selectMode('month')}
+          >
+            {t.periodMonthly}
+          </button>
+        </div>
+      )}
       <button
         type="button"
         className="filter-chip range-filter__trigger"
         aria-expanded={open}
         aria-haspopup="dialog"
-        aria-label={`${t.period} ${chip}`}
+        aria-label={`${single ? t.selectDay : t.period} ${chip}`}
         onClick={() => {
           setOpen((current) => !current)
           setPicking(false)
-          setView(parseIso(start))
+          setView(parseIso(single ? toDate : fromDate))
         }}
       >
-        <CalendarRange size={14} aria-hidden="true" />
-        <span>{t.period}</span>
+        {single ? <CalendarDays size={14} aria-hidden="true" /> : <CalendarRange size={14} aria-hidden="true" />}
+        <span>{single ? t.selectDay : t.period}</span>
         <strong>{chip}</strong>
       </button>
       {open && (
         <div className={alignStart ? 'range-filter__popover range-filter__popover--start' : 'range-filter__popover'} role="dialog" aria-label={t.period}>
+          {mode === 'month' ? (
+            <>
+              <div className="range-cal__head">
+                <button
+                  type="button"
+                  className="range-cal__nav"
+                  aria-label={t.previousPage}
+                  onClick={() => setView(new Date(view.getFullYear() - 1, view.getMonth(), 1))}
+                >
+                  <ChevronLeft size={16} />
+                </button>
+                <strong>{view.getFullYear()}</strong>
+                <button
+                  type="button"
+                  className="range-cal__nav"
+                  aria-label={t.nextPage}
+                  onClick={() => setView(new Date(view.getFullYear() + 1, view.getMonth(), 1))}
+                >
+                  <ChevronRight size={16} />
+                </button>
+              </div>
+              <div className="range-cal__months">
+                {Array.from({ length: 12 }, (_, month) => {
+                  const label = new Date(view.getFullYear(), month, 1).toLocaleDateString(dateLocale, { month: 'short' })
+                  const selected = view.getFullYear() === selectedYear && month === selectedMonth && isWholeMonth(fromDate, toDate)
+                  const hasData = monthHasData(month)
+                  return (
+                    <button
+                      key={month}
+                      type="button"
+                      className={selected ? 'range-cal__month range-cal__month--on' : 'range-cal__month'}
+                      aria-pressed={selected}
+                      aria-label={hasData ? `${formatMonth(isoOf(new Date(view.getFullYear(), month, 1)))}. ${t.dataDay}` : formatMonth(isoOf(new Date(view.getFullYear(), month, 1)))}
+                      onClick={() => chooseMonth(month)}
+                    >
+                      {label}
+                      {hasData && <span className="range-cal__mark" />}
+                    </button>
+                  )
+                })}
+              </div>
+              <p className="range-cal__legend">
+                <span className="range-cal__dot" />
+                {t.dataDay}
+              </p>
+            </>
+          ) : (
+            <>
           <div className="range-cal__head">
             <button
               type="button"
@@ -196,6 +335,8 @@ export function DateRangeFilter({
             <span className="range-cal__dot" />
             {t.dataDay}
           </p>
+            </>
+          )}
         </div>
       )}
     </div>

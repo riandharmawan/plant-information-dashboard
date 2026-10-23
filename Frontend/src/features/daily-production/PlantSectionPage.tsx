@@ -1,6 +1,6 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, type ReactNode } from 'react'
+import { useProductionReport } from '../../data/ProductionContext.tsx'
 import {
-  PRODUCTION_DAYS,
   coproductYield,
   lossOf,
   lossYield,
@@ -9,10 +9,12 @@ import {
   ratio,
   type PlantDay,
   type PlantKey,
+  type ProductionDay,
   type Qty,
 } from '../../domain/dailyProduction.ts'
 import { useLocale } from '../../i18n/LocaleContext.tsx'
 import { DateRangeFilter } from './DateRangeFilter.tsx'
+import { RefineryQualityLedger } from './RefineryQualityLedger.tsx'
 import { PlantTabs, useProductionRange } from './productionNav.tsx'
 
 type SortDir = 'asc' | 'desc'
@@ -68,8 +70,8 @@ function yieldOn(key: PlantKey): boolean {
   return key === 'refinery500' || key === 'refinery150' || key === 'separator'
 }
 
-function plantOn(id: string, key: PlantKey): PlantDay {
-  const hit = PRODUCTION_DAYS.find((day) => day.id === id)?.[key]
+function plantOn(days: readonly ProductionDay[], id: string, key: PlantKey): PlantDay {
+  const hit = days.find((day) => day.id === id)?.[key]
   const applicable = yieldOn(key)
   if (!hit) return blankPlant(applicable)
   return { ...hit, yieldApplicable: applicable }
@@ -209,6 +211,7 @@ export function Refinery150Page() {
         { label: `${t.pfad} ${t.yieldPct}`, get: coproductYield, tone: 'yield', pct: true },
         { label: t.loss, get: lossOf },
       ]}
+      extra={<RefineryQualityLedger />}
       tables={[
         {
           title: t.refinery150,
@@ -351,6 +354,7 @@ const SUPPORTING = [
 export function SupportingMaterialsPage() {
   const { t } = useLocale()
   const { start, end, setRange } = useProductionRange()
+  const { dates } = useProductionReport()
   const sort = useColumnSort()
   const rows = sortRows(
     SUPPORTING.map((name) => ({ name })),
@@ -363,7 +367,7 @@ export function SupportingMaterialsPage() {
     <div className="page page--prod">
       <header className="page-title-row">
         <h1 className="page-title">{t.supportingMaterials}</h1>
-        <DateRangeFilter start={start} end={end} onChange={setRange} />
+        <DateRangeFilter start={start} end={end} dataDates={dates} onChange={setRange} />
       </header>
       <PlantTabs start={start} end={end} />
       <section className="prod-panel">
@@ -404,16 +408,19 @@ function PlantSection({
   plantKey,
   kpis,
   tables,
+  extra,
 }: {
   title: string
   plantKey: PlantKey
   kpis: KpiSpec[]
   tables: TableSpec[]
+  extra?: ReactNode
 }) {
   const { t, locale } = useLocale()
   const { start, end, setRange } = useProductionRange()
+  const { days, dates } = useProductionReport()
   const numberLocale = locale === 'id' ? 'id-ID' : 'en-US'
-  const total = useMemo(() => plantOnRange(start, end, plantKey), [start, end, plantKey])
+  const total = useMemo(() => plantOnRange(days, start, end, plantKey), [days, start, end, plantKey])
 
   const qty = (value: Qty, digits = 3) => {
     if (value == null) return '-'
@@ -436,7 +443,7 @@ function PlantSection({
     <div className="page page--prod">
       <header className="page-title-row">
         <h1 className="page-title">{title}</h1>
-        <DateRangeFilter start={start} end={end} onChange={setRange} />
+        <DateRangeFilter start={start} end={end} dataDates={dates} onChange={setRange} />
       </header>
       <PlantTabs start={start} end={end} />
       <section className="prod-kpis" aria-label={title}>
@@ -459,6 +466,7 @@ function PlantSection({
           title={table.title}
           plantKey={plantKey}
           columns={table.columns}
+          days={days}
           start={start}
           end={end}
           dateLabel={t.colDate}
@@ -468,12 +476,13 @@ function PlantSection({
           pct={pct}
         />
       ))}
+      {extra}
     </div>
   )
 }
 
-function plantOnRange(start: string, end: string, key: PlantKey): PlantDay {
-  const summed = productionForRange(start, end)[key]
+function plantOnRange(days: readonly ProductionDay[], start: string, end: string, key: PlantKey): PlantDay {
+  const summed = productionForRange(start, end, days)[key]
   return { ...summed, yieldApplicable: yieldOn(key) }
 }
 
@@ -481,6 +490,7 @@ function DayTable({
   title,
   plantKey,
   columns,
+  days,
   start,
   end,
   dateLabel,
@@ -492,6 +502,7 @@ function DayTable({
   title: string
   plantKey: PlantKey
   columns: Col[]
+  days: readonly ProductionDay[]
   start: string
   end: string
   dateLabel: string
@@ -503,7 +514,7 @@ function DayTable({
   const sort = useColumnSort()
   const dates = datesBetween(start, end)
   const rows = sortRows(
-    dates.map((id) => ({ id, plant: plantOn(id, plantKey) })),
+    dates.map((id) => ({ id, plant: plantOn(days, id, plantKey) })),
     sort.key,
     sort.dir,
     (row, column) => {
@@ -511,7 +522,7 @@ function DayTable({
       return columns.find((col) => col.key === column)?.get(row.plant) ?? null
     },
   )
-  const total = dates.length > 1 ? plantOnRange(start, end, plantKey) : null
+  const total = dates.length > 1 ? plantOnRange(days, start, end, plantKey) : null
 
   return (
     <section className="prod-panel">

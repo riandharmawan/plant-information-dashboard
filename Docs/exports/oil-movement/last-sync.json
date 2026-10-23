@@ -1,0 +1,34 @@
+{
+  "ranAt": "2026-10-23 08:59:46 WIB",
+  "from": "2026-10-21",
+  "to": "2026-10-23",
+  "downloaded": [
+    {
+      "day": "2026-10-22",
+      "tickets": 1,
+      "bytes": 25528,
+      "file": "D:\\Cursor\\Plant Information Dashboard\\Docs\\exports\\oil-movement\\F-TNF-004_2026-10-22.xlsx",
+      "visits": 1
+    },
+    {
+      "day": "2026-10-23",
+      "tickets": 4,
+      "bytes": 55288,
+      "file": "D:\\Cursor\\Plant Information Dashboard\\Docs\\exports\\oil-movement\\F-TNF-004_2026-10-23.xlsx",
+      "visits": 4
+    }
+  ],
+  "skipped": [
+    {
+      "day": "2026-10-21",
+      "tickets": 0
+    }
+  ],
+  "failed": [],
+  "ingested": {
+    "downloaded": 2,
+    "skipped": 1,
+    "visits": 5
+  },
+  "status": "OK"
+}

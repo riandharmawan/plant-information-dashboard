@@ -4,7 +4,7 @@
 **Date:** 2026-10-20
 **Status:** Aligned with PID-FSD-001. Behaviour is defined there. This document is the implementation baseline. `Docs/DATABASE-DESIGN.md` records these decisions before migration `001`. It does not reopen them.
 **Audience:** Engineering
-**Companion:** `Docs/FSD-Plant-Information-Dashboard.md` (PID-FSD-001)
+**Companion:** `Docs/FSD/FSD-Plant-Information-Dashboard.md` (PID-FSD-001). User and role screens: `Docs/TSD/TSD-Admin-Users-and-Roles.md`.
 **Reference system:** Jetty Planning System (local), for environment layout, Docker, and Alicloud only. This product does not share that database, those ports, or that API.
 
 ---
@@ -518,7 +518,7 @@ supporting_materials (
   unique (site_id, code)
 )
 
-tanks (id, plant_id → plants, code, capacity, capacity_unit,
+tanks (id, plant_id → plants, code,
        unique (plant_id, code))
 ```
 
@@ -625,16 +625,11 @@ Every fact row includes `site_id`, `plant_id` where the form is plant-scoped, an
 soundings (
   id, site_id, plant_id, tank_id → tanks, submission_id,
   recorded_on date, round_index,
-  product_name, level_m, temperature_c, operational_status,
+  product_name, commodity_id null, level_m, temperature_c, operational_status,
   unique (tank_id, recorded_on, round_index)
 )
 
-lab_results (
-  id, site_id, plant_id, tank_id → tanks, submission_id,
-  analysis_date, snapshot_on, revision,
-  product_name, temperature_c, parameters jsonb, remark,
-  unique (tank_id, snapshot_on, revision)
-)
+The sounding, storage-certificate, and refinery-quality projections are specified in `Docs/DATABASE-DESIGN.md` under “Three logsheet projections”. `storage_certificates` is the F/QCO-001 header. Its tests are `certificate_parameters`, not `lab_results`. F/QCO-002 is `refinery_quality_days` and its children. `lab_results` remains in migration 001 and is not written for these forms.
 
 production_measures (
   id, site_id, plant_id, process_unit_id → process_units, submission_id,
@@ -659,12 +654,13 @@ checklist_results (
 
 Gate samples, vessel tickets, truck samples, and movements follow the same rule: foreign keys to site, plant, and submission. A day total for a process unit is the sum of its shift rows. A duplicated flowmeter span that repeats the same start and end is counted once.
 
-Mass (`quantity`, empty space, loadable stock, fill ratio) is computed at read time from the tank profile and the density table. Level alone is not a mass. Sounding mass is shown to two decimal places of kilograms. Yield is shown as a percentage to one decimal place. A quantity that cannot be computed is null, never zero.
+Mass (`quantity`, empty space, loadable stock, fill ratio) is computed at read time from the tank profile and the density table. Capacity and bottom stock share `capacity_unit` and are converted to kilograms first: `kg` is unchanged, and a tonne is 1,000 kg. A unit the converter does not know leaves those figures null. Level alone is not a mass. Sounding mass is shown to two decimal places of kilograms. Yield is shown as a percentage to one decimal place. A quantity that cannot be computed is null, never zero.
 
 Calibration hangs off `tanks.id`, not off a tank code:
 
 ```text
-tank_profiles (tank_id primary key → tanks, capacity_kg, bottom_stock_kg, …, origin)
+tank_profiles (tank_id primary key → tanks, capacity, capacity_unit default 'kg',
+               bottom_stock, …, origin)
 tank_volume_points (tank_id, height_mm, volume_litre, primary key (tank_id, height_mm))
 tank_ring_bands (id, tank_id, low_mm, high_mm, offset_mm)
 tank_ring_volumes (tank_id, ring_index, volume_litre, primary key (tank_id, ring_index))

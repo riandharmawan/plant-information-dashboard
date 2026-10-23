@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { NavLink, useSearchParams } from 'react-router-dom'
-import { QC_DATES } from '../../domain/qc.ts'
+import { qcDates } from '../../domain/qc.ts'
+import { useQcFile } from '../../data/QcContext.tsx'
 import { useLocale } from '../../i18n/LocaleContext.tsx'
 import type { Messages } from '../../i18n/messages.ts'
 import { recentWindow } from '../usePeriodRange.ts'
@@ -12,8 +13,10 @@ const ISO_DATE = /^(\d{4})-(\d{2})-(\d{2})$/
 const TABS: Array<{ path: string; label: keyof Messages; end?: boolean }> = [
   { path: '/qc', label: 'qcTitle', end: true },
   { path: '/qc/storage', label: 'qcStorage' },
+  { path: '/qc/refinery', label: 'refineryQuality' },
   { path: '/qc/vessel', label: 'qcVessel' },
   { path: '/qc/truck', label: 'qcTruck' },
+  { path: '/qc/movements', label: 'qcMovements' },
 ]
 
 function isIsoDate(value: string | null): value is string {
@@ -35,8 +38,9 @@ export function qcSearch(start: string, end: string): string {
 
 export function useQcRange() {
   const [params, setParams] = useSearchParams()
-  const boundsStart = QC_DATES[0] ?? '2026-08-18'
-  const boundsEnd = QC_DATES[QC_DATES.length - 1] ?? boundsStart
+  const dates = qcDates(useQcFile())
+  const boundsStart = dates[0] ?? '2026-08-18'
+  const boundsEnd = dates[dates.length - 1] ?? boundsStart
   const window = recentWindow({ start: boundsStart, end: boundsEnd }, QC_RECENT_DAYS)
   const from = params.get('from')
   const to = params.get('to')
@@ -110,16 +114,19 @@ export function SortHeader({
   column,
   sort,
   align = 'left',
+  className,
 }: {
   label: string
   column: string
   sort: { key: string | null; dir: SortDir; toggle: (column: string) => void }
   align?: 'left' | 'right'
+  className?: string
 }) {
   const active = sort.key === column
   const mark = active ? (sort.dir === 'asc' ? '↑' : '↓') : '↕'
+  const names = [align === 'right' ? 'num' : '', className ?? ''].filter(Boolean).join(' ')
   return (
-    <th className={align === 'right' ? 'num' : undefined} aria-sort={active ? (sort.dir === 'asc' ? 'ascending' : 'descending') : 'none'}>
+    <th className={names || undefined} aria-sort={active ? (sort.dir === 'asc' ? 'ascending' : 'descending') : 'none'}>
       <button type="button" className="prod-sort" onClick={() => sort.toggle(column)}>
         {label}
         <span className={active ? 'prod-sort__mark prod-sort__mark--on' : 'prod-sort__mark'}>{mark}</span>

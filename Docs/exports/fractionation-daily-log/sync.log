@@ -1,0 +1,74 @@
+Fractionation daily log (F/RFA-004(B))
+Status: OK
+Ran at: 2026-10-20 15:30:12 WIB
+Range: 2026-09-21 through 2026-10-20 (30 days)
+Source: https://logsheet-builder.gamasap.com/report/index/476fba4b-8ee8-4e3b-8fb1-627da45a47d3
+
+The sync finished. No sheet in this range had tickets, so nothing was saved.
+
+Result
+- Downloaded: 0 days
+- Skipped (no tickets): 30 days
+- Failed: 0 days
+
+A day is downloaded when Total Ticket is greater than 0.
+This job saves the workbook only. It does not insert rows into the database.
+
+Skipped because Total Ticket was 0
+2026-09-21   tickets 0
+2026-09-22   tickets 0
+2026-09-23   tickets 0
+2026-09-24   tickets 0
+2026-09-25   tickets 0
+2026-09-26   tickets 0
+2026-09-27   tickets 0
+2026-09-28   tickets 0
+2026-09-29   tickets 0
+2026-09-30   tickets 0
+2026-10-01   tickets 0
+2026-10-02   tickets 0
+2026-10-03   tickets 0
+2026-10-04   tickets 0
+2026-10-05   tickets 0
+2026-10-06   tickets 0
+2026-10-07   tickets 0
+2026-10-08   tickets 0
+2026-10-09   tickets 0
+2026-10-10   tickets 0
+2026-10-11   tickets 0
+2026-10-12   tickets 0
+2026-10-13   tickets 0
+2026-10-14   tickets 0
+2026-10-15   tickets 0
+2026-10-16   tickets 0
+2026-10-17   tickets 0
+2026-10-18   tickets 0
+2026-10-19   tickets 0
+2026-10-20   tickets 0
+
+---
+Fractionation daily log (F/RFA-004(B))
+Status: OK
+Ran at: 2026-10-23 08:59:53 WIB
+Range: 2026-10-23 through 2026-10-23 (1 day)
+Source: https://logsheet-builder.gamasap.com/report/index/476fba4b-8ee8-4e3b-8fb1-627da45a47d3
+
+The sync finished. No sheet in this range had tickets, so nothing was saved.
+
+Result
+- Downloaded: 0 days
+- Skipped (no tickets): 1 day
+- Failed: 0 days
+- Production days written: 0
+- Flows: 0
+- Materials: 0
+- Utilities: 0
+- Remarks: 0
+
+A day is downloaded when Total Ticket is greater than 0.
+Each downloaded day replaces that process unit’s production day. This job does not rewrite the local dashboard JSON.
+
+Skipped because Total Ticket was 0
+2026-10-23   tickets 0
+
+---

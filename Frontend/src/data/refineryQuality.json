@@ -1,0 +1,4458 @@
+{
+  "days": [
+    {
+      "productionDate": "2026-10-14",
+      "reportDate": "2026-10-15",
+      "processUnit": "refinery150",
+      "processUnitName": "Refinery 150",
+      "declaredOils": "CPO",
+      "readings": [
+        {
+          "rowIndex": 0,
+          "time": "08:00",
+          "fromTank": "T.11",
+          "flowRate": 5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 4.258,
+                "lab.moisture": 0.358,
+                "lab.dobi": 2.793,
+                "lab.iv": 52.188,
+                "lab.pv": 2.899,
+                "lab.av": 4.428,
+                "lab.totox": 10.226,
+                "lab.color_r": 22,
+                "lab.color_y": 22
+              }
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.047,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 1,
+          "time": "09:00",
+          "fromTank": "T.11",
+          "flowRate": 5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.057,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 2,
+          "time": "10:00",
+          "fromTank": "T.11",
+          "flowRate": 5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.05,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 3,
+          "time": "11:00",
+          "fromTank": "T.11",
+          "flowRate": 5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": {
+              "commodity": null,
+              "destination": null,
+              "remark": null,
+              "parameters": {
+                "lab.color_r": 18.6,
+                "lab.color_y": 20,
+                "lab.break_test": "Clear"
+              }
+            },
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.052,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 4,
+          "time": "12:00",
+          "fromTank": "T.11",
+          "flowRate": 4.5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.049,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 5,
+          "time": "13:00",
+          "fromTank": "T.11",
+          "flowRate": 4.5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.055,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 6,
+          "time": "14:00",
+          "fromTank": "T.11",
+          "flowRate": 4.5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.042,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 7,
+          "time": "15:00",
+          "fromTank": "T.11",
+          "flowRate": 4.5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.045,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 8,
+          "time": "16:00",
+          "fromTank": "T.11",
+          "flowRate": 5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.044,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 9,
+          "time": "17:00",
+          "fromTank": null,
+          "flowRate": null,
+          "remark": null,
+          "streams": {
+            "raw_material": null,
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": null,
+              "destination": null,
+              "remark": "Trouble valve BE",
+              "parameters": {}
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 10,
+          "time": "20:00",
+          "fromTank": null,
+          "flowRate": null,
+          "remark": "trouble valve BE",
+          "streams": {
+            "raw_material": null,
+            "bleaching_oil": null,
+            "finished_good": null,
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 11,
+          "time": "20:00",
+          "fromTank": null,
+          "flowRate": null,
+          "remark": "trouble valve BE",
+          "streams": {
+            "raw_material": null,
+            "bleaching_oil": null,
+            "finished_good": null,
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 12,
+          "time": "21:30",
+          "fromTank": "T.11",
+          "flowRate": 4.5,
+          "remark": "start feed CPO T11, flowrate akan dinaikkan perlahan jika quality stabil",
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.063,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 13,
+          "time": "22:00",
+          "fromTank": "T.11",
+          "flowRate": 4.5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.057,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 14,
+          "time": "23:00",
+          "fromTank": "T.11",
+          "flowRate": 4.5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": {
+              "commodity": null,
+              "destination": null,
+              "remark": null,
+              "parameters": {
+                "lab.color_r": 18.6,
+                "lab.color_y": 20,
+                "lab.break_test": "clear"
+              }
+            },
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.052,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 15,
+          "time": "00:00",
+          "fromTank": "T.11",
+          "flowRate": 4.5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.05,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 16,
+          "time": "01:00",
+          "fromTank": "T.11",
+          "flowRate": 4.5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.048,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 17,
+          "time": "02:00",
+          "fromTank": "T.11",
+          "flowRate": 4.5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.049,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 18,
+          "time": "03:00",
+          "fromTank": "T.11",
+          "flowRate": 4.5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.05,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 19,
+          "time": "04:00",
+          "fromTank": "T.11",
+          "flowRate": 4.5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.047,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 20,
+          "time": "05:00",
+          "fromTank": "T.11",
+          "flowRate": 4.5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": {
+              "commodity": null,
+              "destination": null,
+              "remark": null,
+              "parameters": {
+                "lab.color_r": 18.8,
+                "lab.color_y": 20,
+                "lab.break_test": "clear"
+              }
+            },
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "CR.401",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.047,
+                "lab.color_r": 2.2,
+                "lab.color_y": 22
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 21,
+          "time": "06:00",
+          "fromTank": "T.11",
+          "flowRate": 4.5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "CR.401",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.05,
+                "lab.color_r": 2.2,
+                "lab.color_y": 22
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 22,
+          "time": "07:00",
+          "fromTank": "T.11",
+          "flowRate": 4.5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "CR.401",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.052,
+                "lab.moisture": 0.037,
+                "lab.iv": 52.075,
+                "lab.pv": 0.18,
+                "lab.color_r": 2.2,
+                "lab.color_y": 22
+              }
+            },
+            "by_product": {
+              "commodity": null,
+              "destination": "T.05",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 87.296,
+                "lab.moisture": 0.215
+              }
+            },
+            "spent_earth": {
+              "commodity": null,
+              "destination": null,
+              "remark": null,
+              "parameters": {
+                "lab.moisture": 2.189,
+                "lab.oc": 19.852
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "productionDate": "2026-10-15",
+      "reportDate": "2026-10-16",
+      "processUnit": "refinery150",
+      "processUnitName": "Refinery 150",
+      "declaredOils": "CPO, CPKO",
+      "readings": [
+        {
+          "rowIndex": 0,
+          "time": "08:00",
+          "fromTank": "T.12",
+          "flowRate": 4.5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "CR.401",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.051,
+                "lab.color_r": 2.2,
+                "lab.color_y": 22
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 1,
+          "time": "09:00",
+          "fromTank": "T.12",
+          "flowRate": 4.5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "CR.401",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.049,
+                "lab.color_r": 2.2,
+                "lab.color_y": 22
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 2,
+          "time": "10:00",
+          "fromTank": "T.12",
+          "flowRate": 4.5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "CR.401",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.045,
+                "lab.color_r": 2.2,
+                "lab.color_y": 22
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 3,
+          "time": "11:00",
+          "fromTank": "T.12",
+          "flowRate": 4.5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 3.876,
+                "lab.moisture": 0.413,
+                "lab.dobi": 2.92,
+                "lab.iv": 52.134,
+                "lab.pv": 2.756,
+                "lab.av": 4.412,
+                "lab.totox": 9.924,
+                "lab.color_r": 22,
+                "lab.color_y": 22
+              }
+            },
+            "bleaching_oil": {
+              "commodity": null,
+              "destination": null,
+              "remark": null,
+              "parameters": {
+                "lab.color_r": 18.7,
+                "lab.color_y": 20,
+                "lab.break_test": "clear"
+              }
+            },
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "CR.401",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.044,
+                "lab.color_r": 2.1,
+                "lab.color_y": 21
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 4,
+          "time": "12:00",
+          "fromTank": "T.12",
+          "flowRate": 4.5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "CR.402",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.043,
+                "lab.color_r": 2.1,
+                "lab.color_y": 21
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 5,
+          "time": "13:00",
+          "fromTank": "T.12",
+          "flowRate": 4.5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "CR.402",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.047,
+                "lab.color_r": 2.1,
+                "lab.color_y": 21
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 6,
+          "time": "14:00",
+          "fromTank": "T.12",
+          "flowRate": 4.5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "CR.402",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.049,
+                "lab.color_r": 2.1,
+                "lab.color_y": 21
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 7,
+          "time": "15:00",
+          "fromTank": "T.12",
+          "flowRate": 4.5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.23",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.048,
+                "lab.color_r": 2.1,
+                "lab.color_y": 21
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 8,
+          "time": "16:00",
+          "fromTank": "T.12",
+          "flowRate": 4.5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.045,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 9,
+          "time": "17:00",
+          "fromTank": "T.12",
+          "flowRate": 4.5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.046,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 10,
+          "time": "18:00",
+          "fromTank": "T.12",
+          "flowRate": 4.5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.048,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 11,
+          "time": "19:00",
+          "fromTank": "T.12",
+          "flowRate": 4.5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.049,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 12,
+          "time": "20:00",
+          "fromTank": "T.12",
+          "flowRate": 5.3,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.045,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 13,
+          "time": "21:00",
+          "fromTank": "T.12",
+          "flowRate": 5.3,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.047,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 14,
+          "time": "22:00",
+          "fromTank": "T.12",
+          "flowRate": 5.3,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.045,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 15,
+          "time": "23:00",
+          "fromTank": "T.12",
+          "flowRate": 5.8,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": {
+              "commodity": null,
+              "destination": null,
+              "remark": null,
+              "parameters": {
+                "lab.color_r": 18.7,
+                "lab.color_y": 20,
+                "lab.break_test": "clear"
+              }
+            },
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.046,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 16,
+          "time": "00:00",
+          "fromTank": "T.12",
+          "flowRate": 5.8,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.045,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 17,
+          "time": "01:00",
+          "fromTank": "T.12",
+          "flowRate": 5.8,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.047,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 18,
+          "time": "02:00",
+          "fromTank": "T.12",
+          "flowRate": 5.8,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.049,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 19,
+          "time": "03:00",
+          "fromTank": "T.12",
+          "flowRate": 5.8,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.048,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 20,
+          "time": "04:00",
+          "fromTank": "T.12",
+          "flowRate": 5.8,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": {
+              "commodity": null,
+              "destination": null,
+              "remark": null,
+              "parameters": {
+                "lab.color_r": 18.7,
+                "lab.color_y": 20,
+                "lab.break_test": "clear"
+              }
+            },
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.049,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 21,
+          "time": "05:00",
+          "fromTank": "T.12",
+          "flowRate": 5.8,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.05,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 22,
+          "time": "06:00",
+          "fromTank": "T.12",
+          "flowRate": 5.8,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.046,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 23,
+          "time": "07:00",
+          "fromTank": "T.12",
+          "flowRate": 5.8,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.048,
+                "lab.moisture": 0.038,
+                "lab.iv": 52.125,
+                "lab.pv": 0.19,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": {
+              "commodity": "PFAD",
+              "destination": "T.05",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 88.145,
+                "lab.moisture": 0.175
+              }
+            },
+            "spent_earth": {
+              "commodity": null,
+              "destination": null,
+              "remark": null,
+              "parameters": {
+                "lab.moisture": 2.015,
+                "lab.oc": 20.105
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "productionDate": "2026-10-16",
+      "reportDate": "2026-10-17",
+      "processUnit": "refinery150",
+      "processUnitName": "Refinery 150",
+      "declaredOils": "CPO, RPS/RBDPS",
+      "readings": [
+        {
+          "rowIndex": 0,
+          "time": "08:00",
+          "fromTank": "T.12",
+          "flowRate": 5.8,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.049,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 1,
+          "time": "09:00",
+          "fromTank": null,
+          "flowRate": null,
+          "remark": "Stop feed cpo dan prepare feed rps T.15",
+          "streams": {
+            "raw_material": null,
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.047,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 2,
+          "time": "09:00",
+          "fromTank": null,
+          "flowRate": null,
+          "remark": "Stop feed cpo dan prepare feed rps T.15",
+          "streams": {
+            "raw_material": null,
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.047,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 3,
+          "time": "10:00",
+          "fromTank": "T.15",
+          "flowRate": 5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "RPS/RBDPS",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.048,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 4,
+          "time": "11:00",
+          "fromTank": "T.15",
+          "flowRate": 5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "RPS/RBDPS",
+              "destination": null,
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.088,
+                "lab.moisture": 0.039,
+                "lab.iv": 34.489,
+                "lab.pv": 4.687,
+                "lab.color_r": 3.9,
+                "lab.color_y": 39
+              }
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.049,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 5,
+          "time": "12:00",
+          "fromTank": "T.15",
+          "flowRate": 5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "RPS/RBDPS",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.045,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 6,
+          "time": "13:00",
+          "fromTank": "T.15",
+          "flowRate": 5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "RPS/RBDPS",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.048,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 7,
+          "time": "14:00",
+          "fromTank": "T.15",
+          "flowRate": 5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "RPS/RBDPS",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": {
+              "commodity": null,
+              "destination": null,
+              "remark": null,
+              "parameters": {
+                "lab.color_r": 3.4,
+                "lab.color_y": 34,
+                "lab.break_test": "clear"
+              }
+            },
+            "finished_good": {
+              "commodity": "RRPS/RRBDPS",
+              "destination": "T.15",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.043,
+                "lab.iv": 46.918,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 8,
+          "time": "15:00",
+          "fromTank": "T.15",
+          "flowRate": 5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "RPS/RBDPS",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RRPS/RRBDPS",
+              "destination": "T.15",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.042,
+                "lab.iv": 46.918,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 9,
+          "time": "16:00",
+          "fromTank": "T.15",
+          "flowRate": 5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "RPS/RBDPS",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RRPS/RRBDPS",
+              "destination": "RFI T.08",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.045,
+                "lab.color_r": 1.9,
+                "lab.color_y": 19
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 10,
+          "time": "17:00",
+          "fromTank": "T.15",
+          "flowRate": 5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "RPS/RBDPS",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RRPS/RRBDPS",
+              "destination": "RFI T.08",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.043,
+                "lab.color_r": 1.8,
+                "lab.color_y": 18
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 11,
+          "time": "18:00",
+          "fromTank": "T.15",
+          "flowRate": 5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "RPS/RBDPS",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RRPS/RRBDPS",
+              "destination": "RFI T.08",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.047,
+                "lab.color_r": 1.8,
+                "lab.color_y": 18
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 12,
+          "time": "19:00",
+          "fromTank": "T.15",
+          "flowRate": 6,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "RPS/RBDPS",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RRPS/RRBDPS",
+              "destination": "RFI T.08",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.045,
+                "lab.color_r": 1.8,
+                "lab.color_y": 18
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 13,
+          "time": "20:00",
+          "fromTank": "T.15",
+          "flowRate": 6,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "RPS/RBDPS",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RRPS/RRBDPS",
+              "destination": "RFI T.08",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.043,
+                "lab.color_r": 1.8,
+                "lab.color_y": 18
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 14,
+          "time": "21:00",
+          "fromTank": "T.15",
+          "flowRate": 6,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "RPS/RBDPS",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": {
+              "commodity": null,
+              "destination": null,
+              "remark": null,
+              "parameters": {
+                "lab.color_r": 2.8,
+                "lab.color_y": 28,
+                "lab.break_test": "clear"
+              }
+            },
+            "finished_good": {
+              "commodity": "RRPS/RRBDPS",
+              "destination": "RFI T.08",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.044,
+                "lab.color_r": 1.8,
+                "lab.color_y": 18
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 15,
+          "time": "22:00",
+          "fromTank": "T.15",
+          "flowRate": 6,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "RPS/RBDPS",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RRPS/RRBDPS",
+              "destination": "RFI T.08",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.046,
+                "lab.color_r": 1.8,
+                "lab.color_y": 18
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 16,
+          "time": "23:00",
+          "fromTank": "T.15",
+          "flowRate": 6,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "RPS/RBDPS",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RRPS/RRBDPS",
+              "destination": "RFI T.08",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.049,
+                "lab.color_r": 1.8,
+                "lab.color_y": 18
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 17,
+          "time": "00:00",
+          "fromTank": "T.15",
+          "flowRate": 6,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "RPS/RBDPS",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RRPS/RRBDPS",
+              "destination": "RFI T.08",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.047,
+                "lab.color_r": 1.8,
+                "lab.color_y": 18
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 18,
+          "time": "01:00",
+          "fromTank": "T.15",
+          "flowRate": 6,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "RPS/RBDPS",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RRPS/RRBDPS",
+              "destination": "RFI T.08",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.043,
+                "lab.color_r": 1.8,
+                "lab.color_y": 18
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 19,
+          "time": "02:00",
+          "fromTank": "T.15",
+          "flowRate": 6,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "RPS/RBDPS",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RRPS/RRBDPS",
+              "destination": "RFI T.08",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.041,
+                "lab.color_r": 1.8,
+                "lab.color_y": 18
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 20,
+          "time": "03:00",
+          "fromTank": "T.15",
+          "flowRate": 6,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "RPS/RBDPS",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RRPS/RRBDPS",
+              "destination": "RFI T.08",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.046,
+                "lab.color_r": 1.8,
+                "lab.color_y": 18
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 21,
+          "time": "04:00",
+          "fromTank": "T.15",
+          "flowRate": 6,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "RPS/RBDPS",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": {
+              "commodity": null,
+              "destination": null,
+              "remark": null,
+              "parameters": {
+                "lab.color_r": 2.7,
+                "lab.color_y": 27,
+                "lab.break_test": "Clear"
+              }
+            },
+            "finished_good": {
+              "commodity": "RRPS/RRBDPS",
+              "destination": "RFI T.08",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.044,
+                "lab.color_r": 1.8,
+                "lab.color_y": 18
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 22,
+          "time": "05:00",
+          "fromTank": "T.15",
+          "flowRate": 6,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "RPS/RBDPS",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RRPS/RRBDPS",
+              "destination": "RFI T.08",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.043,
+                "lab.color_r": 1.8,
+                "lab.color_y": 18
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 23,
+          "time": "06:00",
+          "fromTank": "T.15",
+          "flowRate": 6,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "RPS/RBDPS",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RRPS/RRBDPS",
+              "destination": "RFI T.08",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.046,
+                "lab.color_r": 1.8,
+                "lab.color_y": 18
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 24,
+          "time": "07:00",
+          "fromTank": "T.15",
+          "flowRate": 6,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "RPS/RBDPS",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RRPS/RRBDPS",
+              "destination": "RFI T.08",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.046,
+                "lab.moisture": 0.035,
+                "lab.iv": 34.516,
+                "lab.pv": 0.199,
+                "lab.color_r": 1.8,
+                "lab.color_y": 18
+              }
+            },
+            "by_product": {
+              "commodity": "PFAD",
+              "destination": "T.05",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 86.152,
+                "lab.moisture": 0.173
+              }
+            },
+            "spent_earth": {
+              "commodity": null,
+              "destination": null,
+              "remark": null,
+              "parameters": {
+                "lab.moisture": 1.907,
+                "lab.oc": 19.115
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "productionDate": "2026-10-17",
+      "reportDate": "2026-10-18",
+      "processUnit": "refinery150",
+      "processUnitName": "Refinery 150",
+      "declaredOils": "RPS/RBDPS, CPO",
+      "readings": [
+        {
+          "rowIndex": 0,
+          "time": "08:00",
+          "fromTank": "T.15",
+          "flowRate": 6,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "RPS/RBDPS",
+              "destination": null,
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.089,
+                "lab.moisture": 0.038,
+                "lab.iv": 34.661,
+                "lab.pv": 4.998,
+                "lab.color_r": 3.8,
+                "lab.color_y": 38
+              }
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RRPS/RRBDPS",
+              "destination": "RFI T.08",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.047,
+                "lab.color_r": 1.8,
+                "lab.color_y": 18
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 1,
+          "time": "09:00",
+          "fromTank": "T.15",
+          "flowRate": 6,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "RPS/RBDPS",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RRPS/RRBDPS",
+              "destination": "RFI T.08",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.049,
+                "lab.color_r": 1.8,
+                "lab.color_y": 18
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 2,
+          "time": "10:00",
+          "fromTank": "T.15",
+          "flowRate": 6,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "RPS/RBDPS",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RRPS/RRBDPS",
+              "destination": "RFI T.08",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.048,
+                "lab.color_r": 1.8,
+                "lab.color_y": 18
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 3,
+          "time": "11:00",
+          "fromTank": "T.15",
+          "flowRate": 6.2,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "RPS/RBDPS",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": {
+              "commodity": null,
+              "destination": null,
+              "remark": null,
+              "parameters": {
+                "lab.color_r": 2.6,
+                "lab.color_y": 26,
+                "lab.break_test": "clear"
+              }
+            },
+            "finished_good": {
+              "commodity": "RRPS/RRBDPS",
+              "destination": "RFI T.08",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.05,
+                "lab.color_r": 1.8,
+                "lab.color_y": 18
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 4,
+          "time": "12:00",
+          "fromTank": "T.15",
+          "flowRate": 6.2,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "RPS/RBDPS",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RRPS/RRBDPS",
+              "destination": "RFI T.08",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.049,
+                "lab.color_r": 1.9,
+                "lab.color_y": 19
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 5,
+          "time": "13:00",
+          "fromTank": "T.15",
+          "flowRate": 6.2,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "RPS/RBDPS",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RRPS/RRBDPS",
+              "destination": "RFI T.08",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.048,
+                "lab.color_r": 1.9,
+                "lab.color_y": 19
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 6,
+          "time": "14:00",
+          "fromTank": "T.15",
+          "flowRate": 6.2,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "RPS/RBDPS",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RRPS/RRBDPS",
+              "destination": "RFI T.08",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.05,
+                "lab.color_r": 1.9,
+                "lab.color_y": 19
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 7,
+          "time": "15:00",
+          "fromTank": "T.15",
+          "flowRate": 6.2,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "RPS/RBDPS",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RRPS/RRBDPS",
+              "destination": "RFI T.07",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.049,
+                "lab.color_r": 1.9,
+                "lab.color_y": 19
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 8,
+          "time": "16:00",
+          "fromTank": "T.15",
+          "flowRate": 6.2,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "RPS/RBDPS",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RRPS/RRBDPS",
+              "destination": "RFI T.07",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.044,
+                "lab.color_r": 1.9,
+                "lab.color_y": 19
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 9,
+          "time": "17:00",
+          "fromTank": "T.15",
+          "flowRate": 6.2,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "RPS/RBDPS",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": {
+              "commodity": null,
+              "destination": null,
+              "remark": null,
+              "parameters": {
+                "lab.color_r": 2.6,
+                "lab.color_y": 26,
+                "lab.break_test": "clear"
+              }
+            },
+            "finished_good": {
+              "commodity": "RRPS/RRBDPS",
+              "destination": "RFI T.07",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.048,
+                "lab.color_r": 1.9,
+                "lab.color_y": 19
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 10,
+          "time": "18:00",
+          "fromTank": "T.15",
+          "flowRate": 6.2,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "RPS/RBDPS",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RRPS/RRBDPS",
+              "destination": "RFI T.07",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.045,
+                "lab.color_r": 1.9,
+                "lab.color_y": 19
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 11,
+          "time": "19:00",
+          "fromTank": "T.15",
+          "flowRate": 6.2,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "RPS/RBDPS",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RRPS/RRBDPS",
+              "destination": "RFI T.07",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.048,
+                "lab.color_r": 1.9,
+                "lab.color_y": 19
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 12,
+          "time": "20:00",
+          "fromTank": "T.15",
+          "flowRate": null,
+          "remark": "stop feed T15, pengosongan oip",
+          "streams": {
+            "raw_material": {
+              "commodity": "RPS/RBDPS",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RRPS/RRBDPS",
+              "destination": "RFI T.07",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.049,
+                "lab.color_r": 1.9,
+                "lab.color_y": 19
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 13,
+          "time": "21:00",
+          "fromTank": null,
+          "flowRate": null,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "RPS/RBDPS",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RRPS/RRBDPS",
+              "destination": "RFI T.07",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.05,
+                "lab.color_r": 1.9,
+                "lab.color_y": 19
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 14,
+          "time": "22:00",
+          "fromTank": null,
+          "flowRate": null,
+          "remark": "stop feed rps T15,  pengosongan oip rrps kirim ke T7 RFI",
+          "streams": {
+            "raw_material": null,
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RRPS/RRBDPS",
+              "destination": "RFI T.07",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.048,
+                "lab.color_r": 1.9,
+                "lab.color_y": 19
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 15,
+          "time": "23:00",
+          "fromTank": null,
+          "flowRate": null,
+          "remark": null,
+          "streams": {
+            "raw_material": null,
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RRPS/RRBDPS",
+              "destination": "RFI T.07",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.047,
+                "lab.color_r": 1.9,
+                "lab.color_y": 19
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 16,
+          "time": "00:00",
+          "fromTank": "T.12",
+          "flowRate": 5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 3.886,
+                "lab.moisture": 0.42,
+                "lab.dobi": 2.92,
+                "lab.iv": 52.129,
+                "lab.pv": 2.763,
+                "lab.av": 4.421,
+                "lab.totox": 9.947,
+                "lab.color_r": 22,
+                "lab.color_y": 22
+              }
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RRPS/RRBDPS",
+              "destination": "RFI T.07",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.048,
+                "lab.color_r": 1.9,
+                "lab.color_y": 19
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 17,
+          "time": "01:00",
+          "fromTank": "T.12",
+          "flowRate": 5,
+          "remark": "Proses peralihan produk rrps ke rbdpo, color ada kenaikan stop transfer ke rfi , kembali ke T.15",
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RRPS/RRBDPS",
+              "destination": "T.15",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.05,
+                "lab.iv": 36.129,
+                "lab.color_r": 2.1,
+                "lab.color_y": 21
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 18,
+          "time": "02:00",
+          "fromTank": "T.12",
+          "flowRate": 5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": {
+              "commodity": null,
+              "destination": null,
+              "remark": null,
+              "parameters": {
+                "lab.color_r": 19,
+                "lab.color_y": 20,
+                "lab.break_test": "clear"
+              }
+            },
+            "finished_good": {
+              "commodity": "RRPS/RRBDPS",
+              "destination": "T.15",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.053,
+                "lab.iv": 38.529,
+                "lab.color_r": 2.8,
+                "lab.color_y": 28
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 19,
+          "time": "03:00",
+          "fromTank": "T.12",
+          "flowRate": 5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RRPS/RRBDPS",
+              "destination": "T.15",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.058,
+                "lab.iv": 39.928,
+                "lab.color_r": 2.9,
+                "lab.color_y": 29
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 20,
+          "time": "04:00",
+          "fromTank": "T.12",
+          "flowRate": 5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "CR.401",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.089,
+                "lab.iv": 49.322,
+                "lab.color_r": 2.9,
+                "lab.color_y": 29
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 21,
+          "time": "05:00",
+          "fromTank": "T.12",
+          "flowRate": 5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "CR.401",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.087,
+                "lab.color_r": 2.9,
+                "lab.color_y": 29
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 22,
+          "time": "06:00",
+          "fromTank": "T.12",
+          "flowRate": 5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "CR.401",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.085,
+                "lab.color_r": 2.9,
+                "lab.color_y": 29
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 23,
+          "time": "07:00",
+          "fromTank": "T.12",
+          "flowRate": 5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": {
+              "commodity": null,
+              "destination": null,
+              "remark": null,
+              "parameters": {
+                "lab.color_r": 18.7,
+                "lab.color_y": 20,
+                "lab.break_test": "clear"
+              }
+            },
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "CR.401",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.075,
+                "lab.moisture": 0.039,
+                "lab.iv": 52.041,
+                "lab.pv": 0.19,
+                "lab.color_r": 2.5,
+                "lab.color_y": 25
+              }
+            },
+            "by_product": {
+              "commodity": "PFAD",
+              "destination": "T.05",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 87.015,
+                "lab.moisture": 0.178
+              }
+            },
+            "spent_earth": {
+              "commodity": null,
+              "destination": null,
+              "remark": null,
+              "parameters": {
+                "lab.moisture": 1.925,
+                "lab.oc": 19.885
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "productionDate": "2026-10-18",
+      "reportDate": "2026-10-19",
+      "processUnit": "refinery150",
+      "processUnitName": "Refinery 150",
+      "declaredOils": "CPO",
+      "readings": [
+        {
+          "rowIndex": 0,
+          "time": "08:00",
+          "fromTank": "T.12",
+          "flowRate": 5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.05",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.069,
+                "lab.color_r": 2.3,
+                "lab.color_y": 23
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 1,
+          "time": "09:00",
+          "fromTank": "T.12",
+          "flowRate": 6,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.05",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.062,
+                "lab.color_r": 2.2,
+                "lab.color_y": 22
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 2,
+          "time": "10:00",
+          "fromTank": "T.12",
+          "flowRate": 6,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 3.899,
+                "lab.moisture": 0.41,
+                "lab.dobi": 2.952,
+                "lab.iv": 52.102,
+                "lab.pv": 2.974,
+                "lab.av": 4.415,
+                "lab.totox": 9.929,
+                "lab.color_r": 22,
+                "lab.color_y": 22
+              }
+            },
+            "bleaching_oil": {
+              "commodity": null,
+              "destination": null,
+              "remark": null,
+              "parameters": {
+                "lab.color_r": 18.6,
+                "lab.color_y": 20,
+                "lab.break_test": "clear"
+              }
+            },
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.05",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.053,
+                "lab.color_r": 2.1,
+                "lab.color_y": 21
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 3,
+          "time": "11:00",
+          "fromTank": "T.12",
+          "flowRate": 6,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.05",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.05,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 4,
+          "time": "12:00",
+          "fromTank": "T.12",
+          "flowRate": 6,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.05",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.049,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 5,
+          "time": "13:00",
+          "fromTank": "T.12",
+          "flowRate": 6,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.05",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.048,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 6,
+          "time": "14:00",
+          "fromTank": "T.12",
+          "flowRate": 6,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.05",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.049,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 7,
+          "time": "15:00",
+          "fromTank": "T.12",
+          "flowRate": 6,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.05",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.053,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 8,
+          "time": "16:00",
+          "fromTank": "T.12",
+          "flowRate": 6,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.05",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.051,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 9,
+          "time": "17:00",
+          "fromTank": "T.12",
+          "flowRate": 6,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.05",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.053,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 10,
+          "time": "18:00",
+          "fromTank": "T.12",
+          "flowRate": 6,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": {
+              "commodity": null,
+              "destination": null,
+              "remark": null,
+              "parameters": {
+                "lab.color_r": 18.6,
+                "lab.color_y": 20,
+                "lab.break_test": "clear"
+              }
+            },
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.05",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.052,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 11,
+          "time": "19:00",
+          "fromTank": "T.12",
+          "flowRate": 6,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.05",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.048,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 12,
+          "time": "20:00",
+          "fromTank": "T.12",
+          "flowRate": 6,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.05",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.047,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 13,
+          "time": "21:00",
+          "fromTank": "T.12",
+          "flowRate": 6,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.05",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.046,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 14,
+          "time": "23:00",
+          "fromTank": "T.12",
+          "flowRate": 6.2,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.05",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.05,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 15,
+          "time": "22:00",
+          "fromTank": "T.12",
+          "flowRate": 6,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.05",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.048,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 16,
+          "time": "00:00",
+          "fromTank": "T.12",
+          "flowRate": 6.2,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.03",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.043,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 17,
+          "time": "01:00",
+          "fromTank": "T.12",
+          "flowRate": 6.2,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.03",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.045,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 18,
+          "time": "02:00",
+          "fromTank": "T.12",
+          "flowRate": 6.2,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.03",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.044,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 19,
+          "time": "03:00",
+          "fromTank": "T.12",
+          "flowRate": 6.2,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.03",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.043,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 20,
+          "time": "04:00",
+          "fromTank": "T.12",
+          "flowRate": 6.2,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": {
+              "commodity": null,
+              "destination": null,
+              "remark": null,
+              "parameters": {
+                "lab.color_r": 18.6,
+                "lab.color_y": 20,
+                "lab.break_test": "Clear"
+              }
+            },
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.03",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.046,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 21,
+          "time": "05:00",
+          "fromTank": "T.12",
+          "flowRate": 6.2,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.03",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.044,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 22,
+          "time": "06:00",
+          "fromTank": "T.12",
+          "flowRate": 6.2,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.03",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.044,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 23,
+          "time": "07:00",
+          "fromTank": "T.12",
+          "flowRate": 6.2,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.03",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.046,
+                "lab.moisture": 0.037,
+                "lab.iv": 52.238,
+                "lab.pv": 0.194,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": {
+              "commodity": "PFAD",
+              "destination": "T.05",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 87.539,
+                "lab.moisture": 0.188
+              }
+            },
+            "spent_earth": {
+              "commodity": null,
+              "destination": null,
+              "remark": null,
+              "parameters": {
+                "lab.moisture": 1.903,
+                "lab.oc": 19.256
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "productionDate": "2026-10-19",
+      "reportDate": "2026-10-20",
+      "processUnit": "refinery150",
+      "processUnitName": "Refinery 150",
+      "declaredOils": "CPO",
+      "readings": [
+        {
+          "rowIndex": 0,
+          "time": "08:00",
+          "fromTank": "T.12",
+          "flowRate": 6.2,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.03",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.048,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 1,
+          "time": "09:00",
+          "fromTank": "T.12",
+          "flowRate": 6.2,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.03",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.047,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 2,
+          "time": "10:00",
+          "fromTank": "T.12",
+          "flowRate": 6.2,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 3.899,
+                "lab.moisture": 0.33,
+                "lab.dobi": 2.786,
+                "lab.iv": 51.923,
+                "lab.pv": 2.798,
+                "lab.av": 4.487,
+                "lab.totox": 10.083,
+                "lab.color_r": 23,
+                "lab.color_y": 23
+              }
+            },
+            "bleaching_oil": {
+              "commodity": null,
+              "destination": null,
+              "remark": null,
+              "parameters": {
+                "lab.color_r": 18.6,
+                "lab.color_y": 20,
+                "lab.break_test": "clear"
+              }
+            },
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.03",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.043,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 3,
+          "time": "11:00",
+          "fromTank": null,
+          "flowRate": null,
+          "remark": "stop feed cpo, perbaikan boiler",
+          "streams": {
+            "raw_material": null,
+            "bleaching_oil": null,
+            "finished_good": null,
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 4,
+          "time": "12:00",
+          "fromTank": null,
+          "flowRate": null,
+          "remark": "stop feed cpo, perbaikan boiler",
+          "streams": {
+            "raw_material": null,
+            "bleaching_oil": null,
+            "finished_good": null,
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 5,
+          "time": "13:00",
+          "fromTank": null,
+          "flowRate": null,
+          "remark": "minyak sisaan sebelum stop, masuk CR utk tampung sementara",
+          "streams": {
+            "raw_material": null,
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "CR.401",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.059,
+                "lab.color_r": 2.1,
+                "lab.color_y": 21
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 6,
+          "time": "14:00",
+          "fromTank": "T.12",
+          "flowRate": 4.5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "CR.401",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.068,
+                "lab.color_r": 4.9,
+                "lab.color_y": 49
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 7,
+          "time": "15:00",
+          "fromTank": "T.12",
+          "flowRate": 4.5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "CR.401",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.06,
+                "lab.color_r": 3,
+                "lab.color_y": 30
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 8,
+          "time": "16:00",
+          "fromTank": "T.12",
+          "flowRate": 4.5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "CR.402",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.058,
+                "lab.color_r": 2.6,
+                "lab.color_y": 26
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 9,
+          "time": "17:00",
+          "fromTank": "T.12",
+          "flowRate": 4.5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "CR.402",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.052,
+                "lab.color_r": 2.2,
+                "lab.color_y": 22
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 10,
+          "time": "18:00",
+          "fromTank": "T.12",
+          "flowRate": 4.5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "T.22",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.05,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 11,
+          "time": "19:00",
+          "fromTank": "T.12",
+          "flowRate": 5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.04",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.053,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 12,
+          "time": "20:00",
+          "fromTank": "T.12",
+          "flowRate": 5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.04",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.05,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 13,
+          "time": "21:00",
+          "fromTank": "T.12",
+          "flowRate": 5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": {
+              "commodity": null,
+              "destination": null,
+              "remark": null,
+              "parameters": {
+                "lab.color_r": 18.6,
+                "lab.color_y": 20,
+                "lab.break_test": "clear"
+              }
+            },
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.04",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.049,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 14,
+          "time": "22:00",
+          "fromTank": "T.12",
+          "flowRate": 5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.04",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.047,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 15,
+          "time": "23:00",
+          "fromTank": "T.12",
+          "flowRate": 5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.04",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.048,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 16,
+          "time": "00:00",
+          "fromTank": "T.12",
+          "flowRate": 5.5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.04",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.046,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 17,
+          "time": "01:00",
+          "fromTank": "T.12",
+          "flowRate": 5.5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.04",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.048,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 18,
+          "time": "02:00",
+          "fromTank": "T.12",
+          "flowRate": 5.5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.04",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.043,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 19,
+          "time": "03:00",
+          "fromTank": "T.12",
+          "flowRate": 5.5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.04",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.041,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 20,
+          "time": "04:00",
+          "fromTank": "T.12",
+          "flowRate": 5.5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": {
+              "commodity": null,
+              "destination": null,
+              "remark": null,
+              "parameters": {
+                "lab.color_r": 18.6,
+                "lab.color_y": 20,
+                "lab.break_test": "Clear"
+              }
+            },
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.04",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.045,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 21,
+          "time": "05:00",
+          "fromTank": "T.12",
+          "flowRate": 5.5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.04",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.042,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 22,
+          "time": "06:00",
+          "fromTank": "T.12",
+          "flowRate": 5.5,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.04",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.042,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 23,
+          "time": "07:00",
+          "fromTank": "T.12",
+          "flowRate": 6,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.04",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.041,
+                "lab.moisture": 0.038,
+                "lab.iv": 52.127,
+                "lab.pv": 0.196,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": {
+              "commodity": "PFAD",
+              "destination": "T.05",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 87.041,
+                "lab.moisture": 0.193
+              }
+            },
+            "spent_earth": {
+              "commodity": null,
+              "destination": null,
+              "remark": null,
+              "parameters": {
+                "lab.moisture": 1.96,
+                "lab.oc": 19.481
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "productionDate": "2026-10-20",
+      "reportDate": "2026-10-21",
+      "processUnit": "refinery150",
+      "processUnitName": "Refinery 150",
+      "declaredOils": "CPO",
+      "readings": [
+        {
+          "rowIndex": 0,
+          "time": "08:00",
+          "fromTank": "T.12",
+          "flowRate": 6,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 3.983,
+                "lab.moisture": 0.312,
+                "lab.dobi": 2.766,
+                "lab.iv": 51.923,
+                "lab.pv": 2.801,
+                "lab.av": 4.502,
+                "lab.totox": 10.104,
+                "lab.color_r": 23,
+                "lab.color_y": 23
+              }
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.04",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.043,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 1,
+          "time": "09:00",
+          "fromTank": "T.12",
+          "flowRate": 6,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.04",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.045,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        },
+        {
+          "rowIndex": 2,
+          "time": "10:00",
+          "fromTank": "T.12",
+          "flowRate": 6,
+          "remark": null,
+          "streams": {
+            "raw_material": {
+              "commodity": "CPO",
+              "destination": null,
+              "remark": null,
+              "parameters": {}
+            },
+            "bleaching_oil": null,
+            "finished_good": {
+              "commodity": "RPO/RBDPO",
+              "destination": "RFI T.04",
+              "remark": null,
+              "parameters": {
+                "lab.ffa": 0.046,
+                "lab.color_r": 2,
+                "lab.color_y": 20
+              }
+            },
+            "by_product": null,
+            "spent_earth": null
+          }
+        }
+      ]
+    }
+  ]
+}

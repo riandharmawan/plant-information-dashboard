@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { useRepository } from '../../data/OperationsContext.tsx'
-import { formatDay, formatKg, formatMeasure, tankLabel } from '../../domain/format.ts'
+import { formatDay, formatMeasure, tankLabel } from '../../domain/format.ts'
 import { profileOf } from '../../domain/tankStock.ts'
 import type { LabHistoryPoint, SoundingPoint } from '../../domain/types.ts'
 import { useLocale } from '../../i18n/LocaleContext.tsx'
+import { useMass, type MassFormat } from './massUnit.ts'
 import { historySeries, isLabMetric, labHistorySeries, type HistoryDay, type HistoryMetric } from './quantitySeries.ts'
 
 export function QuantityHistoryDialog({
@@ -23,6 +24,7 @@ export function QuantityHistoryDialog({
   onClose: () => void
 }) {
   const { t, locale } = useLocale()
+  const mass = useMass()
   const repository = useRepository()
   const dialogRef = useRef<HTMLDialogElement>(null)
   const [soundings, setSoundings] = useState<{ tankId: string; points: SoundingPoint[] } | null>(null)
@@ -71,20 +73,20 @@ export function QuantityHistoryDialog({
           <dl className="qty-stats">
             <div>
               <dt>{t.rangeAverage}</dt>
-              <dd>{stats ? formatTip(metric, stats.average) : t.unavailable}</dd>
+              <dd>{stats ? formatTip(metric, stats.average, mass) : t.unavailable}</dd>
             </div>
             <div>
               <dt>{t.rangeMax}</dt>
-              <dd>{stats ? formatTip(metric, stats.max) : t.unavailable}</dd>
+              <dd>{stats ? formatTip(metric, stats.max, mass) : t.unavailable}</dd>
             </div>
             <div>
               <dt>{t.rangeMin}</dt>
-              <dd>{stats ? formatTip(metric, stats.min) : t.unavailable}</dd>
+              <dd>{stats ? formatTip(metric, stats.min, mass) : t.unavailable}</dd>
             </div>
             {metric === 'loadable' && (
               <div>
                 <dt>{t.bottomStock}</dt>
-                <dd>{bottomStock == null ? t.unavailable : `${formatKg(bottomStock)} kg`}</dd>
+                <dd>{bottomStock == null ? t.unavailable : `${mass.amount(bottomStock)} ${mass.symbol}`}</dd>
               </div>
             )}
           </dl>
@@ -129,6 +131,7 @@ function metricTitle(metric: HistoryMetric, t: { levelAxis: string; quantity: st
 
 function QuantityChart({ series, metric, title }: { series: HistoryDay[]; metric: HistoryMetric; title: string }) {
   const { locale } = useLocale()
+  const mass = useMass()
   const wide = metric === 'quantity' || metric === 'emptySpace' || metric === 'loadable'
   return (
     <div className="chart-frame qty-chart">
@@ -145,7 +148,7 @@ function QuantityChart({ series, metric, title }: { series: HistoryDay[]; metric
           <YAxis
             tick={{ fontSize: 11 }}
             width={wide ? 72 : 48}
-            tickFormatter={(value: number) => formatAxis(metric, value)}
+            tickFormatter={(value: number) => formatAxis(metric, value, mass)}
           />
           <Tooltip content={<QuantityTooltip locale={locale} metric={metric} title={title} />} />
           <Line
@@ -209,26 +212,27 @@ function QuantityTooltip({
   metric: HistoryMetric
   title: string
 }) {
+  const mass = useMass()
   const row = payload?.[0]?.payload
   if (!active || !row || row.value == null || row.kind === 'gap') return null
   return (
     <div className="chart-tip">
       <strong>{formatDay(label == null ? null : String(label), locale)}</strong>
-      <p>{title}: {formatTip(metric, row.value)}</p>
+      <p>{title}: {formatTip(metric, row.value, mass)}</p>
     </div>
   )
 }
 
-function formatAxis(metric: HistoryMetric, value: number): string {
-  if (metric === 'quantity' || metric === 'emptySpace' || metric === 'loadable') return formatKg(value).replace(/\.00$/, '')
+function formatAxis(metric: HistoryMetric, value: number, mass: MassFormat): string {
+  if (metric === 'quantity' || metric === 'emptySpace' || metric === 'loadable') return mass.axis(value)
   if (metric === 'levelTank') return `${Math.round(value)}%`
   if (metric === 'temperature') return formatMeasure(value, 0)
   if (metric === 'level') return formatMeasure(value, 1)
   return formatMeasure(value, 2)
 }
 
-function formatTip(metric: HistoryMetric, value: number): string {
-  if (metric === 'quantity' || metric === 'emptySpace' || metric === 'loadable') return `${formatKg(value)} kg`
+function formatTip(metric: HistoryMetric, value: number, mass: MassFormat): string {
+  if (metric === 'quantity' || metric === 'emptySpace' || metric === 'loadable') return `${mass.amount(value)} ${mass.symbol}`
   if (metric === 'level') return `${formatMeasure(value, 3)} m`
   if (metric === 'levelTank') return `${value.toFixed(1)}%`
   if (metric === 'temperature') return `${formatMeasure(value, 1)} °C`

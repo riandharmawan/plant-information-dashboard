@@ -1,0 +1,29 @@
+Refinery daily log (F/RFA-004(A))
+Status: OK
+Ran at: 2026-10-23 08:59:51 WIB
+Range: 2026-10-21 through 2026-10-23 (3 days)
+Source: https://logsheet-builder.gamasap.com/report/index/b1d7e44d-e90d-447f-9772-ffecba657b1e
+
+The sync finished. Days with tickets were saved and written to production days.
+
+Result
+- Downloaded: 2 days
+- Skipped (no tickets): 1 day
+- Failed: 0 days
+- Production days written: 2
+- Flows: 8
+- Materials: 4
+- Utilities: 4
+- Remarks: 0
+
+A day is downloaded when Total Ticket is greater than 0.
+Each downloaded day replaces that process unit’s production day. This job does not rewrite the local dashboard JSON.
+
+Downloaded
+Date         Tickets  Unit          Workbook
+2026-10-21   1        refinery150   F-RFA-004A_2026-10-21.xlsx
+2026-10-22   2        refinery150   F-RFA-004A_2026-10-22.xlsx
+
+Skipped because Total Ticket was 0
+2026-10-23   tickets 0
+

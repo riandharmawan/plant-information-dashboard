@@ -8,7 +8,13 @@
     "build": "tsc -b && vite build",
     "parse-logsheets": "node scripts/parse-logsheets.mjs",
     "sync-sounding": "node scripts/sync-sounding.mjs",
+    "sync-rfa004a": "node scripts/sync-rfa004a.mjs",
+    "sync-utility": "node scripts/sync-utility.mjs",
+    "sync-tnf004": "node scripts/sync-tnf004.mjs",
+    "sync-rfa004b": "node scripts/sync-rfa004b.mjs",
     "sync-analytical": "node scripts/sync-analytical.mjs",
+    "sync-refinery-quality": "node scripts/sync-refinery-quality.mjs",
+    "sync-all": "node scripts/sync-all.mjs",
     "lint": "oxlint",
     "preview": "vite preview"
   },

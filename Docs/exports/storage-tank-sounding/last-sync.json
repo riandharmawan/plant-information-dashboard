@@ -1,15 +1,37 @@
 {
-  "ranAt": "2026-10-19T08:46:58.638Z",
-  "from": "2026-10-19",
-  "to": "2026-10-19",
+  "ranAt": "2026-10-23 08:59:42 WIB",
+  "from": "2026-10-21",
+  "to": "2026-10-23",
   "downloaded": [
     {
-      "day": "2026-10-19",
+      "day": "2026-10-21",
       "tickets": 27,
-      "bytes": 55900,
-      "file": "D:\\Cursor\\Plant Information Dashboard\\Docs\\exports\\storage-tank-sounding\\F-TNF-003_2026-10-19.xlsx"
+      "bytes": 55898,
+      "file": "D:\\Cursor\\Plant Information Dashboard\\Docs\\exports\\storage-tank-sounding\\F-TNF-003_2026-10-21.xlsx",
+      "tanks": 27
+    },
+    {
+      "day": "2026-10-22",
+      "tickets": 27,
+      "bytes": 55868,
+      "file": "D:\\Cursor\\Plant Information Dashboard\\Docs\\exports\\storage-tank-sounding\\F-TNF-003_2026-10-22.xlsx",
+      "tanks": 27
+    },
+    {
+      "day": "2026-10-23",
+      "tickets": 27,
+      "bytes": 55855,
+      "file": "D:\\Cursor\\Plant Information Dashboard\\Docs\\exports\\storage-tank-sounding\\F-TNF-003_2026-10-23.xlsx",
+      "tanks": 27
     }
   ],
   "skipped": [],
-  "failed": []
+  "failed": [],
+  "ingested": {
+    "downloaded": 3,
+    "skipped": 0,
+    "soundings": 81,
+    "unknownTanks": []
+  },
+  "status": "OK"
 }

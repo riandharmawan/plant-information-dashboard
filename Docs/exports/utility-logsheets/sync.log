@@ -1,0 +1,749 @@
+Utility Log Sheet reports
+Status: OK
+Ran at: 2026-10-21 09:08:31 WIB
+Range: 2026-09-21 through 2026-10-20 (30 days)
+
+The sync finished. Days with tickets were saved as workbooks.
+
+Result
+- Reports: 13
+- Downloaded: 243 days
+- Skipped (no tickets): 147 days
+- Failed: 0 days
+
+A day is downloaded when Total Ticket is greater than 0.
+This job saves the workbook only. It does not insert rows into the database.
+
+Operational Boiler Daily Report Taihu 15 TPH
+2877806f-02dc-4332-8a18-1d515c531001
+Downloaded 29 days, skipped 1 day, failed 0 days
+  2026-09-21   tickets 63   UTILITY_2877806f_2026-09-21.xlsx
+  2026-09-22   tickets 18   UTILITY_2877806f_2026-09-22.xlsx
+  2026-09-24   tickets 27   UTILITY_2877806f_2026-09-24.xlsx
+  2026-09-25   tickets 374   UTILITY_2877806f_2026-09-25.xlsx
+  2026-09-26   tickets 286   UTILITY_2877806f_2026-09-26.xlsx
+  2026-09-27   tickets 320   UTILITY_2877806f_2026-09-27.xlsx
+  2026-09-28   tickets 336   UTILITY_2877806f_2026-09-28.xlsx
+  2026-09-29   tickets 379   UTILITY_2877806f_2026-09-29.xlsx
+  2026-09-30   tickets 200   UTILITY_2877806f_2026-09-30.xlsx
+  2026-10-01   tickets 253   UTILITY_2877806f_2026-10-01.xlsx
+  2026-10-02   tickets 299   UTILITY_2877806f_2026-10-02.xlsx
+  2026-10-03   tickets 319   UTILITY_2877806f_2026-10-03.xlsx
+  2026-10-04   tickets 319   UTILITY_2877806f_2026-10-04.xlsx
+  2026-10-05   tickets 310   UTILITY_2877806f_2026-10-05.xlsx
+  2026-10-06   tickets 374   UTILITY_2877806f_2026-10-06.xlsx
+  2026-10-07   tickets 363   UTILITY_2877806f_2026-10-07.xlsx
+  2026-10-08   tickets 230   UTILITY_2877806f_2026-10-08.xlsx
+  2026-10-09   tickets 284   UTILITY_2877806f_2026-10-09.xlsx
+  2026-10-10   tickets 309   UTILITY_2877806f_2026-10-10.xlsx
+  2026-10-11   tickets 304   UTILITY_2877806f_2026-10-11.xlsx
+  2026-10-12   tickets 316   UTILITY_2877806f_2026-10-12.xlsx
+  2026-10-13   tickets 180   UTILITY_2877806f_2026-10-13.xlsx
+  2026-10-14   tickets 349   UTILITY_2877806f_2026-10-14.xlsx
+  2026-10-15   tickets 368   UTILITY_2877806f_2026-10-15.xlsx
+  2026-10-16   tickets 336   UTILITY_2877806f_2026-10-16.xlsx
+  2026-10-17   tickets 337   UTILITY_2877806f_2026-10-17.xlsx
+  2026-10-18   tickets 323   UTILITY_2877806f_2026-10-18.xlsx
+  2026-10-19   tickets 246   UTILITY_2877806f_2026-10-19.xlsx
+  2026-10-20   tickets 387   UTILITY_2877806f_2026-10-20.xlsx
+  Skipped: 2026-09-23
+
+Operational Boiler Taihu 15 t/h Daily Report (Local)
+f9db0b0c-6518-4ca7-80dc-f5763521857f
+Downloaded 30 days, skipped 0 days, failed 0 days
+  2026-09-21   tickets 20002   UTILITY_f9db0b0c_2026-09-21.xlsx
+  2026-09-22   tickets 20002   UTILITY_f9db0b0c_2026-09-22.xlsx
+  2026-09-23   tickets 20002   UTILITY_f9db0b0c_2026-09-23.xlsx
+  2026-09-24   tickets 20002   UTILITY_f9db0b0c_2026-09-24.xlsx
+  2026-09-25   tickets 20002   UTILITY_f9db0b0c_2026-09-25.xlsx
+  2026-09-26   tickets 20002   UTILITY_f9db0b0c_2026-09-26.xlsx
+  2026-09-27   tickets 20002   UTILITY_f9db0b0c_2026-09-27.xlsx
+  2026-09-28   tickets 20002   UTILITY_f9db0b0c_2026-09-28.xlsx
+  2026-09-29   tickets 20002   UTILITY_f9db0b0c_2026-09-29.xlsx
+  2026-09-30   tickets 20002   UTILITY_f9db0b0c_2026-09-30.xlsx
+  2026-10-01   tickets 20002   UTILITY_f9db0b0c_2026-10-01.xlsx
+  2026-10-02   tickets 20002   UTILITY_f9db0b0c_2026-10-02.xlsx
+  2026-10-03   tickets 20002   UTILITY_f9db0b0c_2026-10-03.xlsx
+  2026-10-04   tickets 20002   UTILITY_f9db0b0c_2026-10-04.xlsx
+  2026-10-05   tickets 20002   UTILITY_f9db0b0c_2026-10-05.xlsx
+  2026-10-06   tickets 20002   UTILITY_f9db0b0c_2026-10-06.xlsx
+  2026-10-07   tickets 20002   UTILITY_f9db0b0c_2026-10-07.xlsx
+  2026-10-08   tickets 20002   UTILITY_f9db0b0c_2026-10-08.xlsx
+  2026-10-09   tickets 20002   UTILITY_f9db0b0c_2026-10-09.xlsx
+  2026-10-10   tickets 20002   UTILITY_f9db0b0c_2026-10-10.xlsx
+  2026-10-11   tickets 20002   UTILITY_f9db0b0c_2026-10-11.xlsx
+  2026-10-12   tickets 20002   UTILITY_f9db0b0c_2026-10-12.xlsx
+  2026-10-13   tickets 20002   UTILITY_f9db0b0c_2026-10-13.xlsx
+  2026-10-14   tickets 20002   UTILITY_f9db0b0c_2026-10-14.xlsx
+  2026-10-15   tickets 20002   UTILITY_f9db0b0c_2026-10-15.xlsx
+  2026-10-16   tickets 20002   UTILITY_f9db0b0c_2026-10-16.xlsx
+  2026-10-17   tickets 20002   UTILITY_f9db0b0c_2026-10-17.xlsx
+  2026-10-18   tickets 20002   UTILITY_f9db0b0c_2026-10-18.xlsx
+  2026-10-19   tickets 20002   UTILITY_f9db0b0c_2026-10-19.xlsx
+  2026-10-20   tickets 20002   UTILITY_f9db0b0c_2026-10-20.xlsx
+
+Operational Boiler Daily Report Wuxi 15 TPH
+3538d238-442b-4add-9f9d-ce14aae06ba8
+Downloaded 0 days, skipped 30 days, failed 0 days
+  Skipped: 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-25, 2026-09-26, 2026-09-27, 2026-09-28, 2026-09-29, 2026-09-30, 2026-10-01, 2026-10-02, 2026-10-03, 2026-10-04, 2026-10-05, 2026-10-06, 2026-10-07, 2026-10-08, 2026-10-09, 2026-10-10, 2026-10-11, 2026-10-12, 2026-10-13, 2026-10-14, 2026-10-15, 2026-10-16, 2026-10-17, 2026-10-18, 2026-10-19, 2026-10-20
+
+Form Pemakaian Bahan bakar Priscolin Taihu 15t/h Boiler
+0a1b0c28-1780-43d9-8c79-46b9ce2a82b1
+Downloaded 29 days, skipped 1 day, failed 0 days
+  2026-09-21   tickets 15   UTILITY_0a1b0c28_2026-09-21.xlsx
+  2026-09-22   tickets 1   UTILITY_0a1b0c28_2026-09-22.xlsx
+  2026-09-24   tickets 6   UTILITY_0a1b0c28_2026-09-24.xlsx
+  2026-09-25   tickets 21   UTILITY_0a1b0c28_2026-09-25.xlsx
+  2026-09-26   tickets 24   UTILITY_0a1b0c28_2026-09-26.xlsx
+  2026-09-27   tickets 22   UTILITY_0a1b0c28_2026-09-27.xlsx
+  2026-09-28   tickets 28   UTILITY_0a1b0c28_2026-09-28.xlsx
+  2026-09-29   tickets 21   UTILITY_0a1b0c28_2026-09-29.xlsx
+  2026-09-30   tickets 20   UTILITY_0a1b0c28_2026-09-30.xlsx
+  2026-10-01   tickets 21   UTILITY_0a1b0c28_2026-10-01.xlsx
+  2026-10-02   tickets 19   UTILITY_0a1b0c28_2026-10-02.xlsx
+  2026-10-03   tickets 19   UTILITY_0a1b0c28_2026-10-03.xlsx
+  2026-10-04   tickets 22   UTILITY_0a1b0c28_2026-10-04.xlsx
+  2026-10-05   tickets 21   UTILITY_0a1b0c28_2026-10-05.xlsx
+  2026-10-06   tickets 21   UTILITY_0a1b0c28_2026-10-06.xlsx
+  2026-10-07   tickets 18   UTILITY_0a1b0c28_2026-10-07.xlsx
+  2026-10-08   tickets 21   UTILITY_0a1b0c28_2026-10-08.xlsx
+  2026-10-09   tickets 19   UTILITY_0a1b0c28_2026-10-09.xlsx
+  2026-10-10   tickets 18   UTILITY_0a1b0c28_2026-10-10.xlsx
+  2026-10-11   tickets 18   UTILITY_0a1b0c28_2026-10-11.xlsx
+  2026-10-12   tickets 13   UTILITY_0a1b0c28_2026-10-12.xlsx
+  2026-10-13   tickets 14   UTILITY_0a1b0c28_2026-10-13.xlsx
+  2026-10-14   tickets 13   UTILITY_0a1b0c28_2026-10-14.xlsx
+  2026-10-15   tickets 11   UTILITY_0a1b0c28_2026-10-15.xlsx
+  2026-10-16   tickets 15   UTILITY_0a1b0c28_2026-10-16.xlsx
+  2026-10-17   tickets 11   UTILITY_0a1b0c28_2026-10-17.xlsx
+  2026-10-18   tickets 10   UTILITY_0a1b0c28_2026-10-18.xlsx
+  2026-10-19   tickets 13   UTILITY_0a1b0c28_2026-10-19.xlsx
+  2026-10-20   tickets 12   UTILITY_0a1b0c28_2026-10-20.xlsx
+  Skipped: 2026-09-23
+
+Logbook Pemakaian Chemical Boiler
+232ca732-aae1-49e9-937e-80d3d0f156bd
+Downloaded 6 days, skipped 24 days, failed 0 days
+  2026-09-26   tickets 3   UTILITY_232ca732_2026-09-26.xlsx
+  2026-09-28   tickets 2   UTILITY_232ca732_2026-09-28.xlsx
+  2026-10-14   tickets 3   UTILITY_232ca732_2026-10-14.xlsx
+  2026-10-17   tickets 2   UTILITY_232ca732_2026-10-17.xlsx
+  2026-10-18   tickets 3   UTILITY_232ca732_2026-10-18.xlsx
+  2026-10-20   tickets 1   UTILITY_232ca732_2026-10-20.xlsx
+  Skipped: 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-25, 2026-09-27, 2026-09-29, 2026-09-30, 2026-10-01, 2026-10-02, 2026-10-03, 2026-10-04, 2026-10-05, 2026-10-06, 2026-10-07, 2026-10-08, 2026-10-09, 2026-10-10, 2026-10-11, 2026-10-12, 2026-10-13, 2026-10-15, 2026-10-16, 2026-10-19
+
+Monitoring Display Meter Listrik
+cc2e0682-4681-4ef9-a13d-3a51dd786c86
+Downloaded 0 days, skipped 30 days, failed 0 days
+  Skipped: 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-25, 2026-09-26, 2026-09-27, 2026-09-28, 2026-09-29, 2026-09-30, 2026-10-01, 2026-10-02, 2026-10-03, 2026-10-04, 2026-10-05, 2026-10-06, 2026-10-07, 2026-10-08, 2026-10-09, 2026-10-10, 2026-10-11, 2026-10-12, 2026-10-13, 2026-10-14, 2026-10-15, 2026-10-16, 2026-10-17, 2026-10-18, 2026-10-19, 2026-10-20
+
+Logsheet Batu Bara
+1d5bb87a-74f1-41a5-b692-ad210107a0d6
+Downloaded 29 days, skipped 1 day, failed 0 days
+  2026-09-21   tickets 2   UTILITY_1d5bb87a_2026-09-21.xlsx
+  2026-09-22   tickets 1   UTILITY_1d5bb87a_2026-09-22.xlsx
+  2026-09-23   tickets 1   UTILITY_1d5bb87a_2026-09-23.xlsx
+  2026-09-25   tickets 1   UTILITY_1d5bb87a_2026-09-25.xlsx
+  2026-09-26   tickets 4   UTILITY_1d5bb87a_2026-09-26.xlsx
+  2026-09-27   tickets 3   UTILITY_1d5bb87a_2026-09-27.xlsx
+  2026-09-28   tickets 2   UTILITY_1d5bb87a_2026-09-28.xlsx
+  2026-09-29   tickets 3   UTILITY_1d5bb87a_2026-09-29.xlsx
+  2026-09-30   tickets 2   UTILITY_1d5bb87a_2026-09-30.xlsx
+  2026-10-01   tickets 2   UTILITY_1d5bb87a_2026-10-01.xlsx
+  2026-10-02   tickets 2   UTILITY_1d5bb87a_2026-10-02.xlsx
+  2026-10-03   tickets 3   UTILITY_1d5bb87a_2026-10-03.xlsx
+  2026-10-04   tickets 3   UTILITY_1d5bb87a_2026-10-04.xlsx
+  2026-10-05   tickets 3   UTILITY_1d5bb87a_2026-10-05.xlsx
+  2026-10-06   tickets 3   UTILITY_1d5bb87a_2026-10-06.xlsx
+  2026-10-07   tickets 1   UTILITY_1d5bb87a_2026-10-07.xlsx
+  2026-10-08   tickets 1   UTILITY_1d5bb87a_2026-10-08.xlsx
+  2026-10-09   tickets 2   UTILITY_1d5bb87a_2026-10-09.xlsx
+  2026-10-10   tickets 4   UTILITY_1d5bb87a_2026-10-10.xlsx
+  2026-10-11   tickets 2   UTILITY_1d5bb87a_2026-10-11.xlsx
+  2026-10-12   tickets 4   UTILITY_1d5bb87a_2026-10-12.xlsx
+  2026-10-13   tickets 2   UTILITY_1d5bb87a_2026-10-13.xlsx
+  2026-10-14   tickets 2   UTILITY_1d5bb87a_2026-10-14.xlsx
+  2026-10-15   tickets 2   UTILITY_1d5bb87a_2026-10-15.xlsx
+  2026-10-16   tickets 3   UTILITY_1d5bb87a_2026-10-16.xlsx
+  2026-10-17   tickets 3   UTILITY_1d5bb87a_2026-10-17.xlsx
+  2026-10-18   tickets 3   UTILITY_1d5bb87a_2026-10-18.xlsx
+  2026-10-19   tickets 3   UTILITY_1d5bb87a_2026-10-19.xlsx
+  2026-10-20   tickets 2   UTILITY_1d5bb87a_2026-10-20.xlsx
+  Skipped: 2026-09-24
+
+Logsheet Operational Wheel loader Preventive Maintenance Daily Checklist
+8faf8a0f-7938-405b-8caf-c6cb3763c247
+Downloaded 28 days, skipped 2 days, failed 0 days
+  2026-09-21   tickets 12   UTILITY_8faf8a0f_2026-09-21.xlsx
+  2026-09-24   tickets 11   UTILITY_8faf8a0f_2026-09-24.xlsx
+  2026-09-25   tickets 24   UTILITY_8faf8a0f_2026-09-25.xlsx
+  2026-09-26   tickets 35   UTILITY_8faf8a0f_2026-09-26.xlsx
+  2026-09-27   tickets 35   UTILITY_8faf8a0f_2026-09-27.xlsx
+  2026-09-28   tickets 35   UTILITY_8faf8a0f_2026-09-28.xlsx
+  2026-09-29   tickets 23   UTILITY_8faf8a0f_2026-09-29.xlsx
+  2026-09-30   tickets 24   UTILITY_8faf8a0f_2026-09-30.xlsx
+  2026-10-01   tickets 37   UTILITY_8faf8a0f_2026-10-01.xlsx
+  2026-10-02   tickets 36   UTILITY_8faf8a0f_2026-10-02.xlsx
+  2026-10-03   tickets 35   UTILITY_8faf8a0f_2026-10-03.xlsx
+  2026-10-04   tickets 35   UTILITY_8faf8a0f_2026-10-04.xlsx
+  2026-10-05   tickets 35   UTILITY_8faf8a0f_2026-10-05.xlsx
+  2026-10-06   tickets 23   UTILITY_8faf8a0f_2026-10-06.xlsx
+  2026-10-07   tickets 23   UTILITY_8faf8a0f_2026-10-07.xlsx
+  2026-10-08   tickets 23   UTILITY_8faf8a0f_2026-10-08.xlsx
+  2026-10-09   tickets 35   UTILITY_8faf8a0f_2026-10-09.xlsx
+  2026-10-10   tickets 37   UTILITY_8faf8a0f_2026-10-10.xlsx
+  2026-10-11   tickets 35   UTILITY_8faf8a0f_2026-10-11.xlsx
+  2026-10-12   tickets 35   UTILITY_8faf8a0f_2026-10-12.xlsx
+  2026-10-13   tickets 24   UTILITY_8faf8a0f_2026-10-13.xlsx
+  2026-10-14   tickets 23   UTILITY_8faf8a0f_2026-10-14.xlsx
+  2026-10-15   tickets 23   UTILITY_8faf8a0f_2026-10-15.xlsx
+  2026-10-16   tickets 35   UTILITY_8faf8a0f_2026-10-16.xlsx
+  2026-10-17   tickets 35   UTILITY_8faf8a0f_2026-10-17.xlsx
+  2026-10-18   tickets 35   UTILITY_8faf8a0f_2026-10-18.xlsx
+  2026-10-19   tickets 36   UTILITY_8faf8a0f_2026-10-19.xlsx
+  2026-10-20   tickets 23   UTILITY_8faf8a0f_2026-10-20.xlsx
+  Skipped: 2026-09-22, 2026-09-23
+
+Operational Wheel Loader Fuel Level & Loader Hour Meter
+f49949cb-4e6d-4958-a7df-9c40e89b90fd
+Downloaded 28 days, skipped 2 days, failed 0 days
+  2026-09-21   tickets 1   UTILITY_f49949cb_2026-09-21.xlsx
+  2026-09-24   tickets 1   UTILITY_f49949cb_2026-09-24.xlsx
+  2026-09-25   tickets 3   UTILITY_f49949cb_2026-09-25.xlsx
+  2026-09-26   tickets 3   UTILITY_f49949cb_2026-09-26.xlsx
+  2026-09-27   tickets 3   UTILITY_f49949cb_2026-09-27.xlsx
+  2026-09-28   tickets 3   UTILITY_f49949cb_2026-09-28.xlsx
+  2026-09-29   tickets 2   UTILITY_f49949cb_2026-09-29.xlsx
+  2026-09-30   tickets 2   UTILITY_f49949cb_2026-09-30.xlsx
+  2026-10-01   tickets 2   UTILITY_f49949cb_2026-10-01.xlsx
+  2026-10-02   tickets 3   UTILITY_f49949cb_2026-10-02.xlsx
+  2026-10-03   tickets 3   UTILITY_f49949cb_2026-10-03.xlsx
+  2026-10-04   tickets 3   UTILITY_f49949cb_2026-10-04.xlsx
+  2026-10-05   tickets 3   UTILITY_f49949cb_2026-10-05.xlsx
+  2026-10-06   tickets 2   UTILITY_f49949cb_2026-10-06.xlsx
+  2026-10-07   tickets 2   UTILITY_f49949cb_2026-10-07.xlsx
+  2026-10-08   tickets 2   UTILITY_f49949cb_2026-10-08.xlsx
+  2026-10-09   tickets 4   UTILITY_f49949cb_2026-10-09.xlsx
+  2026-10-10   tickets 3   UTILITY_f49949cb_2026-10-10.xlsx
+  2026-10-11   tickets 3   UTILITY_f49949cb_2026-10-11.xlsx
+  2026-10-12   tickets 3   UTILITY_f49949cb_2026-10-12.xlsx
+  2026-10-13   tickets 2   UTILITY_f49949cb_2026-10-13.xlsx
+  2026-10-14   tickets 2   UTILITY_f49949cb_2026-10-14.xlsx
+  2026-10-15   tickets 2   UTILITY_f49949cb_2026-10-15.xlsx
+  2026-10-16   tickets 3   UTILITY_f49949cb_2026-10-16.xlsx
+  2026-10-17   tickets 3   UTILITY_f49949cb_2026-10-17.xlsx
+  2026-10-18   tickets 3   UTILITY_f49949cb_2026-10-18.xlsx
+  2026-10-19   tickets 4   UTILITY_f49949cb_2026-10-19.xlsx
+  2026-10-20   tickets 2   UTILITY_f49949cb_2026-10-20.xlsx
+  Skipped: 2026-09-22, 2026-09-23
+
+Laporan Analisa Air Boiler
+834ce78e-3eed-4f3b-bef4-af84dc50728e
+Downloaded 28 days, skipped 2 days, failed 0 days
+  2026-09-21   tickets 10   UTILITY_834ce78e_2026-09-21.xlsx
+  2026-09-24   tickets 10   UTILITY_834ce78e_2026-09-24.xlsx
+  2026-09-25   tickets 27   UTILITY_834ce78e_2026-09-25.xlsx
+  2026-09-26   tickets 30   UTILITY_834ce78e_2026-09-26.xlsx
+  2026-09-27   tickets 30   UTILITY_834ce78e_2026-09-27.xlsx
+  2026-09-28   tickets 10   UTILITY_834ce78e_2026-09-28.xlsx
+  2026-09-29   tickets 20   UTILITY_834ce78e_2026-09-29.xlsx
+  2026-09-30   tickets 10   UTILITY_834ce78e_2026-09-30.xlsx
+  2026-10-01   tickets 20   UTILITY_834ce78e_2026-10-01.xlsx
+  2026-10-02   tickets 30   UTILITY_834ce78e_2026-10-02.xlsx
+  2026-10-03   tickets 30   UTILITY_834ce78e_2026-10-03.xlsx
+  2026-10-04   tickets 27   UTILITY_834ce78e_2026-10-04.xlsx
+  2026-10-05   tickets 30   UTILITY_834ce78e_2026-10-05.xlsx
+  2026-10-06   tickets 20   UTILITY_834ce78e_2026-10-06.xlsx
+  2026-10-07   tickets 10   UTILITY_834ce78e_2026-10-07.xlsx
+  2026-10-08   tickets 10   UTILITY_834ce78e_2026-10-08.xlsx
+  2026-10-09   tickets 40   UTILITY_834ce78e_2026-10-09.xlsx
+  2026-10-10   tickets 30   UTILITY_834ce78e_2026-10-10.xlsx
+  2026-10-11   tickets 30   UTILITY_834ce78e_2026-10-11.xlsx
+  2026-10-12   tickets 40   UTILITY_834ce78e_2026-10-12.xlsx
+  2026-10-13   tickets 24   UTILITY_834ce78e_2026-10-13.xlsx
+  2026-10-14   tickets 20   UTILITY_834ce78e_2026-10-14.xlsx
+  2026-10-15   tickets 20   UTILITY_834ce78e_2026-10-15.xlsx
+  2026-10-16   tickets 30   UTILITY_834ce78e_2026-10-16.xlsx
+  2026-10-17   tickets 30   UTILITY_834ce78e_2026-10-17.xlsx
+  2026-10-18   tickets 28   UTILITY_834ce78e_2026-10-18.xlsx
+  2026-10-19   tickets 28   UTILITY_834ce78e_2026-10-19.xlsx
+  2026-10-20   tickets 18   UTILITY_834ce78e_2026-10-20.xlsx
+  Skipped: 2026-09-22, 2026-09-23
+
+Laporan Analisa Air WTP & WWTP
+767e5297-f861-4a65-ab27-cbb0d07f8253
+Downloaded 28 days, skipped 2 days, failed 0 days
+  2026-09-21   tickets 12   UTILITY_767e5297_2026-09-21.xlsx
+  2026-09-24   tickets 10   UTILITY_767e5297_2026-09-24.xlsx
+  2026-09-25   tickets 18   UTILITY_767e5297_2026-09-25.xlsx
+  2026-09-26   tickets 18   UTILITY_767e5297_2026-09-26.xlsx
+  2026-09-27   tickets 18   UTILITY_767e5297_2026-09-27.xlsx
+  2026-09-28   tickets 6   UTILITY_767e5297_2026-09-28.xlsx
+  2026-09-29   tickets 6   UTILITY_767e5297_2026-09-29.xlsx
+  2026-09-30   tickets 12   UTILITY_767e5297_2026-09-30.xlsx
+  2026-10-01   tickets 18   UTILITY_767e5297_2026-10-01.xlsx
+  2026-10-02   tickets 18   UTILITY_767e5297_2026-10-02.xlsx
+  2026-10-03   tickets 19   UTILITY_767e5297_2026-10-03.xlsx
+  2026-10-04   tickets 12   UTILITY_767e5297_2026-10-04.xlsx
+  2026-10-05   tickets 12   UTILITY_767e5297_2026-10-05.xlsx
+  2026-10-06   tickets 12   UTILITY_767e5297_2026-10-06.xlsx
+  2026-10-07   tickets 6   UTILITY_767e5297_2026-10-07.xlsx
+  2026-10-08   tickets 6   UTILITY_767e5297_2026-10-08.xlsx
+  2026-10-09   tickets 18   UTILITY_767e5297_2026-10-09.xlsx
+  2026-10-10   tickets 19   UTILITY_767e5297_2026-10-10.xlsx
+  2026-10-11   tickets 12   UTILITY_767e5297_2026-10-11.xlsx
+  2026-10-12   tickets 12   UTILITY_767e5297_2026-10-12.xlsx
+  2026-10-13   tickets 6   UTILITY_767e5297_2026-10-13.xlsx
+  2026-10-14   tickets 16   UTILITY_767e5297_2026-10-14.xlsx
+  2026-10-15   tickets 18   UTILITY_767e5297_2026-10-15.xlsx
+  2026-10-16   tickets 12   UTILITY_767e5297_2026-10-16.xlsx
+  2026-10-17   tickets 12   UTILITY_767e5297_2026-10-17.xlsx
+  2026-10-18   tickets 12   UTILITY_767e5297_2026-10-18.xlsx
+  2026-10-19   tickets 12   UTILITY_767e5297_2026-10-19.xlsx
+  2026-10-20   tickets 6   UTILITY_767e5297_2026-10-20.xlsx
+  Skipped: 2026-09-22, 2026-09-23
+
+Realization & Verification Cleaning RO
+305c8641-93d0-4c55-9d71-28ee9d7eeee3
+Downloaded 1 day, skipped 29 days, failed 0 days
+  2026-10-02   tickets 1   UTILITY_305c8641_2026-10-02.xlsx
+  Skipped: 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-25, 2026-09-26, 2026-09-27, 2026-09-28, 2026-09-29, 2026-09-30, 2026-10-01, 2026-10-03, 2026-10-04, 2026-10-05, 2026-10-06, 2026-10-07, 2026-10-08, 2026-10-09, 2026-10-10, 2026-10-11, 2026-10-12, 2026-10-13, 2026-10-14, 2026-10-15, 2026-10-16, 2026-10-17, 2026-10-18, 2026-10-19, 2026-10-20
+
+WWTP Operational
+0826ff96-b12d-42db-ad59-93bea313e4da
+Downloaded 7 days, skipped 23 days, failed 0 days
+  2026-09-26   tickets 16   UTILITY_0826ff96_2026-09-26.xlsx
+  2026-10-15   tickets 16   UTILITY_0826ff96_2026-10-15.xlsx
+  2026-10-16   tickets 48   UTILITY_0826ff96_2026-10-16.xlsx
+  2026-10-17   tickets 51   UTILITY_0826ff96_2026-10-17.xlsx
+  2026-10-18   tickets 33   UTILITY_0826ff96_2026-10-18.xlsx
+  2026-10-19   tickets 40   UTILITY_0826ff96_2026-10-19.xlsx
+  2026-10-20   tickets 18   UTILITY_0826ff96_2026-10-20.xlsx
+  Skipped: 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-25, 2026-09-27, 2026-09-28, 2026-09-29, 2026-09-30, 2026-10-01, 2026-10-02, 2026-10-03, 2026-10-04, 2026-10-05, 2026-10-06, 2026-10-07, 2026-10-08, 2026-10-09, 2026-10-10, 2026-10-11, 2026-10-12, 2026-10-13, 2026-10-14
+
+---
+Utility Log Sheet reports
+Status: OK
+Ran at: 2026-10-21 09:48:07 WIB
+Range: 2026-09-21 through 2026-10-20 (30 days)
+
+The sync finished. Days with tickets were saved and written to utility days.
+
+Result
+- Reports: 13
+- Downloaded: 243 days
+- Skipped (no tickets): 0 days
+- Failed: 0 days
+- Utility days written: 243
+- Readings: 27331
+- Material uses: 13
+- Loader runs: 70
+- Checks: 759
+- Jobs: 1
+
+A day is downloaded when Total Ticket is greater than 0.
+Each saved workbook replaces that form’s utility day. Steam on these sheets is not the production-report steam total.
+
+Operational Boiler Daily Report Taihu 15 TPH
+2877806f-02dc-4332-8a18-1d515c531001
+Downloaded 29 days, skipped 0 days, failed 0 days
+  2026-09-21   tickets null   UTILITY_2877806f_2026-09-21.xlsx
+  2026-09-22   tickets null   UTILITY_2877806f_2026-09-22.xlsx
+  2026-09-24   tickets null   UTILITY_2877806f_2026-09-24.xlsx
+  2026-09-25   tickets null   UTILITY_2877806f_2026-09-25.xlsx
+  2026-09-26   tickets null   UTILITY_2877806f_2026-09-26.xlsx
+  2026-09-27   tickets null   UTILITY_2877806f_2026-09-27.xlsx
+  2026-09-28   tickets null   UTILITY_2877806f_2026-09-28.xlsx
+  2026-09-29   tickets null   UTILITY_2877806f_2026-09-29.xlsx
+  2026-09-30   tickets null   UTILITY_2877806f_2026-09-30.xlsx
+  2026-10-01   tickets null   UTILITY_2877806f_2026-10-01.xlsx
+  2026-10-02   tickets null   UTILITY_2877806f_2026-10-02.xlsx
+  2026-10-03   tickets null   UTILITY_2877806f_2026-10-03.xlsx
+  2026-10-04   tickets null   UTILITY_2877806f_2026-10-04.xlsx
+  2026-10-05   tickets null   UTILITY_2877806f_2026-10-05.xlsx
+  2026-10-06   tickets null   UTILITY_2877806f_2026-10-06.xlsx
+  2026-10-07   tickets null   UTILITY_2877806f_2026-10-07.xlsx
+  2026-10-08   tickets null   UTILITY_2877806f_2026-10-08.xlsx
+  2026-10-09   tickets null   UTILITY_2877806f_2026-10-09.xlsx
+  2026-10-10   tickets null   UTILITY_2877806f_2026-10-10.xlsx
+  2026-10-11   tickets null   UTILITY_2877806f_2026-10-11.xlsx
+  2026-10-12   tickets null   UTILITY_2877806f_2026-10-12.xlsx
+  2026-10-13   tickets null   UTILITY_2877806f_2026-10-13.xlsx
+  2026-10-14   tickets null   UTILITY_2877806f_2026-10-14.xlsx
+  2026-10-15   tickets null   UTILITY_2877806f_2026-10-15.xlsx
+  2026-10-16   tickets null   UTILITY_2877806f_2026-10-16.xlsx
+  2026-10-17   tickets null   UTILITY_2877806f_2026-10-17.xlsx
+  2026-10-18   tickets null   UTILITY_2877806f_2026-10-18.xlsx
+  2026-10-19   tickets null   UTILITY_2877806f_2026-10-19.xlsx
+  2026-10-20   tickets null   UTILITY_2877806f_2026-10-20.xlsx
+
+Operational Boiler Taihu 15 t/h Daily Report (Local)
+f9db0b0c-6518-4ca7-80dc-f5763521857f
+Downloaded 30 days, skipped 0 days, failed 0 days
+  2026-09-21   tickets null   UTILITY_f9db0b0c_2026-09-21.xlsx
+  2026-09-22   tickets null   UTILITY_f9db0b0c_2026-09-22.xlsx
+  2026-09-23   tickets null   UTILITY_f9db0b0c_2026-09-23.xlsx
+  2026-09-24   tickets null   UTILITY_f9db0b0c_2026-09-24.xlsx
+  2026-09-25   tickets null   UTILITY_f9db0b0c_2026-09-25.xlsx
+  2026-09-26   tickets null   UTILITY_f9db0b0c_2026-09-26.xlsx
+  2026-09-27   tickets null   UTILITY_f9db0b0c_2026-09-27.xlsx
+  2026-09-28   tickets null   UTILITY_f9db0b0c_2026-09-28.xlsx
+  2026-09-29   tickets null   UTILITY_f9db0b0c_2026-09-29.xlsx
+  2026-09-30   tickets null   UTILITY_f9db0b0c_2026-09-30.xlsx
+  2026-10-01   tickets null   UTILITY_f9db0b0c_2026-10-01.xlsx
+  2026-10-02   tickets null   UTILITY_f9db0b0c_2026-10-02.xlsx
+  2026-10-03   tickets null   UTILITY_f9db0b0c_2026-10-03.xlsx
+  2026-10-04   tickets null   UTILITY_f9db0b0c_2026-10-04.xlsx
+  2026-10-05   tickets null   UTILITY_f9db0b0c_2026-10-05.xlsx
+  2026-10-06   tickets null   UTILITY_f9db0b0c_2026-10-06.xlsx
+  2026-10-07   tickets null   UTILITY_f9db0b0c_2026-10-07.xlsx
+  2026-10-08   tickets null   UTILITY_f9db0b0c_2026-10-08.xlsx
+  2026-10-09   tickets null   UTILITY_f9db0b0c_2026-10-09.xlsx
+  2026-10-10   tickets null   UTILITY_f9db0b0c_2026-10-10.xlsx
+  2026-10-11   tickets null   UTILITY_f9db0b0c_2026-10-11.xlsx
+  2026-10-12   tickets null   UTILITY_f9db0b0c_2026-10-12.xlsx
+  2026-10-13   tickets null   UTILITY_f9db0b0c_2026-10-13.xlsx
+  2026-10-14   tickets null   UTILITY_f9db0b0c_2026-10-14.xlsx
+  2026-10-15   tickets null   UTILITY_f9db0b0c_2026-10-15.xlsx
+  2026-10-16   tickets null   UTILITY_f9db0b0c_2026-10-16.xlsx
+  2026-10-17   tickets null   UTILITY_f9db0b0c_2026-10-17.xlsx
+  2026-10-18   tickets null   UTILITY_f9db0b0c_2026-10-18.xlsx
+  2026-10-19   tickets null   UTILITY_f9db0b0c_2026-10-19.xlsx
+  2026-10-20   tickets null   UTILITY_f9db0b0c_2026-10-20.xlsx
+
+Operational Boiler Daily Report Wuxi 15 TPH
+3538d238-442b-4add-9f9d-ce14aae06ba8
+Downloaded 0 days, skipped 0 days, failed 0 days
+
+Form Pemakaian Bahan Bakar Taihu
+0a1b0c28-1780-43d9-8c79-46b9ce2a82b1
+Downloaded 29 days, skipped 0 days, failed 0 days
+  2026-09-21   tickets null   UTILITY_0a1b0c28_2026-09-21.xlsx
+  2026-09-22   tickets null   UTILITY_0a1b0c28_2026-09-22.xlsx
+  2026-09-24   tickets null   UTILITY_0a1b0c28_2026-09-24.xlsx
+  2026-09-25   tickets null   UTILITY_0a1b0c28_2026-09-25.xlsx
+  2026-09-26   tickets null   UTILITY_0a1b0c28_2026-09-26.xlsx
+  2026-09-27   tickets null   UTILITY_0a1b0c28_2026-09-27.xlsx
+  2026-09-28   tickets null   UTILITY_0a1b0c28_2026-09-28.xlsx
+  2026-09-29   tickets null   UTILITY_0a1b0c28_2026-09-29.xlsx
+  2026-09-30   tickets null   UTILITY_0a1b0c28_2026-09-30.xlsx
+  2026-10-01   tickets null   UTILITY_0a1b0c28_2026-10-01.xlsx
+  2026-10-02   tickets null   UTILITY_0a1b0c28_2026-10-02.xlsx
+  2026-10-03   tickets null   UTILITY_0a1b0c28_2026-10-03.xlsx
+  2026-10-04   tickets null   UTILITY_0a1b0c28_2026-10-04.xlsx
+  2026-10-05   tickets null   UTILITY_0a1b0c28_2026-10-05.xlsx
+  2026-10-06   tickets null   UTILITY_0a1b0c28_2026-10-06.xlsx
+  2026-10-07   tickets null   UTILITY_0a1b0c28_2026-10-07.xlsx
+  2026-10-08   tickets null   UTILITY_0a1b0c28_2026-10-08.xlsx
+  2026-10-09   tickets null   UTILITY_0a1b0c28_2026-10-09.xlsx
+  2026-10-10   tickets null   UTILITY_0a1b0c28_2026-10-10.xlsx
+  2026-10-11   tickets null   UTILITY_0a1b0c28_2026-10-11.xlsx
+  2026-10-12   tickets null   UTILITY_0a1b0c28_2026-10-12.xlsx
+  2026-10-13   tickets null   UTILITY_0a1b0c28_2026-10-13.xlsx
+  2026-10-14   tickets null   UTILITY_0a1b0c28_2026-10-14.xlsx
+  2026-10-15   tickets null   UTILITY_0a1b0c28_2026-10-15.xlsx
+  2026-10-16   tickets null   UTILITY_0a1b0c28_2026-10-16.xlsx
+  2026-10-17   tickets null   UTILITY_0a1b0c28_2026-10-17.xlsx
+  2026-10-18   tickets null   UTILITY_0a1b0c28_2026-10-18.xlsx
+  2026-10-19   tickets null   UTILITY_0a1b0c28_2026-10-19.xlsx
+  2026-10-20   tickets null   UTILITY_0a1b0c28_2026-10-20.xlsx
+
+Logbook Pemakaian Chemical Boiler
+232ca732-aae1-49e9-937e-80d3d0f156bd
+Downloaded 6 days, skipped 0 days, failed 0 days
+  2026-09-26   tickets null   UTILITY_232ca732_2026-09-26.xlsx
+  2026-09-28   tickets null   UTILITY_232ca732_2026-09-28.xlsx
+  2026-10-14   tickets null   UTILITY_232ca732_2026-10-14.xlsx
+  2026-10-17   tickets null   UTILITY_232ca732_2026-10-17.xlsx
+  2026-10-18   tickets null   UTILITY_232ca732_2026-10-18.xlsx
+  2026-10-20   tickets null   UTILITY_232ca732_2026-10-20.xlsx
+
+Monitoring Display Meter Listrik
+cc2e0682-4681-4ef9-a13d-3a51dd786c86
+Downloaded 0 days, skipped 0 days, failed 0 days
+
+Logsheet Batu Bara
+1d5bb87a-74f1-41a5-b692-ad210107a0d6
+Downloaded 29 days, skipped 0 days, failed 0 days
+  2026-09-21   tickets null   UTILITY_1d5bb87a_2026-09-21.xlsx
+  2026-09-22   tickets null   UTILITY_1d5bb87a_2026-09-22.xlsx
+  2026-09-23   tickets null   UTILITY_1d5bb87a_2026-09-23.xlsx
+  2026-09-25   tickets null   UTILITY_1d5bb87a_2026-09-25.xlsx
+  2026-09-26   tickets null   UTILITY_1d5bb87a_2026-09-26.xlsx
+  2026-09-27   tickets null   UTILITY_1d5bb87a_2026-09-27.xlsx
+  2026-09-28   tickets null   UTILITY_1d5bb87a_2026-09-28.xlsx
+  2026-09-29   tickets null   UTILITY_1d5bb87a_2026-09-29.xlsx
+  2026-09-30   tickets null   UTILITY_1d5bb87a_2026-09-30.xlsx
+  2026-10-01   tickets null   UTILITY_1d5bb87a_2026-10-01.xlsx
+  2026-10-02   tickets null   UTILITY_1d5bb87a_2026-10-02.xlsx
+  2026-10-03   tickets null   UTILITY_1d5bb87a_2026-10-03.xlsx
+  2026-10-04   tickets null   UTILITY_1d5bb87a_2026-10-04.xlsx
+  2026-10-05   tickets null   UTILITY_1d5bb87a_2026-10-05.xlsx
+  2026-10-06   tickets null   UTILITY_1d5bb87a_2026-10-06.xlsx
+  2026-10-07   tickets null   UTILITY_1d5bb87a_2026-10-07.xlsx
+  2026-10-08   tickets null   UTILITY_1d5bb87a_2026-10-08.xlsx
+  2026-10-09   tickets null   UTILITY_1d5bb87a_2026-10-09.xlsx
+  2026-10-10   tickets null   UTILITY_1d5bb87a_2026-10-10.xlsx
+  2026-10-11   tickets null   UTILITY_1d5bb87a_2026-10-11.xlsx
+  2026-10-12   tickets null   UTILITY_1d5bb87a_2026-10-12.xlsx
+  2026-10-13   tickets null   UTILITY_1d5bb87a_2026-10-13.xlsx
+  2026-10-14   tickets null   UTILITY_1d5bb87a_2026-10-14.xlsx
+  2026-10-15   tickets null   UTILITY_1d5bb87a_2026-10-15.xlsx
+  2026-10-16   tickets null   UTILITY_1d5bb87a_2026-10-16.xlsx
+  2026-10-17   tickets null   UTILITY_1d5bb87a_2026-10-17.xlsx
+  2026-10-18   tickets null   UTILITY_1d5bb87a_2026-10-18.xlsx
+  2026-10-19   tickets null   UTILITY_1d5bb87a_2026-10-19.xlsx
+  2026-10-20   tickets null   UTILITY_1d5bb87a_2026-10-20.xlsx
+
+Wheel loader checklist
+8faf8a0f-7938-405b-8caf-c6cb3763c247
+Downloaded 28 days, skipped 0 days, failed 0 days
+  2026-09-21   tickets null   UTILITY_8faf8a0f_2026-09-21.xlsx
+  2026-09-24   tickets null   UTILITY_8faf8a0f_2026-09-24.xlsx
+  2026-09-25   tickets null   UTILITY_8faf8a0f_2026-09-25.xlsx
+  2026-09-26   tickets null   UTILITY_8faf8a0f_2026-09-26.xlsx
+  2026-09-27   tickets null   UTILITY_8faf8a0f_2026-09-27.xlsx
+  2026-09-28   tickets null   UTILITY_8faf8a0f_2026-09-28.xlsx
+  2026-09-29   tickets null   UTILITY_8faf8a0f_2026-09-29.xlsx
+  2026-09-30   tickets null   UTILITY_8faf8a0f_2026-09-30.xlsx
+  2026-10-01   tickets null   UTILITY_8faf8a0f_2026-10-01.xlsx
+  2026-10-02   tickets null   UTILITY_8faf8a0f_2026-10-02.xlsx
+  2026-10-03   tickets null   UTILITY_8faf8a0f_2026-10-03.xlsx
+  2026-10-04   tickets null   UTILITY_8faf8a0f_2026-10-04.xlsx
+  2026-10-05   tickets null   UTILITY_8faf8a0f_2026-10-05.xlsx
+  2026-10-06   tickets null   UTILITY_8faf8a0f_2026-10-06.xlsx
+  2026-10-07   tickets null   UTILITY_8faf8a0f_2026-10-07.xlsx
+  2026-10-08   tickets null   UTILITY_8faf8a0f_2026-10-08.xlsx
+  2026-10-09   tickets null   UTILITY_8faf8a0f_2026-10-09.xlsx
+  2026-10-10   tickets null   UTILITY_8faf8a0f_2026-10-10.xlsx
+  2026-10-11   tickets null   UTILITY_8faf8a0f_2026-10-11.xlsx
+  2026-10-12   tickets null   UTILITY_8faf8a0f_2026-10-12.xlsx
+  2026-10-13   tickets null   UTILITY_8faf8a0f_2026-10-13.xlsx
+  2026-10-14   tickets null   UTILITY_8faf8a0f_2026-10-14.xlsx
+  2026-10-15   tickets null   UTILITY_8faf8a0f_2026-10-15.xlsx
+  2026-10-16   tickets null   UTILITY_8faf8a0f_2026-10-16.xlsx
+  2026-10-17   tickets null   UTILITY_8faf8a0f_2026-10-17.xlsx
+  2026-10-18   tickets null   UTILITY_8faf8a0f_2026-10-18.xlsx
+  2026-10-19   tickets null   UTILITY_8faf8a0f_2026-10-19.xlsx
+  2026-10-20   tickets null   UTILITY_8faf8a0f_2026-10-20.xlsx
+
+Wheel loader fuel and hour meter
+f49949cb-4e6d-4958-a7df-9c40e89b90fd
+Downloaded 28 days, skipped 0 days, failed 0 days
+  2026-09-21   tickets null   UTILITY_f49949cb_2026-09-21.xlsx
+  2026-09-24   tickets null   UTILITY_f49949cb_2026-09-24.xlsx
+  2026-09-25   tickets null   UTILITY_f49949cb_2026-09-25.xlsx
+  2026-09-26   tickets null   UTILITY_f49949cb_2026-09-26.xlsx
+  2026-09-27   tickets null   UTILITY_f49949cb_2026-09-27.xlsx
+  2026-09-28   tickets null   UTILITY_f49949cb_2026-09-28.xlsx
+  2026-09-29   tickets null   UTILITY_f49949cb_2026-09-29.xlsx
+  2026-09-30   tickets null   UTILITY_f49949cb_2026-09-30.xlsx
+  2026-10-01   tickets null   UTILITY_f49949cb_2026-10-01.xlsx
+  2026-10-02   tickets null   UTILITY_f49949cb_2026-10-02.xlsx
+  2026-10-03   tickets null   UTILITY_f49949cb_2026-10-03.xlsx
+  2026-10-04   tickets null   UTILITY_f49949cb_2026-10-04.xlsx
+  2026-10-05   tickets null   UTILITY_f49949cb_2026-10-05.xlsx
+  2026-10-06   tickets null   UTILITY_f49949cb_2026-10-06.xlsx
+  2026-10-07   tickets null   UTILITY_f49949cb_2026-10-07.xlsx
+  2026-10-08   tickets null   UTILITY_f49949cb_2026-10-08.xlsx
+  2026-10-09   tickets null   UTILITY_f49949cb_2026-10-09.xlsx
+  2026-10-10   tickets null   UTILITY_f49949cb_2026-10-10.xlsx
+  2026-10-11   tickets null   UTILITY_f49949cb_2026-10-11.xlsx
+  2026-10-12   tickets null   UTILITY_f49949cb_2026-10-12.xlsx
+  2026-10-13   tickets null   UTILITY_f49949cb_2026-10-13.xlsx
+  2026-10-14   tickets null   UTILITY_f49949cb_2026-10-14.xlsx
+  2026-10-15   tickets null   UTILITY_f49949cb_2026-10-15.xlsx
+  2026-10-16   tickets null   UTILITY_f49949cb_2026-10-16.xlsx
+  2026-10-17   tickets null   UTILITY_f49949cb_2026-10-17.xlsx
+  2026-10-18   tickets null   UTILITY_f49949cb_2026-10-18.xlsx
+  2026-10-19   tickets null   UTILITY_f49949cb_2026-10-19.xlsx
+  2026-10-20   tickets null   UTILITY_f49949cb_2026-10-20.xlsx
+
+Laporan Analisa Air Boiler
+834ce78e-3eed-4f3b-bef4-af84dc50728e
+Downloaded 28 days, skipped 0 days, failed 0 days
+  2026-09-21   tickets null   UTILITY_834ce78e_2026-09-21.xlsx
+  2026-09-24   tickets null   UTILITY_834ce78e_2026-09-24.xlsx
+  2026-09-25   tickets null   UTILITY_834ce78e_2026-09-25.xlsx
+  2026-09-26   tickets null   UTILITY_834ce78e_2026-09-26.xlsx
+  2026-09-27   tickets null   UTILITY_834ce78e_2026-09-27.xlsx
+  2026-09-28   tickets null   UTILITY_834ce78e_2026-09-28.xlsx
+  2026-09-29   tickets null   UTILITY_834ce78e_2026-09-29.xlsx
+  2026-09-30   tickets null   UTILITY_834ce78e_2026-09-30.xlsx
+  2026-10-01   tickets null   UTILITY_834ce78e_2026-10-01.xlsx
+  2026-10-02   tickets null   UTILITY_834ce78e_2026-10-02.xlsx
+  2026-10-03   tickets null   UTILITY_834ce78e_2026-10-03.xlsx
+  2026-10-04   tickets null   UTILITY_834ce78e_2026-10-04.xlsx
+  2026-10-05   tickets null   UTILITY_834ce78e_2026-10-05.xlsx
+  2026-10-06   tickets null   UTILITY_834ce78e_2026-10-06.xlsx
+  2026-10-07   tickets null   UTILITY_834ce78e_2026-10-07.xlsx
+  2026-10-08   tickets null   UTILITY_834ce78e_2026-10-08.xlsx
+  2026-10-09   tickets null   UTILITY_834ce78e_2026-10-09.xlsx
+  2026-10-10   tickets null   UTILITY_834ce78e_2026-10-10.xlsx
+  2026-10-11   tickets null   UTILITY_834ce78e_2026-10-11.xlsx
+  2026-10-12   tickets null   UTILITY_834ce78e_2026-10-12.xlsx
+  2026-10-13   tickets null   UTILITY_834ce78e_2026-10-13.xlsx
+  2026-10-14   tickets null   UTILITY_834ce78e_2026-10-14.xlsx
+  2026-10-15   tickets null   UTILITY_834ce78e_2026-10-15.xlsx
+  2026-10-16   tickets null   UTILITY_834ce78e_2026-10-16.xlsx
+  2026-10-17   tickets null   UTILITY_834ce78e_2026-10-17.xlsx
+  2026-10-18   tickets null   UTILITY_834ce78e_2026-10-18.xlsx
+  2026-10-19   tickets null   UTILITY_834ce78e_2026-10-19.xlsx
+  2026-10-20   tickets null   UTILITY_834ce78e_2026-10-20.xlsx
+
+Laporan Analisa Air WTP & WWTP
+767e5297-f861-4a65-ab27-cbb0d07f8253
+Downloaded 28 days, skipped 0 days, failed 0 days
+  2026-09-21   tickets null   UTILITY_767e5297_2026-09-21.xlsx
+  2026-09-24   tickets null   UTILITY_767e5297_2026-09-24.xlsx
+  2026-09-25   tickets null   UTILITY_767e5297_2026-09-25.xlsx
+  2026-09-26   tickets null   UTILITY_767e5297_2026-09-26.xlsx
+  2026-09-27   tickets null   UTILITY_767e5297_2026-09-27.xlsx
+  2026-09-28   tickets null   UTILITY_767e5297_2026-09-28.xlsx
+  2026-09-29   tickets null   UTILITY_767e5297_2026-09-29.xlsx
+  2026-09-30   tickets null   UTILITY_767e5297_2026-09-30.xlsx
+  2026-10-01   tickets null   UTILITY_767e5297_2026-10-01.xlsx
+  2026-10-02   tickets null   UTILITY_767e5297_2026-10-02.xlsx
+  2026-10-03   tickets null   UTILITY_767e5297_2026-10-03.xlsx
+  2026-10-04   tickets null   UTILITY_767e5297_2026-10-04.xlsx
+  2026-10-05   tickets null   UTILITY_767e5297_2026-10-05.xlsx
+  2026-10-06   tickets null   UTILITY_767e5297_2026-10-06.xlsx
+  2026-10-07   tickets null   UTILITY_767e5297_2026-10-07.xlsx
+  2026-10-08   tickets null   UTILITY_767e5297_2026-10-08.xlsx
+  2026-10-09   tickets null   UTILITY_767e5297_2026-10-09.xlsx
+  2026-10-10   tickets null   UTILITY_767e5297_2026-10-10.xlsx
+  2026-10-11   tickets null   UTILITY_767e5297_2026-10-11.xlsx
+  2026-10-12   tickets null   UTILITY_767e5297_2026-10-12.xlsx
+  2026-10-13   tickets null   UTILITY_767e5297_2026-10-13.xlsx
+  2026-10-14   tickets null   UTILITY_767e5297_2026-10-14.xlsx
+  2026-10-15   tickets null   UTILITY_767e5297_2026-10-15.xlsx
+  2026-10-16   tickets null   UTILITY_767e5297_2026-10-16.xlsx
+  2026-10-17   tickets null   UTILITY_767e5297_2026-10-17.xlsx
+  2026-10-18   tickets null   UTILITY_767e5297_2026-10-18.xlsx
+  2026-10-19   tickets null   UTILITY_767e5297_2026-10-19.xlsx
+  2026-10-20   tickets null   UTILITY_767e5297_2026-10-20.xlsx
+
+Realization & Verification Cleaning RO
+305c8641-93d0-4c55-9d71-28ee9d7eeee3
+Downloaded 1 day, skipped 0 days, failed 0 days
+  2026-10-02   tickets null   UTILITY_305c8641_2026-10-02.xlsx
+
+WWTP Operational
+0826ff96-b12d-42db-ad59-93bea313e4da
+Downloaded 7 days, skipped 0 days, failed 0 days
+  2026-09-26   tickets null   UTILITY_0826ff96_2026-09-26.xlsx
+  2026-10-15   tickets null   UTILITY_0826ff96_2026-10-15.xlsx
+  2026-10-16   tickets null   UTILITY_0826ff96_2026-10-16.xlsx
+  2026-10-17   tickets null   UTILITY_0826ff96_2026-10-17.xlsx
+  2026-10-18   tickets null   UTILITY_0826ff96_2026-10-18.xlsx
+  2026-10-19   tickets null   UTILITY_0826ff96_2026-10-19.xlsx
+  2026-10-20   tickets null   UTILITY_0826ff96_2026-10-20.xlsx
+
+---
+Utility Log Sheet reports
+Status: OK
+Ran at: 2026-10-23 09:01:11 WIB
+Range: the job stopped before a date range was chosen
+
+The sync finished. Days with tickets were saved and written to utility days.
+
+Result
+- Reports: 13
+- Downloaded: 28 days
+- Skipped (no tickets): 25 days
+- Failed: 0 days
+- Utility days written: 28
+- Readings: 2473
+- Material uses: 4
+- Loader runs: 5
+- Checks: 59
+- Jobs: 0
+
+A day is downloaded when Total Ticket is greater than 0.
+Each saved workbook replaces that form’s utility day. Steam on these sheets is not the production-report steam total.
+
+Operational Boiler Daily Report Taihu 15 TPH
+2877806f-02dc-4332-8a18-1d515c531001
+Downloaded 3 days, skipped 0 days, failed 0 days
+  2026-10-21   tickets 198   UTILITY_2877806f_2026-10-21.xlsx
+  2026-10-22   tickets 208   UTILITY_2877806f_2026-10-22.xlsx
+  2026-10-23   tickets 208   UTILITY_2877806f_2026-10-23.xlsx
+
+Operational Boiler Taihu 15 t/h Daily Report (Local)
+f9db0b0c-6518-4ca7-80dc-f5763521857f
+Downloaded 3 days, skipped 0 days, failed 0 days
+  2026-10-21   tickets 21010   UTILITY_f9db0b0c_2026-10-21.xlsx
+  2026-10-22   tickets 21010   UTILITY_f9db0b0c_2026-10-22.xlsx
+  2026-10-23   tickets 21010   UTILITY_f9db0b0c_2026-10-23.xlsx
+
+Operational Boiler Daily Report Wuxi 15 TPH
+3538d238-442b-4add-9f9d-ce14aae06ba8
+Downloaded 0 days, skipped 1 day, failed 0 days
+  Skipped: 2026-10-23
+
+Form Pemakaian Bahan bakar Priscolin Taihu 15t/h Boiler
+0a1b0c28-1780-43d9-8c79-46b9ce2a82b1
+Downloaded 3 days, skipped 0 days, failed 0 days
+  2026-10-21   tickets 15   UTILITY_0a1b0c28_2026-10-21.xlsx
+  2026-10-22   tickets 10   UTILITY_0a1b0c28_2026-10-22.xlsx
+  2026-10-23   tickets 5   UTILITY_0a1b0c28_2026-10-23.xlsx
+
+Logbook Pemakaian Chemical Boiler
+232ca732-aae1-49e9-937e-80d3d0f156bd
+Downloaded 1 day, skipped 2 days, failed 0 days
+  2026-10-22   tickets 4   UTILITY_232ca732_2026-10-22.xlsx
+  Skipped: 2026-10-21, 2026-10-23
+
+Monitoring Display Meter Listrik
+cc2e0682-4681-4ef9-a13d-3a51dd786c86
+Downloaded 0 days, skipped 1 day, failed 0 days
+  Skipped: 2026-10-23
+
+Logsheet Batu Bara
+1d5bb87a-74f1-41a5-b692-ad210107a0d6
+Downloaded 3 days, skipped 0 days, failed 0 days
+  2026-10-21   tickets 2   UTILITY_1d5bb87a_2026-10-21.xlsx
+  2026-10-22   tickets 1   UTILITY_1d5bb87a_2026-10-22.xlsx
+  2026-10-23   tickets 1   UTILITY_1d5bb87a_2026-10-23.xlsx
+
+Logsheet Operational Wheel loader Preventive Maintenance Daily Checklist
+8faf8a0f-7938-405b-8caf-c6cb3763c247
+Downloaded 3 days, skipped 0 days, failed 0 days
+  2026-10-21   tickets 24   UTILITY_8faf8a0f_2026-10-21.xlsx
+  2026-10-22   tickets 24   UTILITY_8faf8a0f_2026-10-22.xlsx
+  2026-10-23   tickets 11   UTILITY_8faf8a0f_2026-10-23.xlsx
+
+Operational Wheel Loader Fuel Level & Loader Hour Meter
+f49949cb-4e6d-4958-a7df-9c40e89b90fd
+Downloaded 3 days, skipped 0 days, failed 0 days
+  2026-10-21   tickets 2   UTILITY_f49949cb_2026-10-21.xlsx
+  2026-10-22   tickets 2   UTILITY_f49949cb_2026-10-22.xlsx
+  2026-10-23   tickets 1   UTILITY_f49949cb_2026-10-23.xlsx
+
+Laporan Analisa Air Boiler
+834ce78e-3eed-4f3b-bef4-af84dc50728e
+Downloaded 3 days, skipped 0 days, failed 0 days
+  2026-10-21   tickets 33   UTILITY_834ce78e_2026-10-21.xlsx
+  2026-10-22   tickets 10   UTILITY_834ce78e_2026-10-22.xlsx
+  2026-10-23   tickets 10   UTILITY_834ce78e_2026-10-23.xlsx
+
+Laporan Analisa Air WTP & WWTP
+767e5297-f861-4a65-ab27-cbb0d07f8253
+Downloaded 3 days, skipped 0 days, failed 0 days
+  2026-10-21   tickets 6   UTILITY_767e5297_2026-10-21.xlsx
+  2026-10-22   tickets 12   UTILITY_767e5297_2026-10-22.xlsx
+  2026-10-23   tickets 6   UTILITY_767e5297_2026-10-23.xlsx
+
+Realization & Verification Cleaning RO
+305c8641-93d0-4c55-9d71-28ee9d7eeee3
+Downloaded 0 days, skipped 21 days, failed 0 days
+  Skipped: 2026-10-03, 2026-10-04, 2026-10-05, 2026-10-06, 2026-10-07, 2026-10-08, 2026-10-09, 2026-10-10, 2026-10-11, 2026-10-12, 2026-10-13, 2026-10-14, 2026-10-15, 2026-10-16, 2026-10-17, 2026-10-18, 2026-10-19, 2026-10-20, 2026-10-21, 2026-10-22, 2026-10-23
+
+WWTP Operational
+0826ff96-b12d-42db-ad59-93bea313e4da
+Downloaded 3 days, skipped 0 days, failed 0 days
+  2026-10-21   tickets 20   UTILITY_0826ff96_2026-10-21.xlsx
+  2026-10-22   tickets 33   UTILITY_0826ff96_2026-10-22.xlsx
+  2026-10-23   tickets 14   UTILITY_0826ff96_2026-10-23.xlsx
+
+---

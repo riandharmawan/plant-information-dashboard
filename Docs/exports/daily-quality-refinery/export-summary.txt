@@ -1,0 +1,21 @@
+Status: OK
+Finished: 23 Oct 2026, 09:00 Asia/Jakarta
+Duration: 9s
+Form: F/QCO-002 Daily Quality Refinery
+Range: 2026-10-21 through 2026-10-23 (3 days)
+Source: https://logsheet-builder.gamasap.com/report/index/54c4be2f-6076-4f6e-b897-90f12622d142
+
+Result
+- Inserted: 2 days
+- Skipped (no data): 1 days
+- Failed: 0 days
+
+Inserted
+Date         Unit          Readings  Database
+2026-10-21   refinery150   24        match
+2026-10-22   refinery150   24        match
+
+Skipped because there was no data
+2026-10-23   no tickets
+
+The sync finished and the inserted days match the database.

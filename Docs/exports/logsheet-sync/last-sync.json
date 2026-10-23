@@ -1,0 +1,49 @@
+{
+  "ranAt": "2026-10-23 09:01:11 WIB",
+  "status": "OK",
+  "durationMs": 99736,
+  "jobs": [
+    {
+      "name": "sounding",
+      "exitCode": 0,
+      "durationMs": 10820,
+      "status": "OK"
+    },
+    {
+      "name": "tnf004",
+      "exitCode": 0,
+      "durationMs": 4353,
+      "status": "OK"
+    },
+    {
+      "name": "rfa004a",
+      "exitCode": 0,
+      "durationMs": 4724,
+      "status": "OK"
+    },
+    {
+      "name": "rfa004b",
+      "exitCode": 0,
+      "durationMs": 2730,
+      "status": "OK"
+    },
+    {
+      "name": "analytical",
+      "exitCode": 0,
+      "durationMs": 4097,
+      "status": "OK"
+    },
+    {
+      "name": "refinery-quality",
+      "exitCode": 0,
+      "durationMs": 8940,
+      "status": "OK"
+    },
+    {
+      "name": "utility",
+      "exitCode": 0,
+      "durationMs": 64060,
+      "status": "OK"
+    }
+  ]
+}

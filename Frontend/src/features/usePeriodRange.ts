@@ -7,7 +7,7 @@ function isoOf(date: Date): string {
   return `${date.getFullYear()}-${month}-${day}`
 }
 
-function addDays(iso: string, days: number): string {
+export function addDays(iso: string, days: number): string {
   const [year, month, day] = iso.split('-').map(Number)
   const date = new Date(year, (month || 1) - 1, (day || 1) + days)
   return isoOf(date)

@@ -2,14 +2,17 @@ import { useState } from 'react'
 import { Info } from 'lucide-react'
 import { useLocale } from '../../i18n/LocaleContext.tsx'
 import type { TankLive } from '../../domain/types.ts'
-import { formatDay, formatKg, formatMeasure, parameter, tankLabel } from '../../domain/format.ts'
+import { formatDay, formatMeasure, parameter, tankLabel } from '../../domain/format.ts'
+import { useMass } from './massUnit.ts'
 import type { HistoryMetric } from './quantitySeries.ts'
+import { isEmptyTank, isTempAnomaly } from './tankAlerts.ts'
 
 type SortDir = 'asc' | 'desc'
 type SortValue = string | number | null
 
 export function TankTable({ tanks, averageTemperature, onHistory }: { tanks: TankLive[]; averageTemperature: number | null; onHistory: (tankId: string, metric: HistoryMetric) => void }) {
   const { t, locale } = useLocale()
+  const mass = useMass()
   const [key, setKey] = useState<string | null>(null)
   const [dir, setDir] = useState<SortDir>('asc')
   const sort = {
@@ -46,11 +49,11 @@ export function TankTable({ tanks, averageTemperature, onHistory }: { tanks: Tan
           <tr>
             <SortHeader label={t.tank} column="tank" sort={sort} />
             <SortHeader label={t.commodity} column="commodity" sort={sort} />
-            <SortHeader label={t.capacity} column="capacity" sort={sort} align="right" />
+            <SortHeader label={`${t.capacity} (${mass.symbol})`} column="capacity" sort={sort} align="right" />
             <SortHeader label={t.levelAxis} column="level" sort={sort} align="right" />
-            <SortHeader label={t.quantity} column="quantity" sort={sort} align="right" />
-            <SortHeader label={t.emptySpace} column="empty" sort={sort} align="right" />
-            <SortHeader label={t.loadable} column="loadable" sort={sort} align="right" />
+            <SortHeader label={`${t.quantity} (${mass.symbol})`} column="quantity" sort={sort} align="right" />
+            <SortHeader label={`${t.emptySpace} (${mass.symbol})`} column="empty" sort={sort} align="right" />
+            <SortHeader label={`${t.loadable} (${mass.symbol})`} column="loadable" sort={sort} align="right" />
             <SortHeader label={t.tankLevelPct} column="levelPct" sort={sort} align="right" hint={t.levelFillHint} />
             <SortHeader label={t.tempAxis} column="temp" sort={sort} align="right" hint={t.tempSpikeHint} />
             <SortHeader label="FFA" column="ffa" sort={sort} align="right" hint={t.ffaAgeHint} />
@@ -59,7 +62,7 @@ export function TankTable({ tanks, averageTemperature, onHistory }: { tanks: Tan
         </thead>
         <tbody>
           {rows.map((tank) => {
-            const empty = tank.operationalStatus === 'EMPTY' || (tank.soundingLevelM == null && !tank.productName)
+            const empty = isEmptyTank(tank)
             const quarantined = tank.quality?.storageVerdict === 'quarantine'
             const ffa = parameter(tank.quality?.parameters, 'FFA')
             const moisture = parameter(tank.quality?.parameters, 'MI')
@@ -73,17 +76,17 @@ export function TankTable({ tanks, averageTemperature, onHistory }: { tanks: Tan
               <tr key={tank.tankId} className={rowClass || undefined}>
                 <td className="prod-plant">{tankLabel(tank.tankId)}</td>
                 <td>{tank.productName || t.unavailable}</td>
-                <td className="num">{kg(tank.capacityKg, t.unavailable)}</td>
+                <td className="num">{tank.capacityKg == null ? t.unavailable : mass.whole(tank.capacityKg)}</td>
                 <HistoryCell value={tank.soundingLevelM == null ? t.unavailable : formatMeasure(tank.soundingLevelM, 3)} missing={tank.soundingLevelM == null} onClick={() => onHistory(tank.tankId, 'level')} />
-                <HistoryCell value={kgAmount(tank.quantityKg, t.unavailable)} missing={tank.quantityKg == null} onClick={() => onHistory(tank.tankId, 'quantity')} />
-                <HistoryCell value={kgAmount(tank.emptySpaceKg, t.unavailable)} missing={tank.emptySpaceKg == null} onClick={() => onHistory(tank.tankId, 'emptySpace')} />
-                <HistoryCell value={kgAmount(tank.loadableKg, t.unavailable)} missing={tank.loadableKg == null} alert={tank.loadableKg != null && tank.loadableKg < 0} onClick={() => onHistory(tank.tankId, 'loadable')} />
+                <HistoryCell value={tank.quantityKg == null ? t.unavailable : mass.amount(tank.quantityKg)} missing={tank.quantityKg == null} onClick={() => onHistory(tank.tankId, 'quantity')} />
+                <HistoryCell value={tank.emptySpaceKg == null ? t.unavailable : mass.amount(tank.emptySpaceKg)} missing={tank.emptySpaceKg == null} onClick={() => onHistory(tank.tankId, 'emptySpace')} />
+                <HistoryCell value={tank.loadableKg == null ? t.unavailable : mass.amount(tank.loadableKg)} missing={tank.loadableKg == null} alert={tank.loadableKg != null && tank.loadableKg < 0} onClick={() => onHistory(tank.tankId, 'loadable')} />
                 <td className="num">
                   <button type="button" className={levelClass(tank.fillRatio)} onClick={() => onHistory(tank.tankId, 'levelTank')}>
                     <LevelCue ratio={tank.fillRatio} blank={t.unavailable} />
                   </button>
                 </td>
-                <HistoryCell value={tank.temperatureC == null ? t.unavailable : formatMeasure(tank.temperatureC, 1)} missing={tank.temperatureC == null} alert={temperatureHot(tank.temperatureC, averageTemperature)} onClick={() => onHistory(tank.tankId, 'temperature')} />
+                <HistoryCell value={tank.temperatureC == null ? t.unavailable : formatMeasure(tank.temperatureC, 1)} missing={tank.temperatureC == null} alert={isTempAnomaly(tank.temperatureC, averageTemperature)} onClick={() => onHistory(tank.tankId, 'temperature')} />
                 <HistoryCell value={ffa == null ? t.unavailable : formatMeasure(ffa)} missing={ffa == null} alert={ffa != null && stale} title={ffa != null ? ageTitle : undefined} onClick={() => onHistory(tank.tankId, 'ffa')} />
                 <HistoryCell value={moisture == null ? t.unavailable : formatMeasure(moisture)} missing={moisture == null} alert={moisture != null && stale} title={moisture != null ? ageTitle : undefined} onClick={() => onHistory(tank.tankId, 'moisture')} />
               </tr>
@@ -167,11 +170,6 @@ function levelClass(ratio: number | null): string {
   return 'qty-link'
 }
 
-function temperatureHot(temperature: number | null, average: number | null): boolean {
-  if (temperature == null || average == null || average <= 0) return false
-  return temperature > average * 1.3
-}
-
 function HistoryCell({ value, onClick, stale = false, alert = false, missing = false, title }: { value: string; onClick: () => void; stale?: boolean; alert?: boolean; missing?: boolean; title?: string }) {
   const className = [
     'qty-link',
@@ -210,14 +208,4 @@ function LevelCue({ ratio, blank }: { ratio: number | null; blank: string }) {
       <span className="level-cue__value">{percent.toFixed(1)}%</span>
     </span>
   )
-}
-
-function kg(value: number | null | undefined, blank: string): string {
-  if (value == null) return blank
-  return formatMeasure(value, 0)
-}
-
-function kgAmount(value: number | null | undefined, blank: string): string {
-  if (value == null) return blank
-  return formatKg(value)
 }

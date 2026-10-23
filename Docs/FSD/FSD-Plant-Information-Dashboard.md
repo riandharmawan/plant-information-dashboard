@@ -66,6 +66,7 @@ Observed Bekasi sources:
 | F/QCO-001 | Daily Storage Tank Analytical Result | Daily Excel, analyses present on 14, 15, 16, and 19 Oct 2026 |
 | F/RFA-004(A) | Refinery daily log (feed, RBDPO, PFAD, bleaching earth, phosphoric acid, steam, power, gas) | Workbook parsed for the daily production screen |
 | F/RFA-004(B) | Fractionation daily log (RBDPO/ROL feed, olein, stearin, steam, power, water) | Workbook parsed for the daily production screen |
+| F/QCO-002 | Daily quality, refinery | Daily Excel, 14–20 Oct 2026, Refinery 150 only. Field map in `Docs/FSD/FSD-Refinery-Quality.md` |
 | F/QCO-009, F/QCO-010 | Incoming material by vessel and by truck | Represented on the QC screens from the current extract |
 
 The remaining forms in Appendix A are in the Priscolin register. They are in scope as logsheets the platform must be able to receive. They become dashboard figures only after a field map exists.
@@ -411,7 +412,7 @@ Shared behaviour in section 4.1 applies to every module.
 | QC-06 | Must | Inbound CPO at Bekasi fails when FFA is above 5 or moisture is above 0.5, because those limits are printed on F/QCO-009 and F/QCO-010. A palka sample outside that band rejects the vehicle |
 | QC-07 | Must | IV outside 51–54 and DOBI at or below 2 are shown as watch limits on the vessel form. They do not by themselves reject the vehicle |
 | QC-08 | Must | Those inbound numbers are a rule record for Bekasi. A site without that rule does not inherit it |
-| QC-09 | Should | Refinery and fractionation quality (F/QCO-002, F/QCO-003) appear on the matching production section for the same date |
+| QC-09 | Should | Refinery quality from F/QCO-002 is specified in `Docs/FSD/FSD-Refinery-Quality.md`. Fractionation quality (F/QCO-003) appears on the fractionation section once that workbook is mapped |
 | QC-10 | Should | Outbound truck and vessel results (F/QCO-013, F/QCO-020) appear as release status on the movement view |
 | QC-11 | Must | The user can filter storage, vessel, truck, and movements by date |
 | QC-12 | Later | Chemical and ingredient certificates feed the supporting-materials ladder |
@@ -559,6 +560,8 @@ This bucket is deliberate. The Priscolin register includes start-up checklists, 
 ---
 
 ## 5. Multi-Site Access Control and User Personas
+
+The sign-in page, User Management screens, validation, and the signed-in user’s password change are specified in `Docs/FSD/FSD-User-Management.md`. This section states who receives an account and how site assignment and page permissions combine.
 
 ### 5.1 Personas
 
@@ -788,4 +791,4 @@ These are confirmed from the current forms and screens. They are seed data for t
 - Refinery 500 is the larger flowmeter and its PFAD goes to T16. Refinery 150 is the smaller flowmeter and its PFAD goes to T05.
 - Fractionation yield is not computed from same-day feed, product, and co-product.
 - Stock utilisation groups include IV 64 as its own group.
-- The live sounding form id is `f80caa03-a6b0-4ad7-b823-459b2f828ce3`. The daily analytical form id is `9e1e978f-18c0-42dc-a558-e28e65bdf5ce`.
+- The live sounding form id is `f80caa03-a6b0-4ad7-b823-459b2f828ce3`. The daily analytical form id is `9e1e978f-18c0-42dc-a558-e28e65bdf5ce`. The refinery quality form id is `54c4be2f-6076-4f6e-b897-90f12622d142`.

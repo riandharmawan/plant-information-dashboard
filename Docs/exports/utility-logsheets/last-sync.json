@@ -1,0 +1,550 @@
+{
+  "ranAt": "2026-10-23 09:01:11 WIB",
+  "from": null,
+  "to": null,
+  "forms": [
+    {
+      "id": "2877806f-02dc-4332-8a18-1d515c531001",
+      "title": "Operational Boiler Daily Report Taihu 15 TPH",
+      "folder": "Operational Boiler Daily Report Taihu 15 TPH",
+      "downloaded": [
+        {
+          "day": "2026-10-21",
+          "tickets": 198,
+          "bytes": 66009,
+          "file": "D:\\Cursor\\Plant Information Dashboard\\Docs\\exports\\utility-logsheets\\Operational Boiler Daily Report Taihu 15 TPH\\UTILITY_2877806f_2026-10-21.xlsx"
+        },
+        {
+          "day": "2026-10-22",
+          "tickets": 208,
+          "bytes": 36149,
+          "file": "D:\\Cursor\\Plant Information Dashboard\\Docs\\exports\\utility-logsheets\\Operational Boiler Daily Report Taihu 15 TPH\\UTILITY_2877806f_2026-10-22.xlsx"
+        },
+        {
+          "day": "2026-10-23",
+          "tickets": 208,
+          "bytes": 34421,
+          "file": "D:\\Cursor\\Plant Information Dashboard\\Docs\\exports\\utility-logsheets\\Operational Boiler Daily Report Taihu 15 TPH\\UTILITY_2877806f_2026-10-23.xlsx"
+        }
+      ],
+      "skipped": [],
+      "failed": [],
+      "ingested": {
+        "formCode": "F/UTI-001",
+        "downloaded": 3,
+        "skipped": 0,
+        "days": 3,
+        "readings": 1108,
+        "materials": 0,
+        "loaderRuns": 0,
+        "checks": 0,
+        "jobs": 0,
+        "jobChecks": 0
+      }
+    },
+    {
+      "id": "f9db0b0c-6518-4ca7-80dc-f5763521857f",
+      "title": "Operational Boiler Taihu 15 t/h Daily Report (Local)",
+      "folder": "Operational Boiler Taihu 15 t h Daily Report (Local)",
+      "downloaded": [
+        {
+          "day": "2026-10-21",
+          "tickets": 21010,
+          "bytes": 63111,
+          "file": "D:\\Cursor\\Plant Information Dashboard\\Docs\\exports\\utility-logsheets\\Operational Boiler Taihu 15 t h Daily Report (Local)\\UTILITY_f9db0b0c_2026-10-21.xlsx"
+        },
+        {
+          "day": "2026-10-22",
+          "tickets": 21010,
+          "bytes": 35872,
+          "file": "D:\\Cursor\\Plant Information Dashboard\\Docs\\exports\\utility-logsheets\\Operational Boiler Taihu 15 t h Daily Report (Local)\\UTILITY_f9db0b0c_2026-10-22.xlsx"
+        },
+        {
+          "day": "2026-10-23",
+          "tickets": 21010,
+          "bytes": 30536,
+          "file": "D:\\Cursor\\Plant Information Dashboard\\Docs\\exports\\utility-logsheets\\Operational Boiler Taihu 15 t h Daily Report (Local)\\UTILITY_f9db0b0c_2026-10-23.xlsx"
+        }
+      ],
+      "skipped": [],
+      "failed": [],
+      "ingested": {
+        "formCode": "F/UTI-002",
+        "downloaded": 3,
+        "skipped": 0,
+        "days": 3,
+        "readings": 921,
+        "materials": 0,
+        "loaderRuns": 0,
+        "checks": 0,
+        "jobs": 0,
+        "jobChecks": 0
+      }
+    },
+    {
+      "id": "3538d238-442b-4add-9f9d-ce14aae06ba8",
+      "title": "Operational Boiler Daily Report Wuxi 15 TPH",
+      "folder": "Operational Boiler Daily Report Wuxi 15 TPH",
+      "downloaded": [],
+      "skipped": [
+        {
+          "day": "2026-10-23",
+          "tickets": 0
+        }
+      ],
+      "failed": [],
+      "ingested": {
+        "formCode": "utility-wuxi-15tph",
+        "downloaded": 0,
+        "skipped": 1,
+        "days": 0,
+        "readings": 0,
+        "materials": 0,
+        "loaderRuns": 0,
+        "checks": 0,
+        "jobs": 0,
+        "jobChecks": 0
+      }
+    },
+    {
+      "id": "0a1b0c28-1780-43d9-8c79-46b9ce2a82b1",
+      "title": "Form Pemakaian Bahan bakar Priscolin Taihu 15t/h Boiler",
+      "folder": "Form Pemakaian Bahan bakar Priscolin Taihu 15t h Boiler",
+      "downloaded": [
+        {
+          "day": "2026-10-21",
+          "tickets": 15,
+          "bytes": 55409,
+          "file": "D:\\Cursor\\Plant Information Dashboard\\Docs\\exports\\utility-logsheets\\Form Pemakaian Bahan bakar Priscolin Taihu 15t h Boiler\\UTILITY_0a1b0c28_2026-10-21.xlsx"
+        },
+        {
+          "day": "2026-10-22",
+          "tickets": 10,
+          "bytes": 25762,
+          "file": "D:\\Cursor\\Plant Information Dashboard\\Docs\\exports\\utility-logsheets\\Form Pemakaian Bahan bakar Priscolin Taihu 15t h Boiler\\UTILITY_0a1b0c28_2026-10-22.xlsx"
+        },
+        {
+          "day": "2026-10-23",
+          "tickets": 5,
+          "bytes": 25542,
+          "file": "D:\\Cursor\\Plant Information Dashboard\\Docs\\exports\\utility-logsheets\\Form Pemakaian Bahan bakar Priscolin Taihu 15t h Boiler\\UTILITY_0a1b0c28_2026-10-23.xlsx"
+        }
+      ],
+      "skipped": [],
+      "failed": [],
+      "ingested": {
+        "formCode": "F/UTI-004",
+        "downloaded": 3,
+        "skipped": 0,
+        "days": 3,
+        "readings": 114,
+        "materials": 0,
+        "loaderRuns": 0,
+        "checks": 0,
+        "jobs": 0,
+        "jobChecks": 0
+      }
+    },
+    {
+      "id": "232ca732-aae1-49e9-937e-80d3d0f156bd",
+      "title": "Logbook Pemakaian Chemical Boiler",
+      "folder": "Logbook Pemakaian Chemical Boiler",
+      "downloaded": [
+        {
+          "day": "2026-10-22",
+          "tickets": 4,
+          "bytes": 25529,
+          "file": "D:\\Cursor\\Plant Information Dashboard\\Docs\\exports\\utility-logsheets\\Logbook Pemakaian Chemical Boiler\\UTILITY_232ca732_2026-10-22.xlsx"
+        }
+      ],
+      "skipped": [
+        {
+          "day": "2026-10-21",
+          "tickets": 0
+        },
+        {
+          "day": "2026-10-23",
+          "tickets": 0
+        }
+      ],
+      "failed": [],
+      "ingested": {
+        "formCode": "F/UTI-005",
+        "downloaded": 1,
+        "skipped": 2,
+        "days": 1,
+        "readings": 0,
+        "materials": 4,
+        "loaderRuns": 0,
+        "checks": 0,
+        "jobs": 0,
+        "jobChecks": 0
+      }
+    },
+    {
+      "id": "cc2e0682-4681-4ef9-a13d-3a51dd786c86",
+      "title": "Monitoring Display Meter Listrik",
+      "folder": "Monitoring Display Meter Listrik",
+      "downloaded": [],
+      "skipped": [
+        {
+          "day": "2026-10-23",
+          "tickets": 0
+        }
+      ],
+      "failed": [],
+      "ingested": {
+        "formCode": "utility-meter-listrik",
+        "downloaded": 0,
+        "skipped": 1,
+        "days": 0,
+        "readings": 0,
+        "materials": 0,
+        "loaderRuns": 0,
+        "checks": 0,
+        "jobs": 0,
+        "jobChecks": 0
+      }
+    },
+    {
+      "id": "1d5bb87a-74f1-41a5-b692-ad210107a0d6",
+      "title": "Logsheet Batu Bara",
+      "folder": "Logsheet Batu Bara",
+      "downloaded": [
+        {
+          "day": "2026-10-21",
+          "tickets": 2,
+          "bytes": 55665,
+          "file": "D:\\Cursor\\Plant Information Dashboard\\Docs\\exports\\utility-logsheets\\Logsheet Batu Bara\\UTILITY_1d5bb87a_2026-10-21.xlsx"
+        },
+        {
+          "day": "2026-10-22",
+          "tickets": 1,
+          "bytes": 26026,
+          "file": "D:\\Cursor\\Plant Information Dashboard\\Docs\\exports\\utility-logsheets\\Logsheet Batu Bara\\UTILITY_1d5bb87a_2026-10-22.xlsx"
+        },
+        {
+          "day": "2026-10-23",
+          "tickets": 1,
+          "bytes": 26028,
+          "file": "D:\\Cursor\\Plant Information Dashboard\\Docs\\exports\\utility-logsheets\\Logsheet Batu Bara\\UTILITY_1d5bb87a_2026-10-23.xlsx"
+        }
+      ],
+      "skipped": [],
+      "failed": [],
+      "ingested": {
+        "formCode": "F/UTI-010",
+        "downloaded": 3,
+        "skipped": 0,
+        "days": 3,
+        "readings": 30,
+        "materials": 0,
+        "loaderRuns": 0,
+        "checks": 0,
+        "jobs": 0,
+        "jobChecks": 0
+      }
+    },
+    {
+      "id": "8faf8a0f-7938-405b-8caf-c6cb3763c247",
+      "title": "Logsheet Operational Wheel loader Preventive Maintenance Daily Checklist",
+      "folder": "Logsheet Operational Wheel loader Preventive Maintenance Daily Checklist",
+      "downloaded": [
+        {
+          "day": "2026-10-21",
+          "tickets": 24,
+          "bytes": 55274,
+          "file": "D:\\Cursor\\Plant Information Dashboard\\Docs\\exports\\utility-logsheets\\Logsheet Operational Wheel loader Preventive Maintenance Daily Checklist\\UTILITY_8faf8a0f_2026-10-21.xlsx"
+        },
+        {
+          "day": "2026-10-22",
+          "tickets": 24,
+          "bytes": 25726,
+          "file": "D:\\Cursor\\Plant Information Dashboard\\Docs\\exports\\utility-logsheets\\Logsheet Operational Wheel loader Preventive Maintenance Daily Checklist\\UTILITY_8faf8a0f_2026-10-22.xlsx"
+        },
+        {
+          "day": "2026-10-23",
+          "tickets": 11,
+          "bytes": 25509,
+          "file": "D:\\Cursor\\Plant Information Dashboard\\Docs\\exports\\utility-logsheets\\Logsheet Operational Wheel loader Preventive Maintenance Daily Checklist\\UTILITY_8faf8a0f_2026-10-23.xlsx"
+        }
+      ],
+      "skipped": [],
+      "failed": [],
+      "ingested": {
+        "formCode": "F/UTI-011(a)",
+        "downloaded": 3,
+        "skipped": 0,
+        "days": 3,
+        "readings": 0,
+        "materials": 0,
+        "loaderRuns": 0,
+        "checks": 59,
+        "jobs": 0,
+        "jobChecks": 0
+      }
+    },
+    {
+      "id": "f49949cb-4e6d-4958-a7df-9c40e89b90fd",
+      "title": "Operational Wheel Loader Fuel Level & Loader Hour Meter",
+      "folder": "Operational Wheel Loader Fuel Level & Loader Hour Meter",
+      "downloaded": [
+        {
+          "day": "2026-10-21",
+          "tickets": 2,
+          "bytes": 55249,
+          "file": "D:\\Cursor\\Plant Information Dashboard\\Docs\\exports\\utility-logsheets\\Operational Wheel Loader Fuel Level & Loader Hour Meter\\UTILITY_f49949cb_2026-10-21.xlsx"
+        },
+        {
+          "day": "2026-10-22",
+          "tickets": 2,
+          "bytes": 25686,
+          "file": "D:\\Cursor\\Plant Information Dashboard\\Docs\\exports\\utility-logsheets\\Operational Wheel Loader Fuel Level & Loader Hour Meter\\UTILITY_f49949cb_2026-10-22.xlsx"
+        },
+        {
+          "day": "2026-10-23",
+          "tickets": 1,
+          "bytes": 25611,
+          "file": "D:\\Cursor\\Plant Information Dashboard\\Docs\\exports\\utility-logsheets\\Operational Wheel Loader Fuel Level & Loader Hour Meter\\UTILITY_f49949cb_2026-10-23.xlsx"
+        }
+      ],
+      "skipped": [],
+      "failed": [],
+      "ingested": {
+        "formCode": "F/UTI-011(b)",
+        "downloaded": 3,
+        "skipped": 0,
+        "days": 3,
+        "readings": 0,
+        "materials": 0,
+        "loaderRuns": 5,
+        "checks": 0,
+        "jobs": 0,
+        "jobChecks": 0
+      }
+    },
+    {
+      "id": "834ce78e-3eed-4f3b-bef4-af84dc50728e",
+      "title": "Laporan Analisa Air Boiler",
+      "folder": "Laporan Analisa Air Boiler",
+      "downloaded": [
+        {
+          "day": "2026-10-21",
+          "tickets": 33,
+          "bytes": 57200,
+          "file": "D:\\Cursor\\Plant Information Dashboard\\Docs\\exports\\utility-logsheets\\Laporan Analisa Air Boiler\\UTILITY_834ce78e_2026-10-21.xlsx"
+        },
+        {
+          "day": "2026-10-22",
+          "tickets": 10,
+          "bytes": 26554,
+          "file": "D:\\Cursor\\Plant Information Dashboard\\Docs\\exports\\utility-logsheets\\Laporan Analisa Air Boiler\\UTILITY_834ce78e_2026-10-22.xlsx"
+        },
+        {
+          "day": "2026-10-23",
+          "tickets": 10,
+          "bytes": 26539,
+          "file": "D:\\Cursor\\Plant Information Dashboard\\Docs\\exports\\utility-logsheets\\Laporan Analisa Air Boiler\\UTILITY_834ce78e_2026-10-23.xlsx"
+        }
+      ],
+      "skipped": [],
+      "failed": [],
+      "ingested": {
+        "formCode": "F/UTI-012",
+        "downloaded": 3,
+        "skipped": 0,
+        "days": 3,
+        "readings": 102,
+        "materials": 0,
+        "loaderRuns": 0,
+        "checks": 0,
+        "jobs": 0,
+        "jobChecks": 0
+      }
+    },
+    {
+      "id": "767e5297-f861-4a65-ab27-cbb0d07f8253",
+      "title": "Laporan Analisa Air WTP & WWTP",
+      "folder": "Laporan Analisa Air WTP & WWTP",
+      "downloaded": [
+        {
+          "day": "2026-10-21",
+          "tickets": 6,
+          "bytes": 57153,
+          "file": "D:\\Cursor\\Plant Information Dashboard\\Docs\\exports\\utility-logsheets\\Laporan Analisa Air WTP & WWTP\\UTILITY_767e5297_2026-10-21.xlsx"
+        },
+        {
+          "day": "2026-10-22",
+          "tickets": 12,
+          "bytes": 28477,
+          "file": "D:\\Cursor\\Plant Information Dashboard\\Docs\\exports\\utility-logsheets\\Laporan Analisa Air WTP & WWTP\\UTILITY_767e5297_2026-10-22.xlsx"
+        },
+        {
+          "day": "2026-10-23",
+          "tickets": 6,
+          "bytes": 27560,
+          "file": "D:\\Cursor\\Plant Information Dashboard\\Docs\\exports\\utility-logsheets\\Laporan Analisa Air WTP & WWTP\\UTILITY_767e5297_2026-10-23.xlsx"
+        }
+      ],
+      "skipped": [],
+      "failed": [],
+      "ingested": {
+        "formCode": "F/WTP-001",
+        "downloaded": 3,
+        "skipped": 0,
+        "days": 3,
+        "readings": 133,
+        "materials": 0,
+        "loaderRuns": 0,
+        "checks": 0,
+        "jobs": 0,
+        "jobChecks": 0
+      }
+    },
+    {
+      "id": "305c8641-93d0-4c55-9d71-28ee9d7eeee3",
+      "title": "Realization & Verification Cleaning RO",
+      "folder": "Realization & Verification Cleaning RO",
+      "downloaded": [],
+      "skipped": [
+        {
+          "day": "2026-10-03",
+          "tickets": 0
+        },
+        {
+          "day": "2026-10-04",
+          "tickets": 0
+        },
+        {
+          "day": "2026-10-05",
+          "tickets": 0
+        },
+        {
+          "day": "2026-10-06",
+          "tickets": 0
+        },
+        {
+          "day": "2026-10-07",
+          "tickets": 0
+        },
+        {
+          "day": "2026-10-08",
+          "tickets": 0
+        },
+        {
+          "day": "2026-10-09",
+          "tickets": 0
+        },
+        {
+          "day": "2026-10-10",
+          "tickets": 0
+        },
+        {
+          "day": "2026-10-11",
+          "tickets": 0
+        },
+        {
+          "day": "2026-10-12",
+          "tickets": 0
+        },
+        {
+          "day": "2026-10-13",
+          "tickets": 0
+        },
+        {
+          "day": "2026-10-14",
+          "tickets": 0
+        },
+        {
+          "day": "2026-10-15",
+          "tickets": 0
+        },
+        {
+          "day": "2026-10-16",
+          "tickets": 0
+        },
+        {
+          "day": "2026-10-17",
+          "tickets": 0
+        },
+        {
+          "day": "2026-10-18",
+          "tickets": 0
+        },
+        {
+          "day": "2026-10-19",
+          "tickets": 0
+        },
+        {
+          "day": "2026-10-20",
+          "tickets": 0
+        },
+        {
+          "day": "2026-10-21",
+          "tickets": 0
+        },
+        {
+          "day": "2026-10-22",
+          "tickets": 0
+        },
+        {
+          "day": "2026-10-23",
+          "tickets": 0
+        }
+      ],
+      "failed": [],
+      "ingested": {
+        "formCode": "F/WTP-006",
+        "downloaded": 0,
+        "skipped": 21,
+        "days": 0,
+        "readings": 0,
+        "materials": 0,
+        "loaderRuns": 0,
+        "checks": 0,
+        "jobs": 0,
+        "jobChecks": 0
+      }
+    },
+    {
+      "id": "0826ff96-b12d-42db-ad59-93bea313e4da",
+      "title": "WWTP Operational",
+      "folder": "WWTP Operational",
+      "downloaded": [
+        {
+          "day": "2026-10-21",
+          "tickets": 20,
+          "bytes": 55845,
+          "file": "D:\\Cursor\\Plant Information Dashboard\\Docs\\exports\\utility-logsheets\\WWTP Operational\\UTILITY_0826ff96_2026-10-21.xlsx"
+        },
+        {
+          "day": "2026-10-22",
+          "tickets": 33,
+          "bytes": 26516,
+          "file": "D:\\Cursor\\Plant Information Dashboard\\Docs\\exports\\utility-logsheets\\WWTP Operational\\UTILITY_0826ff96_2026-10-22.xlsx"
+        },
+        {
+          "day": "2026-10-23",
+          "tickets": 14,
+          "bytes": 26173,
+          "file": "D:\\Cursor\\Plant Information Dashboard\\Docs\\exports\\utility-logsheets\\WWTP Operational\\UTILITY_0826ff96_2026-10-23.xlsx"
+        }
+      ],
+      "skipped": [],
+      "failed": [],
+      "ingested": {
+        "formCode": "F/WWTP-001",
+        "downloaded": 3,
+        "skipped": 0,
+        "days": 3,
+        "readings": 65,
+        "materials": 0,
+        "loaderRuns": 0,
+        "checks": 0,
+        "jobs": 0,
+        "jobChecks": 0
+      }
+    }
+  ],
+  "status": "OK"
+}

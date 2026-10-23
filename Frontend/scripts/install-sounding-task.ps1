@@ -1,4 +1,5 @@
-# Registers a daily Windows task that downloads F-TNF-003 and refreshes the dashboard.
+# Registers a daily Windows task that downloads F-TNF-003 and writes it to the database.
+# Each run also writes Docs/exports/storage-tank-sounding/sync-report.txt and appends sync.log.
 # Credentials stay in Frontend/.env.sync. The task itself does not store the password.
 $ErrorActionPreference = 'Stop'
 $frontend = Split-Path -Parent $PSScriptRoot
@@ -11,7 +12,7 @@ $trigger = New-ScheduledTaskTrigger -Daily -At $at
 $settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -DontStopOnIdleEnd
 Register-ScheduledTask `
   -TaskName 'Plant Dashboard sounding sync' `
-  -Description 'Download Storage Tank Sounding F-TNF-003 for missing days through today, then refresh the dashboard data.' `
+  -Description 'Download Storage Tank Sounding F-TNF-003 through today, insert it into the database, and write sync-report.txt.' `
   -Action $action `
   -Trigger $trigger `
   -Settings $settings `

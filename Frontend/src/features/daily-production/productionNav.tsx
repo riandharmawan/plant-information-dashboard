@@ -1,5 +1,6 @@
 import { NavLink, useSearchParams } from 'react-router-dom'
-import { DATA_DATES, type PlantKey } from '../../domain/dailyProduction.ts'
+import { useProductionReport } from '../../data/ProductionContext.tsx'
+import type { PlantKey } from '../../domain/dailyProduction.ts'
 import { useLocale } from '../../i18n/LocaleContext.tsx'
 import type { Messages } from '../../i18n/messages.ts'
 
@@ -40,10 +41,18 @@ export function productionSearch(start: string, end: string): string {
   return `?from=${from}&to=${to}`
 }
 
+function todayIso(): string {
+  const now = new Date()
+  const month = String(now.getMonth() + 1).padStart(2, '0')
+  const day = String(now.getDate()).padStart(2, '0')
+  return `${now.getFullYear()}-${month}-${day}`
+}
+
 export function useProductionRange() {
   const [params, setParams] = useSearchParams()
-  const fallbackStart = DATA_DATES[0] ?? '2026-10-06'
-  const fallbackEnd = DATA_DATES[DATA_DATES.length - 1] ?? fallbackStart
+  const { dates } = useProductionReport()
+  const fallbackStart = dates[0] ?? todayIso()
+  const fallbackEnd = dates[dates.length - 1] ?? fallbackStart
   const from = params.get('from')
   const to = params.get('to')
   const start = isIsoDate(from) ? from : fallbackStart

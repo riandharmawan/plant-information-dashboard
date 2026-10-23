@@ -1,0 +1,50 @@
+# Local Dev. API http://127.0.0.1:3010  Postgres 127.0.0.1:5437
+#   docker compose --env-file .env.dev -f docker-compose.dev.yml up -d --build
+#   docker compose --env-file .env.dev -f docker-compose.dev.yml run --rm pid-api npm run seed
+
+services:
+  pid-db:
+    image: postgres:16-alpine
+    container_name: pid-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-pid_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env.dev}
+      POSTGRES_DB: ${POSTGRES_DB:-pid_db}
+    ports:
+      - "127.0.0.1:5437:5432"
+    volumes:
+      - pid_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-pid_user} -d ${POSTGRES_DB:-pid_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  pid-api:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    container_name: pid-api
+    restart: unless-stopped
+    ports:
+      - "3010:3010"
+    environment:
+      APP_ENV: ${APP_ENV:-dev}
+      NODE_ENV: development
+      PORT: 3010
+      DATABASE_URL: postgresql://${POSTGRES_USER:-pid_user}:${POSTGRES_PASSWORD}@pid-db:5432/${POSTGRES_DB:-pid_db}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://127.0.0.1:5173,http://localhost:5173}
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env.dev}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-8h}
+      COOKIE_SECURE: "false"
+      SEED_DATA_DIR: /seed/data
+    volumes:
+      - ./Frontend/src/data:/seed/data:ro
+    command: ["sh", "-c", "npm run migrate && npm run start"]
+    depends_on:
+      pid-db:
+        condition: service_healthy
+
+volumes:
+  pid_pgdata:

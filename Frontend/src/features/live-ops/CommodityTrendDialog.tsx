@@ -3,29 +3,39 @@ import { CartesianGrid, Line, LineChart, ReferenceLine, ResponsiveContainer, Too
 import { useRepository } from '../../data/OperationsContext.tsx'
 import type { StockGroup } from '../../domain/commodityStock.ts'
 import { commoditySources } from '../../domain/commodityStock.ts'
-import { formatDay, formatKg, formatMeasure, tankLabel } from '../../domain/format.ts'
+import { formatDay, formatMeasure, parameter, tankLabel } from '../../domain/format.ts'
 import type { SoundingPoint, TankLive } from '../../domain/types.ts'
 import { useLocale } from '../../i18n/LocaleContext.tsx'
+import { DateRangeFilter } from '../daily-production/DateRangeFilter.tsx'
+import { addDays } from '../usePeriodRange.ts'
+import { useMass } from './massUnit.ts'
 import { commodityDayReading, commodityQuantitySeries, type HistoryDay } from './quantitySeries.ts'
+import { isOverfilled, isTempAnomaly } from './tankAlerts.ts'
+
+const DEFAULT_DAYS = 30
 
 export function CommodityTrendDialog({
   code,
   tanks,
-  start,
-  end,
+  day,
+  averageTemperature,
   onClose,
 }: {
   code: StockGroup | null
   tanks: TankLive[]
-  start: string
-  end: string
+  /** Dashboard day. The dialog range defaults to the 30 days ending here. */
+  day: string
+  averageTemperature: number | null
   onClose: () => void
 }) {
   const { t, locale } = useLocale()
+  const mass = useMass()
   const repository = useRepository()
   const dialogRef = useRef<HTMLDialogElement>(null)
   const [histories, setHistories] = useState<Array<{ tankId: string; points: SoundingPoint[] }>>([])
   const [selectedDay, setSelectedDay] = useState<string | null>(null)
+  const [range, setRange] = useState(() => defaultRange(day))
+  const { start, end } = range
   const sources = code ? commoditySources(tanks, code) : []
   const sourceKey = sources.map((tank) => tank.tankId).join(',')
   const series = useMemo(() => {
@@ -45,7 +55,13 @@ export function CommodityTrendDialog({
   useEffect(() => {
     setSelectedDay(null)
     setHistories([])
-  }, [code])
+    if (code) setRange(defaultRange(day))
+  }, [code, day])
+
+  const changeRange = (nextStart: string, nextEnd: string) => {
+    setRange({ start: nextStart, end: nextEnd })
+    if (selectedDay && (selectedDay < nextStart || selectedDay > nextEnd)) setSelectedDay(null)
+  }
 
   useEffect(() => {
     if (!code) return
@@ -61,6 +77,7 @@ export function CommodityTrendDialog({
 
   const stats = seriesStats(series)
   const historyByTank = useMemo(() => new Map(histories.map((history) => [history.tankId, history.points])), [histories])
+  const soundingDays = useMemo(() => [...new Set(histories.flatMap((history) => history.points.flatMap((point) => (point.recordedOn ? [point.recordedOn] : []))))], [histories])
 
   useEffect(() => {
     if (selectedDay || series.length === 0) return
@@ -80,20 +97,29 @@ export function CommodityTrendDialog({
     <dialog ref={dialogRef} className="stock-dialog stock-dialog--wide stock-dialog--trend" onClose={onClose}>
       {code && (
         <>
-          <h2>{code} - {t.quantity}</h2>
-          <p className="stock-dialog__updated">{formatDay(start, locale)} – {formatDay(end, locale)}</p>
+          <div className="stock-dialog__head">
+            <div>
+              <h2>{code} - {t.quantity}</h2>
+              <p className="stock-dialog__updated">
+                {t.tanksHolding.replace('{held}', String(sources.filter((tank) => tank.quantityKg != null && tank.quantityKg > 0).length)).replace('{total}', String(sources.length))}
+              </p>
+            </div>
+            {start && end && (
+              <DateRangeFilter start={start} end={end} dataDates={soundingDays} onChange={changeRange} />
+            )}
+          </div>
           <dl className="qty-stats">
             <div>
               <dt>{t.rangeAverage}</dt>
-              <dd>{stats ? `${formatKg(stats.average)} kg` : t.unavailable}</dd>
+              <dd>{stats ? `${mass.amount(stats.average)} ${mass.symbol}` : t.unavailable}</dd>
             </div>
             <div>
               <dt>{t.rangeMax}</dt>
-              <dd>{stats ? `${formatKg(stats.max)} kg` : t.unavailable}</dd>
+              <dd>{stats ? `${mass.amount(stats.max)} ${mass.symbol}` : t.unavailable}</dd>
             </div>
             <div>
               <dt>{t.rangeMin}</dt>
-              <dd>{stats ? `${formatKg(stats.min)} kg` : t.unavailable}</dd>
+              <dd>{stats ? `${mass.amount(stats.min)} ${mass.symbol}` : t.unavailable}</dd>
             </div>
           </dl>
           {stats
@@ -120,32 +146,51 @@ export function CommodityTrendDialog({
                     <tr>
                       <th>{t.tank}</th>
                       <th className="num">{t.levelAxis}</th>
-                      <th className="num">{t.quantity} (kg)</th>
-                      <th className="num">{t.emptySpace} (kg)</th>
-                      <th className="num">{t.loadable} (kg)</th>
+                      <th className="num">{t.quantity} ({mass.symbol})</th>
+                      <th className="num">{t.emptySpace} ({mass.symbol})</th>
+                      <th className="num">{t.loadable} ({mass.symbol})</th>
                       <th className="num">{t.tankLevelPct}</th>
+                      <th className="num">{t.tempAxis}</th>
+                      <th className="num">FFA</th>
+                      <th className="num">M&I</th>
+                      <th>{t.status}</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {readings.map(({ tank, reading }) => (
-                      <tr key={tank.tankId}>
-                        <td>{tankLabel(tank.tankId)}</td>
-                        <td className="num">{reading?.soundingLevelM == null ? t.unavailable : formatMeasure(reading.soundingLevelM, 3)}</td>
-                        <td className="num">{kgAmount(reading?.quantityKg ?? null, t.unavailable)}</td>
-                        <td className="num">{kgAmount(reading?.emptySpaceKg ?? null, t.unavailable)}</td>
-                        <td className="num">{kgAmount(reading?.loadableKg ?? null, t.unavailable)}</td>
-                        <td className="num"><LevelCue ratio={reading?.levelRatio ?? null} blank={t.unavailable} /></td>
-                      </tr>
-                    ))}
+                    {readings.map(({ tank, reading }) => {
+                      const overfilled = isOverfilled(reading?.levelRatio)
+                      const hot = isTempAnomaly(reading?.temperatureC, averageTemperature)
+                      const ffa = parameter(tank.quality?.parameters, 'FFA')
+                      const moisture = parameter(tank.quality?.parameters, 'MI')
+                      const status = reading?.operationalStatus || tank.operationalStatus || t.unavailable
+                      return (
+                        <tr key={tank.tankId} className={overfilled || hot ? 'stock-dialog__row--alert' : undefined}>
+                          <td>{tankLabel(tank.tankId)}</td>
+                          <td className="num">{reading?.soundingLevelM == null ? t.unavailable : formatMeasure(reading.soundingLevelM, 3)}</td>
+                          <td className="num">{reading?.quantityKg == null ? t.unavailable : mass.amount(reading.quantityKg)}</td>
+                          <td className="num">{reading?.emptySpaceKg == null ? t.unavailable : mass.amount(reading.emptySpaceKg)}</td>
+                          <td className="num">{reading?.loadableKg == null ? t.unavailable : mass.amount(reading.loadableKg)}</td>
+                          <td className="num"><LevelCue ratio={reading?.levelRatio ?? null} blank={t.unavailable} /></td>
+                          <td className={hot ? 'num stock-dialog__alert' : 'num'}>
+                            {reading?.temperatureC == null ? t.unavailable : `${formatMeasure(reading.temperatureC, 1)} °C`}
+                          </td>
+                          <td className="num">{ffa == null ? t.unavailable : formatMeasure(ffa, 2)}</td>
+                          <td className="num">{moisture == null ? t.unavailable : formatMeasure(moisture, 2)}</td>
+                          <td>
+                            <span className={status === 'EMPTY' ? 'badge badge--muted' : overfilled ? 'badge badge--danger' : 'badge'}>{status}</span>
+                          </td>
+                        </tr>
+                      )
+                    })}
                   </tbody>
                   <tfoot>
                     <tr>
                       <td>{t.totalQuantity}</td>
                       <td />
-                      <td className="num">{quantityTotal == null ? t.unavailable : formatKg(quantityTotal)}</td>
-                      <td className="num">{emptyTotal == null ? t.unavailable : formatKg(emptyTotal)}</td>
-                      <td className="num">{loadableTotal == null ? t.unavailable : formatKg(loadableTotal)}</td>
-                      <td />
+                      <td className="num">{quantityTotal == null ? t.unavailable : mass.amount(quantityTotal)}</td>
+                      <td className="num">{emptyTotal == null ? t.unavailable : mass.amount(emptyTotal)}</td>
+                      <td className="num">{loadableTotal == null ? t.unavailable : mass.amount(loadableTotal)}</td>
+                      <td colSpan={5} />
                     </tr>
                   </tfoot>
                 </table>
@@ -159,6 +204,11 @@ export function CommodityTrendDialog({
       )}
     </dialog>
   )
+}
+
+function defaultRange(day: string): { start: string; end: string } {
+  if (!day) return { start: '', end: '' }
+  return { start: addDays(day, -(DEFAULT_DAYS - 1)), end: day }
 }
 
 function seriesStats(series: HistoryDay[]): { average: number; max: number; min: number } | null {
@@ -178,6 +228,7 @@ function CommodityChart({
   onSelect: (day: string) => void
 }) {
   const { locale } = useLocale()
+  const mass = useMass()
   return (
     <div className="chart-frame qty-chart">
       <ResponsiveContainer width="100%" height={168}>
@@ -185,8 +236,7 @@ function CommodityChart({
           data={series}
           margin={{ top: 16, right: 8, left: 8, bottom: 0 }}
           onClick={(state) => {
-            const payloadDay = state?.activePayload?.[0]?.payload?.day
-            const day = typeof payloadDay === 'string' ? payloadDay : state?.activeLabel
+            const day = state?.activeLabel
             if (typeof day === 'string') onSelect(day)
           }}
         >
@@ -197,7 +247,7 @@ function CommodityChart({
             interval={Math.max(0, Math.ceil(series.length / 6) - 1)}
             height={24}
           />
-          <YAxis tick={{ fontSize: 11 }} width={72} tickFormatter={(value: number) => formatKg(value).replace(/\.00$/, '')} />
+          <YAxis tick={{ fontSize: 11 }} width={72} tickFormatter={(value: number) => mass.axis(value)} />
           <Tooltip content={<CommodityTooltip locale={locale} />} />
           {selectedDay && (
             <ReferenceLine
@@ -229,15 +279,15 @@ function DayTick({
   payload,
   selectedDay,
 }: {
-  x?: number
-  y?: number
+  x?: number | string
+  y?: number | string
   payload?: { value?: string }
   selectedDay?: string | null
 }) {
   const day = payload?.value ?? ''
   const selected = day === selectedDay
   return (
-    <text x={x} y={(y ?? 0) + 12} textAnchor="middle" fill={selected ? '#c2410c' : '#6b6b6b'} fontSize={11} fontWeight={selected ? 700 : 400}>
+    <text x={x} y={Number(y ?? 0) + 12} textAnchor="middle" fill={selected ? '#c2410c' : '#6b6b6b'} fontSize={11} fontWeight={selected ? 700 : 400}>
       {shortDay(day)}
     </text>
   )
@@ -292,12 +342,13 @@ function CommodityTooltip({
   locale: 'en' | 'id'
 }) {
   const { t } = useLocale()
+  const mass = useMass()
   const row = payload?.[0]?.payload
   if (!active || !row || row.value == null || row.kind === 'gap') return null
   return (
     <div className="chart-tip">
       <strong>{formatDay(label == null ? null : String(label), locale)}</strong>
-      <p>{t.quantity}: {formatKg(row.value)} kg</p>
+      <p>{t.quantity}: {mass.amount(row.value)} {mass.symbol}</p>
     </div>
   )
 }
@@ -306,11 +357,6 @@ function sumKnown(values: Array<number | null>): number | null {
   const nums = values.filter((value): value is number => value != null)
   if (nums.length === 0) return null
   return nums.reduce((sum, value) => sum + value, 0)
-}
-
-function kgAmount(value: number | null, blank: string): string {
-  if (value == null) return blank
-  return formatKg(value)
 }
 
 function LevelCue({ ratio, blank }: { ratio: number | null; blank: string }) {
