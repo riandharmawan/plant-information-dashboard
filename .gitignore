@@ -18,3 +18,9 @@ dist-ssr/
 .idea/
 .DS_Store
 *.local
+
+# Staging database dumps (contain production-like data)
+pid_staging.dump
+*.dump
+.env.staging.smoke
+Backend/.env.staging.smoke

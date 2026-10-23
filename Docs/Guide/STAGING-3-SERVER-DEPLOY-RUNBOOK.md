@@ -89,12 +89,10 @@ export RDS_USER='pid_user'
 export RDS_DB='pid_db'
 export PGPASSWORD='…'
 
-pg_restore -h "$RDS_HOST" -U "$RDS_USER" -d "$RDS_DB" --clean --if-exists --no-owner --no-acl pid_staging.dump
-# First restore on empty DB: drop --clean if objects do not exist yet.
-
-psql -h "$RDS_HOST" -U "$RDS_USER" -d "$RDS_DB" -c "SELECT COUNT(*) AS soundings FROM soundings;"
-psql -h "$RDS_HOST" -U "$RDS_USER" -d "$RDS_DB" -c "SELECT COUNT(*) AS migrations FROM schema_migrations;"
+bash Backend/scripts/staging-pg-restore-rds.sh pid_staging.dump
 ```
+
+Expected counts after restore (from local dev baseline): see [Backend/backups/staging-local-dump-baseline.txt](../../Backend/backups/staging-local-dump-baseline.txt) (`soundings=2488`, `schema_migrations=7`, `users=1`).
 
 If the dump has no `admin` user, run **`npm run seed:admin`** after the API container is up (step 3).
 

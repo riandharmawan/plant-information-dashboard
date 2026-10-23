@@ -1,0 +1,5 @@
+# Baseline counts from local pid-db before staging restore (2026-10-23).
+# pid_staging.dump at repo root (~1.1 MB custom format).
+soundings=2488
+schema_migrations=7
+users=1
