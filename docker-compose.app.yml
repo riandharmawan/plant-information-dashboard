@@ -2,11 +2,12 @@
 # Run on the APP ECS. See Docs/Guide/STAGING-3-SERVER-DEPLOY-RUNBOOK.md
 #
 # Prerequisites:
-# - Edit Frontend/nginx.alicloud-app.conf: set upstream server to BACKEND private IP:3010.
+# - Edit Frontend/nginx.alicloud-app.conf: set upstream to BACKEND private IP:PID_API_PORT
+#   (SIT: 172.28.92.57:3011). Host 3010 is taken by another product.
 # - Root .env (same directory) must define VITE_DATA_SOURCE, VITE_API_URL, PID_FE_PORT.
 #
-# Example:
-#   PID_FE_PORT=3090
+# Example (shared SIT hosts):
+#   PID_FE_PORT=3091
 #   VITE_DATA_SOURCE=api
 #   VITE_API_URL=/api/v1
 #

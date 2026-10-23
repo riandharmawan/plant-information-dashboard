@@ -17,9 +17,21 @@ DEPLOY_BRANCH="${DEPLOY_BRANCH:-sit}"
 DEPLOY_COMMIT="${DEPLOY_COMMIT:-}"
 ENV_FILE="${PID_APP_ENV_FILE:-.env}"
 COMPOSE_FILE="${PID_APP_COMPOSE:-docker-compose.app.yml}"
-FE_PORT="${PID_FE_PORT:-3090}"
 
 cd "$REPO_DIR"
+
+port_from_env() {
+  local key="$1"
+  local fallback="$2"
+  local value="${!key:-}"
+  if [[ -z "$value" && -f "$ENV_FILE" ]]; then
+    value="$(awk -F= -v k="$key" '$1==k {print $2}' "$ENV_FILE" | tail -1 | tr -d '\r')"
+  fi
+  echo "${value:-$fallback}"
+}
+
+# SIT publishes 3091 on the shared App host (3090 is msd-fe).
+FE_PORT="$(port_from_env PID_FE_PORT 3091)"
 
 compose() {
   docker compose --env-file "$ENV_FILE" -f "$COMPOSE_FILE" "$@"

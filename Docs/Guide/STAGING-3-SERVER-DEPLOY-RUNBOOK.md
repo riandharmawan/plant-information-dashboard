@@ -1,28 +1,32 @@
 # Staging — First-Time 3-Server Deployment Runbook
 
-Deploys Plant Information Dashboard from the **`sit`** branch onto **two ECS hosts + ApsaraDB RDS** in one private VPC:
+Deploys Plant Information Dashboard from the **`sit`** branch onto **two shared ECS hosts + ApsaraDB RDS** in one private VPC. Staging is **internal only** (`http://172.28.92.56:3091`). A domain can be added later without rebuilding the frontend (`VITE_API_URL` stays `/api/v1`).
 
 | # | Server | Role | Compose file | Host port(s) |
 |---|--------|------|--------------|--------------|
-| 1 | **ApsaraDB RDS** | PostgreSQL | — | `5432` (API IP whitelisted only) |
-| 2 | **Backend** | Node API only | `docker-compose.backend-api-only.yml` | `3010` (app IP only) |
-| 3 | **Frontend / App** | nginx + React SPA | `docker-compose.app.yml` | `3090` (public) |
+| 1 | **ApsaraDB RDS** | PostgreSQL | — | `5432` (`172.28.92.57` whitelisted only) |
+| 2 | **Backend** `172.28.92.57` | Node API only | `docker-compose.backend-api-only.yml` | **`3011`** → container `3010` (App IP only) |
+| 3 | **Frontend / App** `172.28.92.56` | nginx + React SPA | `docker-compose.app.yml` | **`3091`** → container `80` (VPC / office) |
+
+**Why not 3090 / 3010:** those host ports are already taken on this pair (`msd-fe` on App `:3090`, `project_management_backend_staging` on API `:3010`). Inside the PID containers the process ports stay `80` and `3010`. Only the **published host ports** change (`PID_FE_PORT`, `PID_API_PORT`).
 
 **Deploy order is mandatory: RDS (data load) → Backend (migrate) → Frontend.**
 
 **Subsequent code deploys:** `Backend/scripts/deploy-staging-api.sh` on the API host and `Backend/scripts/deploy-staging-frontend.sh` on the App host (`DEPLOY_BRANCH=sit`).
 
-Substitute placeholders throughout:
+## Locked inventory (SIT)
 
-| Placeholder | Meaning | Example |
-|---|---|---|
-| `RDS_HOST` | ApsaraDB endpoint | `pgm-….pgsql.ap-southeast-5.rds.aliyuncs.com` |
-| `API_IP` | Backend server private IP | `172.28.92.57` |
-| `APP_IP` | App server private IP | `172.28.92.56` |
-| `APP_PUBLIC` | App public IP / DNS users hit | `203.0.113.10` |
-| `APP_PORT` | App host port | `3090` |
+| Name | Value |
+|---|---|
+| `RDS_HOST` | `pgm-d9jx9o06qae8gf3h.pgsql.ap-southeast-5.rds.aliyuncs.com` |
+| `API_IP` | `172.28.92.57` |
+| `APP_IP` / browser URL | `172.28.92.56` — open `http://172.28.92.56:3091` |
+| `PID_API_PORT` | `3011` |
+| `PID_FE_PORT` | `3091` |
+| Repo directory | `/opt/plant-information-dashboard` on both ECS hosts |
+| Branch | `sit` |
 
-**Repo directory (both ECS hosts):** `/opt/plant-information-dashboard`
+Do not attach a public IP for this app. `APP_PUBLIC` is the same as `APP_IP` until a hostname is added. When a domain arrives, add it to `CORS_ORIGIN` only.
 
 ---
 
@@ -31,42 +35,88 @@ Substitute placeholders throughout:
 | Port | Server | Source | Purpose |
 |---|---|---|---|
 | 22 | App + API | your office/VPN IP | SSH |
-| `3090` | App | users / internet | SPA + proxied `/api/` |
-| 3010 | Backend | **`APP_IP/32` only** | API (nginx → API) |
-| 5432 | ApsaraDB | **`API_IP/32` only** | Postgres (API → RDS) |
+| **`3091`** | App `172.28.92.56` | VPC / office CIDR | SPA + proxied `/api/` |
+| **`3011`** | Backend `172.28.92.57` | **`172.28.92.56/32` only** | nginx → API |
+| 5432 | ApsaraDB | **`172.28.92.57/32` only** | Postgres (API → RDS) |
 
-Never expose 3010 or 5432 to the internet. The browser only talks to the App server.
+Never expose `3011` or `5432` to the internet. Do not change the existing `3090` / `3010` rules — other products use them. The browser only talks to the App server.
 
 ---
 
 ## 1. One-time prep on BOTH ECS servers
 
-```bash
-sudo apt-get update
-sudo apt-get install -y ca-certificates curl git
-sudo install -m 0755 -d /etc/apt/keyrings
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo $VERSION_CODENAME) stable" | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
-sudo apt-get update
-sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin postgresql-client
-sudo usermod -aG docker $USER && newgrp docker
+These hosts already run Docker (Jetty and other staging apps). **Do not reinstall Docker** and **do not reboot** for the Ubuntu “restart required” banner.
 
-sudo mkdir -p /opt/plant-information-dashboard && sudo chown $USER:$USER /opt/plant-information-dashboard
+### 1.1 Check (always)
+
+```bash
+whoami
+docker version
+docker compose version
+git --version
+docker ps --format 'table {{.Names}}\t{{.Image}}\t{{.Ports}}\t{{.Status}}'
+ss -lntup | grep -E ':3091|:3011|:3090|:3010 '
+ls -ld /opt/plant-information-dashboard
+```
+
+Pass when:
+
+- `docker version` shows Client **and** Server.
+- You are `root` or in the `docker` group (no “permission denied”).
+- **`:3091` on App and `:3011` on API are free.** Leave Jetty (`jps-api` `:3000`, `jps-fe` `:3080`) and every other container running.
+- Occupied `:3090` (MSD) and `:3010` (Project Management / host nginx) are expected. Do not publish PID there.
+
+**API host only** — restore needs the client tools, not a Postgres server:
+
+```bash
+psql --version
+pg_restore --version
+```
+
+If those commands are missing:
+
+```bash
+apt-get update
+apt-get install -y postgresql-client
+```
+
+### 1.2 Repo
+
+If `/opt/plant-information-dashboard` is missing:
+
+```bash
+mkdir -p /opt/plant-information-dashboard
 git clone https://github.com/riandharmawan/plant-information-dashboard.git /opt/plant-information-dashboard
 cd /opt/plant-information-dashboard
 git checkout sit && git pull origin sit
+git log -1 --oneline
 ```
 
-**ApsaraDB (before API deploy):**
+If the directory already exists:
 
-- Database `pid_db` and user created; **`timezone = Asia/Jakarta`** on the instance.
-- Whitelist **API** private IP on port **5432**.
+```bash
+cd /opt/plant-information-dashboard
+git fetch origin
+git checkout sit && git pull origin sit
+git log -1 --oneline
+```
+
+Leave other products’ `/opt/...` trees alone.
+
+### 1.3 ApsaraDB (before API deploy)
+
+- Database `pid_db` and user `pid_user` created; **`timezone = Asia/Jakarta`** on the instance.
+- Whitelist **`172.28.92.57`** on port **5432**.
+
+```bash
+pg_isready -h pgm-d9jx9o06qae8gf3h.pgsql.ap-southeast-5.rds.aliyuncs.com -p 5432
+```
 
 ---
 
 ## 2. Load data into ApsaraDB (from local dev)
 
-On **Windows dev** (repo root):
+On **Windows dev** (repo root), with local `pid-db` running:
 
 ```powershell
 .\Backend\scripts\staging-pg-dump-local.ps1
@@ -79,17 +129,23 @@ docker exec pid-db pg_dump -U pid_user -d pid_db -Fc -f /tmp/pid_staging.dump
 docker cp pid-db:/tmp/pid_staging.dump .\pid_staging.dump
 ```
 
-Copy `pid_staging.dump` to the **API server** (SCP, not git).
+Copy `pid_staging.dump` to the **API server** (SCP, not git):
 
-On the **API server** (install `postgresql-client` if needed):
+```powershell
+scp .\pid_staging.dump root@172.28.92.57:/opt/plant-information-dashboard/pid_staging.dump
+```
+
+On the **API server**:
 
 ```bash
-export RDS_HOST='pgm-….rds.aliyuncs.com'
+cd /opt/plant-information-dashboard
+export RDS_HOST='pgm-d9jx9o06qae8gf3h.pgsql.ap-southeast-5.rds.aliyuncs.com'
 export RDS_USER='pid_user'
 export RDS_DB='pid_db'
 export PGPASSWORD='…'
 
 bash Backend/scripts/staging-pg-restore-rds.sh pid_staging.dump
+unset PGPASSWORD
 ```
 
 Expected counts after restore (from local dev baseline): see [Backend/backups/staging-local-dump-baseline.txt](../../Backend/backups/staging-local-dump-baseline.txt) (`soundings=2488`, `schema_migrations=7`, `users=1`).
@@ -98,19 +154,24 @@ If the dump has no `admin` user, run **`npm run seed:admin`** after the API cont
 
 ---
 
-## 3. Backend server (`API_IP`) — API container
+## 3. Backend server (`172.28.92.57`) — API container
 
 ```bash
 cd /opt/plant-information-dashboard
 cp Backend/.env.staging.example Backend/.env
-# Edit Backend/.env: RDS_HOST, POSTGRES_*, JWT_SECRET, CORS_ORIGIN (app URLs), logsheet secrets.
+# Edit Backend/.env: POSTGRES_PASSWORD, JWT_SECRET, logsheet secrets.
+# Keep PID_API_PORT=3011 and CORS_ORIGIN=http://172.28.92.56:3091
+```
 
+`PID_API_PORT` is the **host** publish port. `PORT=3010` stays the listen port inside the container.
+
+**RDS password with `#` or `@`:** set a full **`DATABASE_URL`** in `Backend/.env` with URL-encoded password, or compose will build an invalid URL (see Jetty `APSARADB-STAGING-CUTOVER.md`).
+
+```bash
 export DEPLOY_BRANCH=sit
 export RUN_MIGRATE=1
 bash Backend/scripts/deploy-staging-api.sh deploy
 ```
-
-**RDS password with `#` or `@`:** set a full **`DATABASE_URL`** in `Backend/.env` with URL-encoded password, or compose will build an invalid URL (see Jetty `APSARADB-STAGING-CUTOVER.md`).
 
 Optional admin bootstrap:
 
@@ -118,40 +179,55 @@ Optional admin bootstrap:
 docker compose --env-file Backend/.env -f docker-compose.backend-api-only.yml exec -T pid-api npm run seed:admin
 ```
 
-Health:
+Health (host port **3011**):
 
 ```bash
-curl -s http://127.0.0.1:3010/api/v1/health
+curl -s http://127.0.0.1:3011/api/v1/health
 ```
 
 ---
 
-## 4. Frontend / App server (`APP_IP`)
+## 4. Frontend / App server (`172.28.92.56`)
+
+`Frontend/nginx.alicloud-app.conf` already points at `172.28.92.57:3011`. Confirm; do not `sed` it back to `:3010`.
 
 ```bash
 cd /opt/plant-information-dashboard
-
-sed -i 's/172.28.92.57:3010/API_IP:3010/' Frontend/nginx.alicloud-app.conf
+grep server Frontend/nginx.alicloud-app.conf
+# expect: server 172.28.92.57:3011;
 
 cp .env.staging.example .env
-# PID_FE_PORT=3090, VITE_DATA_SOURCE=api, VITE_API_URL=/api/v1
+# PID_FE_PORT=3091, VITE_DATA_SOURCE=api, VITE_API_URL=/api/v1
+```
 
+```bash
 export DEPLOY_BRANCH=sit
 bash Backend/scripts/deploy-staging-frontend.sh deploy
 ```
 
-Open **`http://APP_PUBLIC:3090`**. Log in (dev dump: same password as local; or `admin` / `admin123` after `seed:admin`).
+Open **`http://172.28.92.56:3091`**. Log in (dev dump: same password as local; or `admin` / `admin123` after `seed:admin`). Change that password after first login.
 
 ---
 
 ## 5. Smoke test
 
+On the App host:
+
 ```bash
-curl -s -o /dev/null -w "SPA %{http_code}\n"  http://localhost:3090/
-curl -s -o /dev/null -w "API %{http_code}\n"  http://localhost:3090/api/v1/health
+curl -s -o /dev/null -w "SPA %{http_code}\n"  http://localhost:3091/
+curl -s -o /dev/null -w "API %{http_code}\n"  http://localhost:3091/api/v1/health
+```
+
+From a laptop on the VPC / VPN:
+
+```bash
+curl -s -o /dev/null -w "SPA %{http_code}\n"  http://172.28.92.56:3091/
+curl -s -o /dev/null -w "API %{http_code}\n"  http://172.28.92.56:3091/api/v1/health
 ```
 
 Browser: login → Tank Farm → QC → Daily Production.
+
+If localhost on the App host is `200` but the laptop fails, the App security group is not allowing your office/VPN CIDR on **`3091`**.
 
 ---
 
@@ -188,7 +264,7 @@ bash Backend/scripts/deploy-staging-api.sh rollback
 
 - `POSTGRES_PASSWORD` / `DATABASE_URL` on API server only.
 - `JWT_SECRET` — API server only.
-- `CORS_ORIGIN` — every origin users open the app from.
+- `CORS_ORIGIN` — every origin users open the app from (today `http://172.28.92.56:3091`; add the hostname later).
 - `COOKIE_SECURE=false` for HTTP staging; `true` once on HTTPS.
 - Logsheet credentials — API `Backend/.env` only.
 

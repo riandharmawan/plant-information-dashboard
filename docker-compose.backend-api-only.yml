@@ -3,6 +3,7 @@
 #   docker compose --env-file Backend/.env -f docker-compose.backend-api-only.yml up -d --build
 #
 # Requires in Backend/.env: DB_HOST, DB_PORT, POSTGRES_*, JWT_SECRET, CORS_ORIGIN
+# PID_API_PORT is the host publish port (SIT uses 3011; container still listens on 3010).
 # See Docs/Guide/STAGING-3-SERVER-DEPLOY-RUNBOOK.md
 #
 # If POSTGRES_PASSWORD contains # or @, set DATABASE_URL explicitly in Backend/.env
@@ -16,7 +17,7 @@ services:
     container_name: pid-api
     restart: unless-stopped
     ports:
-      - "3010:3010"
+      - "${PID_API_PORT:-3010}:3010"
     environment:
       APP_ENV: ${APP_ENV:-testing}
       NODE_ENV: production

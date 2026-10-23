@@ -19,9 +19,21 @@ DEPLOY_COMMIT="${DEPLOY_COMMIT:-}"
 RUN_MIGRATE="${RUN_MIGRATE:-}"
 ENV_FILE="${PID_API_ENV_FILE:-Backend/.env}"
 COMPOSE_FILE="${PID_API_COMPOSE:-docker-compose.backend-api-only.yml}"
-API_PORT="${PID_API_PORT:-3010}"
 
 cd "$REPO_DIR"
+
+port_from_env() {
+  local key="$1"
+  local fallback="$2"
+  local value="${!key:-}"
+  if [[ -z "$value" && -f "$ENV_FILE" ]]; then
+    value="$(awk -F= -v k="$key" '$1==k {print $2}' "$ENV_FILE" | tail -1 | tr -d '\r')"
+  fi
+  echo "${value:-$fallback}"
+}
+
+# SIT publishes 3011 on the shared API host; container listen port stays 3010.
+API_PORT="$(port_from_env PID_API_PORT 3011)"
 
 compose() {
   docker compose --env-file "$ENV_FILE" -f "$COMPOSE_FILE" "$@"
