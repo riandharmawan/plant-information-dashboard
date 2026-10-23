@@ -1,13 +1,17 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useQcFile } from '../../data/QcContext.tsx'
 import { formatDay } from '../../domain/format.ts'
 import { contractText, contractVerdict, inRange, overMax, truckKey, type TruckRow } from '../../domain/qc.ts'
 import { useLocale } from '../../i18n/LocaleContext.tsx'
-import { Kpi, Num, QcChrome, VerdictBadge } from './qcChrome.tsx'
+import { Num, QcChrome, VerdictBadge } from './qcChrome.tsx'
+import { QcDetailDialog, QcPanelOpen, TruckSamplesDetail } from './qcDialogs.tsx'
+import { QcKpi } from './qcKpi.tsx'
 import { SortHeader, sortRows, useColumnSort, useQcRange } from './qcNav.tsx'
 import { ContractScatter, type ContractPoint } from './qcCharts.tsx'
 import { Legend, type LegendItem } from './qcVisual.tsx'
+
+type TruckDialog = null | 'sampled' | 'pass' | 'reject' | 'remarks' | 'scatter' | 'table'
 
 export function TruckPage() {
   const { t, locale } = useLocale()
@@ -15,6 +19,7 @@ export function TruckPage() {
   const { start, end, setRange } = useQcRange()
   const [params, setParams] = useSearchParams()
   const focus = params.get('focus')
+  const [dialog, setDialog] = useState<TruckDialog>(null)
   const sort = useColumnSort()
   const sheet = qc.trucks
   const rows = useMemo(
@@ -58,13 +63,12 @@ export function TruckPage() {
   return (
     <QcChrome title={t.qcTruck} start={start} end={end} setRange={setRange} note={note} legend={<Legend items={legend} />}>
       <section className="prod-kpis" aria-label={t.qcTruck}>
-        <Kpi label={t.trucksSampled} value={String(rows.length)} />
-        <Kpi label={t.pass} value={String(passed)} tone="yield" />
-        <Kpi label={t.rejected} value={String(rejected)} tone={rejected > 0 ? 'alert' : undefined} />
-        <Kpi label={t.unloadRemarks} value={String(remarks)} />
+        <QcKpi label={t.trucksSampled} value={String(rows.length)} onOpen={() => setDialog('sampled')} />
+        <QcKpi label={t.pass} value={String(passed)} tone="yield" onOpen={() => setDialog('pass')} />
+        <QcKpi label={t.rejected} value={String(rejected)} tone={rejected > 0 ? 'alert' : undefined} onOpen={() => setDialog('reject')} />
+        <QcKpi label={t.unloadRemarks} value={String(remarks)} onOpen={() => setDialog('remarks')} />
       </section>
-      <section className="prod-panel">
-        <h2 className="card__title">{sheet.material} · {t.ffaPct} / {t.moisturePct}</h2>
+      <QcPanelOpen title={`${sheet.material} · ${t.ffaPct} / ${t.moisturePct}`} onOpen={() => setDialog('scatter')}>
         <ContractScatter
           points={points}
           ffaMax={sheet.ffaMax}
@@ -73,9 +77,8 @@ export function TruckPage() {
           selectedKey={focus}
           onPick={pick}
         />
-      </section>
-      <section className="prod-panel">
-        <h2 className="card__title">{t.qcTruck} · {sheet.material}</h2>
+      </QcPanelOpen>
+      <QcPanelOpen title={`${t.qcTruck} · ${sheet.material}`} onOpen={() => setDialog('table')}>
         <div className="prod-scroll">
           <table className="prod-table">
             <thead>
@@ -123,7 +126,33 @@ export function TruckPage() {
             </tbody>
           </table>
         </div>
-      </section>
+      </QcPanelOpen>
+      <QcDetailDialog
+        open={dialog != null}
+        title={dialog === 'pass' ? t.pass : dialog === 'reject' ? t.rejected : dialog === 'remarks' ? t.unloadRemarks : t.qcTruck}
+        start={start}
+        end={end}
+        onClose={() => setDialog(null)}
+      >
+        {dialog != null ? (
+          <TruckSamplesDetail
+            rows={dialog === 'pass'
+              ? rows.filter((_, index) => verdicts[index] === 'pass')
+              : dialog === 'reject'
+                ? rows.filter((_, index) => verdicts[index] === 'rejected')
+                : dialog === 'remarks'
+                  ? rows.filter((row) => row.remark)
+                  : rows}
+            verdicts={dialog === 'pass'
+              ? verdicts.filter((verdict) => verdict === 'pass')
+              : dialog === 'reject'
+                ? verdicts.filter((verdict) => verdict === 'rejected')
+                : dialog === 'remarks'
+                  ? rows.filter((row) => row.remark).map((row) => contractVerdict(row.ffa, row.moisture, sheet.ffaMax, sheet.moistureMax))
+                  : verdicts}
+          />
+        ) : null}
+      </QcDetailDialog>
       {undated.length > 0 && (
         <section className="prod-panel">
           <h2 className="card__title">{t.noSampleDate}</h2>

@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   STORAGE_TANK_IDS,
@@ -18,7 +18,17 @@ import {
 import { useQcFile } from '../../data/QcContext.tsx'
 import { formatDay, tankLabel } from '../../domain/format.ts'
 import { useLocale } from '../../i18n/LocaleContext.tsx'
-import { Kpi, QcChrome, useParam } from './qcChrome.tsx'
+import { QcChrome, useParam } from './qcChrome.tsx'
+import {
+  InboundSummaryDetail,
+  MovementDetail,
+  QcAttentionDetail,
+  QcDetailDialog,
+  QcPanelOpen,
+  StorageLatestDetail,
+  TankQuickDetail,
+} from './qcDialogs.tsx'
+import { QcKpi } from './qcKpi.tsx'
 import { SortHeader, qcSearch, sortRows, useColumnSort, useQcRange } from './qcNav.tsx'
 import { DirectionTrack, Identity, Legend, ProductBoard, Split, fill, type LegendItem } from './qcVisual.tsx'
 
@@ -34,6 +44,8 @@ type Attention = {
 
 const ATTENTION_SHOWN = 8
 
+type OverviewDialog = null | 'tanks' | 'retest' | 'passed' | 'rejected' | 'attention' | 'incoming' | 'movements'
+
 export function QcOverviewPage() {
   const { t, locale } = useLocale()
   const param = useParam()
@@ -41,9 +53,12 @@ export function QcOverviewPage() {
   const { start, end, setRange } = useQcRange()
   const search = qcSearch(start, end)
   const inboundSort = useColumnSort()
+  const [dialog, setDialog] = useState<OverviewDialog>(null)
+  const [openTank, setOpenTank] = useState<string | null>(null)
 
   const latest = useMemo(() => latestStorage(storageInRange(start, end, qc)), [qc, start, end])
-  const retests = latest.filter(retestDue).length
+  const retestRows = latest.filter(retestDue)
+  const retests = retestRows.length
   const snapshotOn = latest[0]?.snapshotOn ?? null
   const revision = latest[0]?.revision ?? 1
   const revisionCount = new Set(
@@ -149,18 +164,39 @@ export function QcOverviewPage() {
     if (item.badge === 'watch') return <span className="badge badge--warning">{t.watch}</span>
     return <span className="badge badge--warning">{t.retest}</span>
   }
+  const attentionItems = attention.map((item) => ({
+    badge: badgeFor(item),
+    place: item.place,
+    product: item.product,
+    reason: item.reason,
+    to: item.to,
+  }))
+  const tankRow = openTank ? latest.find((row) => row.tankId === openTank) ?? null : null
+  const dialogTitle = () => {
+    if (openTank) return tankLabel(openTank)
+    if (dialog === 'tanks') return t.tanksLogged
+    if (dialog === 'retest') return t.retestDue
+    if (dialog === 'passed') return t.inboundPassed
+    if (dialog === 'rejected') return t.inboundRejected
+    if (dialog === 'attention') return t.needsAttention
+    if (dialog === 'incoming') return t.incoming
+    if (dialog === 'movements') return t.qcMovements
+    return ''
+  }
 
   return (
     <QcChrome title={t.qcTitle} start={start} end={end} setRange={setRange} legend={<Legend items={legend} />}>
       <section className="prod-kpis" aria-label={t.qcTitle}>
-        <Kpi label={t.tanksLogged} value={String(latest.length)} />
-        <Kpi label={t.retestDue} value={String(retests)} tone={retests > 0 ? 'alert' : undefined} />
-        <Kpi label={t.inboundPassed} value={String(passed)} tone="yield" />
-        <Kpi label={t.inboundRejected} value={String(rejected)} tone={rejected > 0 ? 'alert' : undefined} />
+        <QcKpi label={t.tanksLogged} value={String(latest.length)} onOpen={() => setDialog('tanks')} />
+        <QcKpi label={t.retestDue} value={String(retests)} tone={retests > 0 ? 'alert' : undefined} onOpen={() => setDialog('retest')} />
+        <QcKpi label={t.inboundPassed} value={String(passed)} tone="yield" onOpen={() => setDialog('passed')} />
+        <QcKpi label={t.inboundRejected} value={String(rejected)} tone={rejected > 0 ? 'alert' : undefined} onOpen={() => setDialog('rejected')} />
       </section>
 
-      <section className="prod-panel" aria-label={t.needsAttention}>
-        <h2 className="card__title">{t.needsAttention}{attention.length > 0 ? ` · ${attention.length}` : ''}</h2>
+      <QcPanelOpen
+        title={`${t.needsAttention}${attention.length > 0 ? ` · ${attention.length}` : ''}`}
+        onOpen={() => setDialog('attention')}
+      >
         {attention.length === 0 ? (
           <p className="qc-attention__ok">{t.nothingNeedsAttention}</p>
         ) : (
@@ -178,20 +214,19 @@ export function QcOverviewPage() {
         {attention.length > ATTENTION_SHOWN ? (
           <p className="page-note">{fill(t.moreItems, { count: attention.length - ATTENTION_SHOWN })}</p>
         ) : null}
-      </section>
+      </QcPanelOpen>
 
       <ProductBoard
         rows={latest}
         slots={STORAGE_TANK_IDS.length}
-        linkFor={(tankId) => `/qc/storage${search}&tank=${tankId}`}
+        onOpen={(tankId) => setOpenTank(tankId)}
         subtitle={snapshotOn
           ? `${t.latestSnapshot} ${formatDay(snapshotOn, locale)}${revisionCount > 1 ? ` · ${t.revisionShort} ${revision}` : ''}`
           : null}
       />
 
       <div className="prod-layout">
-        <section className="prod-panel">
-          <h2 className="card__title">{t.incoming}</h2>
+        <QcPanelOpen title={t.incoming} onOpen={() => setDialog('incoming')}>
           <div className="prod-scroll">
             <table className="prod-table prod-table--fit">
               <thead>
@@ -212,17 +247,37 @@ export function QcOverviewPage() {
               </tbody>
             </table>
           </div>
-        </section>
+        </QcPanelOpen>
 
-        <section className="prod-panel">
-          <h2 className="card__title">
-            <Link className="prod-plant-link" to={`/qc/movements${search}`}>{t.qcMovements}</Link>
-            {` · ${movements.length}`}
-          </h2>
+        <QcPanelOpen title={`${t.qcMovements} · ${movements.length}`} onOpen={() => setDialog('movements')}>
           <DirectionTrack inbound={directions.inbound} outbound={directions.outbound} unknown={directions.unknown} />
           <p className="page-note">{t.gatePeriodNote.replace('{period}', period)}</p>
-        </section>
+        </QcPanelOpen>
       </div>
+
+      <QcDetailDialog
+        open={dialog != null || openTank != null}
+        title={dialogTitle()}
+        start={start}
+        end={end}
+        onClose={() => { setDialog(null); setOpenTank(null) }}
+      >
+        {openTank ? (
+          <TankQuickDetail row={tankRow} storageLink={`/qc/storage${search}&tank=${openTank}`} />
+        ) : null}
+        {dialog === 'tanks' ? <StorageLatestDetail rows={latest} /> : null}
+        {dialog === 'retest' ? <StorageLatestDetail rows={retestRows} /> : null}
+        {dialog === 'passed' || dialog === 'rejected' ? <InboundSummaryDetail rows={inboundRows} /> : null}
+        {dialog === 'attention' ? <QcAttentionDetail items={attentionItems} /> : null}
+        {dialog === 'incoming' ? <InboundSummaryDetail rows={inboundRows} /> : null}
+        {dialog === 'movements' ? (
+          <MovementDetail rows={movements.map((row) => {
+            const dir = movementDirection(row.sealIn, row.sealOut)
+            const direction = dir === 'inbound' ? t.inbound : dir === 'outbound' ? t.outbound : t.notClassified
+            return { vehicle: row.vehicle, commodity: row.commodity, timeIn: row.timeIn, timeOut: row.timeOut, direction }
+          })} />
+        ) : null}
+      </QcDetailDialog>
     </QcChrome>
   )
 }

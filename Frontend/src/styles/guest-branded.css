@@ -336,6 +336,17 @@
   outline-offset: 2px;
 }
 
+.guest-branded__submit--hub {
+  margin-top: 12px;
+  background: transparent;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+}
+
+.guest-branded__submit--hub:hover {
+  background: rgba(220, 38, 38, 0.08);
+}
+
 .guest-branded__footer {
   flex-shrink: 0;
   margin-top: 16px;

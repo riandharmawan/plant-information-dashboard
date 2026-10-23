@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
 import { Navigate } from 'react-router-dom'
 import { Eye, EyeOff, Lock, User } from 'lucide-react'
-import { ApiError } from '../../data/api.ts'
+import { ApiError, api } from '../../data/api.ts'
 import { useAuth } from '../../data/AuthContext.tsx'
 import { errorText } from '../admin/errors.ts'
 import { useLocale } from '../../i18n/LocaleContext.tsx'
@@ -20,7 +20,31 @@ export function LoginPage() {
   const [missing, setMissing] = useState(false)
   const [formError, setFormError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
+  const [oidcEnabled, setOidcEnabled] = useState(false)
   const year = new Date().getFullYear()
+
+  useEffect(() => {
+    let active = true
+    api<{ oidcEnabled?: boolean }>('/auth/sso/status')
+      .then((status) => {
+        if (active) setOidcEnabled(status.oidcEnabled === true)
+      })
+      .catch(() => {
+        if (active) setOidcEnabled(false)
+      })
+    return () => {
+      active = false
+    }
+  }, [])
+
+  const startHubSignIn = () => {
+    const url = '/auth/oidc/start'
+    try {
+      window.top?.location.assign(url)
+    } catch {
+      window.location.assign(url)
+    }
+  }
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -137,6 +161,16 @@ export function LoginPage() {
                 {busy ? t.signingIn : t.signIn}
               </button>
             </form>
+            {oidcEnabled ? (
+              <button
+                type="button"
+                className="guest-branded__submit guest-branded__submit--hub"
+                onClick={startHubSignIn}
+                disabled={busy}
+              >
+                {t.signInViaDwsHub}
+              </button>
+            ) : null}
           </div>
         </div>
       </div>

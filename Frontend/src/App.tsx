@@ -13,6 +13,7 @@ import { RolesPage } from './features/admin/RolesPage.tsx'
 import { UsersPage } from './features/admin/UsersPage.tsx'
 import { PageGate, RequireAuth, SiteRequired } from './features/auth/guards.tsx'
 import { LoginPage } from './features/login/LoginPage.tsx'
+import { SsoErrorPage } from './features/login/SsoErrorPage.tsx'
 import { LiveOpsPage } from './features/live-ops/LiveOpsPage.tsx'
 import { CommoditiesPage, CompaniesPage, PlantsPage, SitesPage, TankFarmPage } from './features/master/masterPages.tsx'
 import { MasterMenuPage } from './features/master/MasterMenuPage.tsx'
@@ -26,6 +27,13 @@ import { QcOverviewPage } from './features/qc/QcOverviewPage.tsx'
 import { StoragePage } from './features/qc/StoragePage.tsx'
 import { TruckPage } from './features/qc/TruckPage.tsx'
 import { VesselPage } from './features/qc/VesselPage.tsx'
+import { BoilerPage } from './features/utility/BoilerPage.tsx'
+import { CoalPage } from './features/utility/CoalPage.tsx'
+import { EffluentPage } from './features/utility/EffluentPage.tsx'
+import { LoaderPage } from './features/utility/LoaderPage.tsx'
+import { UtilityOverviewPage } from './features/utility/UtilityOverviewPage.tsx'
+import { UtilityLayout } from './features/utility/utilityShell.tsx'
+import { WaterPage } from './features/utility/WaterPage.tsx'
 import {
   Fractionation400Page,
   Fractionation500Page,
@@ -47,6 +55,7 @@ export default function App() {
               <BrowserRouter>
                 <Routes>
                   <Route path="/login" element={<LoginPage />} />
+                  <Route path="/sso-error" element={<SsoErrorPage />} />
                   <Route element={<RequireAuth />}>
                     <Route element={<AppShell />}>
                       <Route path="/" element={<SiteRequired />}>
@@ -75,6 +84,16 @@ export default function App() {
                             <Route path="vessel" element={<VesselPage />} />
                             <Route path="truck" element={<TruckPage />} />
                             <Route path="movements" element={<MovementPage />} />
+                          </Route>
+                        </Route>
+                        <Route element={<PageGate page="utility" />}>
+                          <Route path="utility" element={<UtilityLayout />}>
+                            <Route index element={<UtilityOverviewPage />} />
+                            <Route path="boiler" element={<BoilerPage />} />
+                            <Route path="coal" element={<CoalPage />} />
+                            <Route path="water" element={<WaterPage />} />
+                            <Route path="effluent" element={<EffluentPage />} />
+                            <Route path="loader" element={<LoaderPage />} />
                           </Route>
                         </Route>
                         <Route element={<PageGate page="master-companies" />}>

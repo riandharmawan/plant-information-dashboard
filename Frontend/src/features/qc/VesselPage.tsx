@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useQcFile } from '../../data/QcContext.tsx'
 import { formatDay } from '../../domain/format.ts'
@@ -15,10 +15,14 @@ import {
   type VesselTicket,
 } from '../../domain/qc.ts'
 import { useLocale } from '../../i18n/LocaleContext.tsx'
-import { Kpi, Num, QcChrome, VerdictBadge, useParam, type ParamCode } from './qcChrome.tsx'
+import { Num, QcChrome, VerdictBadge, useParam, type ParamCode } from './qcChrome.tsx'
+import { QcDetailDialog, QcPanelOpen, VesselTicketsDetail } from './qcDialogs.tsx'
+import { QcKpi } from './qcKpi.tsx'
 import { SortHeader, sortRows, useColumnSort, useQcRange } from './qcNav.tsx'
 import { ContractScatter, HoldStrip, type ContractPoint } from './qcCharts.tsx'
 import { Bullet, Legend, type LegendItem } from './qcVisual.tsx'
+
+type VesselDialog = null | 'tickets' | 'pass' | 'reject' | 'samples' | 'scatter' | 'table'
 
 export function VesselPage() {
   const { t, locale } = useLocale()
@@ -26,6 +30,7 @@ export function VesselPage() {
   const { start, end, setRange } = useQcRange()
   const [params, setParams] = useSearchParams()
   const sort = useColumnSort()
+  const [dialog, setDialog] = useState<VesselDialog>(null)
   const tickets = useMemo(
     () => qc.vessels.filter((ticket) => inRange(ticket.arrival, start, end)),
     [qc, start, end],
@@ -66,13 +71,12 @@ export function VesselPage() {
   return (
     <QcChrome title={t.qcVessel} start={start} end={end} setRange={setRange} note={t.palkaLimitNote} legend={<Legend items={legend} />}>
       <section className="prod-kpis" aria-label={t.qcVessel}>
-        <Kpi label={t.vesselTickets} value={String(tickets.length)} />
-        <Kpi label={t.pass} value={String(passed)} tone="yield" />
-        <Kpi label={t.rejected} value={String(rejected)} tone={rejected > 0 ? 'alert' : undefined} />
-        <Kpi label={t.palkaSamples} value={String(samples)} />
+        <QcKpi label={t.vesselTickets} value={String(tickets.length)} onOpen={() => setDialog('tickets')} />
+        <QcKpi label={t.pass} value={String(passed)} tone="yield" onOpen={() => setDialog('pass')} />
+        <QcKpi label={t.rejected} value={String(rejected)} tone={rejected > 0 ? 'alert' : undefined} onOpen={() => setDialog('reject')} />
+        <QcKpi label={t.palkaSamples} value={String(samples)} onOpen={() => setDialog('samples')} />
       </section>
-      <section className="prod-panel">
-        <h2 className="card__title">{products || t.qcVessel} · {t.composite} {t.ffaPct} / {t.moisturePct}</h2>
+      <QcPanelOpen title={`${products || t.qcVessel} · ${t.composite} ${t.ffaPct} / ${t.moisturePct}`} onOpen={() => setDialog('scatter')}>
         <ContractScatter
           points={points}
           ffaMax={selected?.ffaMax ?? null}
@@ -82,9 +86,8 @@ export function VesselPage() {
           onPick={pick}
           height={220}
         />
-      </section>
-      <section className="prod-panel">
-        <h2 className="card__title">{t.qcVessel}{products ? ` · ${products}` : ''}</h2>
+      </QcPanelOpen>
+      <QcPanelOpen title={`${t.qcVessel}${products ? ` · ${products}` : ''}`} onOpen={() => setDialog('table')}>
         <div className="prod-scroll">
           <table className="prod-table">
             <thead>
@@ -133,7 +136,24 @@ export function VesselPage() {
             </tbody>
           </table>
         </div>
-      </section>
+      </QcPanelOpen>
+      <QcDetailDialog
+        open={dialog != null}
+        title={dialog === 'pass' ? t.pass : dialog === 'reject' ? t.rejected : dialog === 'samples' ? t.palkaSamples : t.vesselTickets}
+        start={start}
+        end={end}
+        onClose={() => setDialog(null)}
+      >
+        {dialog != null ? (
+          <VesselTicketsDetail
+            tickets={dialog === 'pass'
+              ? tickets.filter((ticket) => vesselVerdict(ticket) === 'pass')
+              : dialog === 'reject'
+                ? tickets.filter((ticket) => vesselVerdict(ticket) === 'rejected')
+                : tickets}
+          />
+        ) : null}
+      </QcDetailDialog>
       {selected && <TicketDetail ticket={selected} />}
     </QcChrome>
   )

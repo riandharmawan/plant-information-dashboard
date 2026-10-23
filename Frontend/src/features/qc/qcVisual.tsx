@@ -52,16 +52,25 @@ export function Bullet({
   value,
   unit,
   context,
+  format,
+  caption: captionText,
+  statusLabel,
 }: {
-  code: ParamCode
+  code?: ParamCode
   label: string
   value: number | null
   unit?: string
   context: BulletContext
+  /** Formats the value when it is not a lab parameter. */
+  format?: (value: number | null) => string
+  /** Replaces the generated caption. */
+  caption?: string
+  /** Replaces the word shown when the value is outside its band. */
+  statusLabel?: string
 }) {
   const { t, locale } = useLocale()
   const param = useParam()
-  const text = param(code, value)
+  const text = format ? format(value) : param(code ?? 'ffa', value)
   const unitText = unit ? ` ${unit}` : ''
   const plain = (limit: number) => limit.toLocaleString(locale === 'id' ? 'id-ID' : 'en-US')
 
@@ -120,11 +129,13 @@ export function Bullet({
     }
   }
   if (value == null) state = 'none'
+  if (captionText) caption = captionText
 
   const left = position(bandFrom, low, high)
   const width = position(bandTo, low, high) - left
   const showPass = state === 'ok' && context.kind === 'limit' && context.tone === 'breach'
-  const statusWord = state === 'breach' ? t.overMax : state === 'watch' ? t.watch : showPass ? t.pass : null
+  const outside = statusLabel ?? (state === 'breach' ? t.overMax : t.watch)
+  const statusWord = state === 'breach' || state === 'watch' ? outside : showPass ? t.pass : null
   const aria = `${label} ${value == null ? t.notRecorded : `${text}${unitText}`}, ${caption}${statusWord ? `, ${statusWord}` : ''}`
 
   return (
@@ -252,7 +263,7 @@ export function DirectionTrack({ inbound, outbound, unknown }: { inbound: number
 
 export type LegendItem = 'over' | 'watch' | 'retest' | 'nospec' | 'missing'
 
-export function Legend({ items }: { items: LegendItem[] }) {
+export function Legend({ items, labels: custom }: { items: LegendItem[]; labels?: Partial<Record<LegendItem, string>> }) {
   const { t } = useLocale()
   if (items.length === 0) return null
   const labels: Record<LegendItem, string> = {
@@ -261,6 +272,7 @@ export function Legend({ items }: { items: LegendItem[] }) {
     retest: t.retestDue,
     nospec: t.noSpec,
     missing: t.notRecorded,
+    ...custom,
   }
   return (
     <ul className="qc-legend" aria-label={t.legend}>

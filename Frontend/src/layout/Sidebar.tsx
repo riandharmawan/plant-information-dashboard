@@ -1,4 +1,4 @@
-import { ArrowLeftRight, FlaskConical, Ship, TestTube, Truck, Building2, ChevronLeft, ChevronRight, ClipboardList, Droplets, Factory, Filter, Layers, LayoutGrid, MapPin, Package, Radio, Scale, Shield, Warehouse } from 'lucide-react'
+import { ArrowLeftRight, FlaskConical, Ship, TestTube, Truck, Building2, ChevronLeft, ChevronRight, ClipboardList, Droplet, Droplets, Factory, Filter, Flame, Gauge, Layers, LayoutGrid, MapPin, Mountain, Package, Radio, Scale, Shield, Tractor, Warehouse, Waves } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 import { useAuth } from '../data/AuthContext.tsx'
 import { useLocale } from '../i18n/LocaleContext.tsx'
@@ -79,6 +79,37 @@ export function Sidebar({
             <NavLink to="/qc/movements" title={t.qcMovements} className={({ isActive }) => (isActive ? 'active' : undefined)}>
               <ArrowLeftRight className="sidebar-nav__icon" size={16} aria-hidden="true" />
               <span className="sidebar-nav__label">{t.qcMovements}</span>
+            </NavLink>
+          </div>
+            </>
+          ) : null}
+          {hasSites && can('utility', 'view') ? (
+            <>
+          <p className="sidebar-nav__section">{t.utility}</p>
+          <NavLink to="/utility" end title={t.utilityOverview} className={({ isActive }) => (isActive ? 'active' : undefined)}>
+            <Gauge className="sidebar-nav__icon" size={16} aria-hidden="true" />
+            <span className="sidebar-nav__label">{t.utilityOverview}</span>
+          </NavLink>
+          <div className="sidebar-nav__children">
+            <NavLink to="/utility/boiler" title={t.utilityBoiler} className={({ isActive }) => (isActive ? 'active' : undefined)}>
+              <Flame className="sidebar-nav__icon" size={16} aria-hidden="true" />
+              <span className="sidebar-nav__label">{t.utilityBoiler}</span>
+            </NavLink>
+            <NavLink to="/utility/coal" title={t.utilityCoal} className={({ isActive }) => (isActive ? 'active' : undefined)}>
+              <Mountain className="sidebar-nav__icon" size={16} aria-hidden="true" />
+              <span className="sidebar-nav__label">{t.utilityCoal}</span>
+            </NavLink>
+            <NavLink to="/utility/water" title={t.utilityWater} className={({ isActive }) => (isActive ? 'active' : undefined)}>
+              <Droplet className="sidebar-nav__icon" size={16} aria-hidden="true" />
+              <span className="sidebar-nav__label">{t.utilityWater}</span>
+            </NavLink>
+            <NavLink to="/utility/effluent" title={t.utilityEffluent} className={({ isActive }) => (isActive ? 'active' : undefined)}>
+              <Waves className="sidebar-nav__icon" size={16} aria-hidden="true" />
+              <span className="sidebar-nav__label">{t.utilityEffluent}</span>
+            </NavLink>
+            <NavLink to="/utility/loader" title={t.utilityLoader} className={({ isActive }) => (isActive ? 'active' : undefined)}>
+              <Tractor className="sidebar-nav__icon" size={16} aria-hidden="true" />
+              <span className="sidebar-nav__label">{t.utilityLoader}</span>
             </NavLink>
           </div>
             </>

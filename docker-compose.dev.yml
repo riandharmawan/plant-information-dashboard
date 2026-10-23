@@ -38,6 +38,15 @@ services:
       JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env.dev}
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-8h}
       COOKIE_SECURE: "false"
+      APP_PUBLIC_ORIGIN: ${APP_PUBLIC_ORIGIN:-http://localhost:5176}
+      SSO_TOKEN_SECRET: ${SSO_TOKEN_SECRET:-}
+      SSO_LEGACY_BRIDGE_ENABLED: ${SSO_LEGACY_BRIDGE_ENABLED:-true}
+      SSO_OIDC_ENABLED: ${SSO_OIDC_ENABLED:-false}
+      OIDC_ISSUER: ${OIDC_ISSUER:-}
+      OIDC_DISCOVERY_URL: ${OIDC_DISCOVERY_URL:-}
+      OIDC_CLIENT_ID: ${OIDC_CLIENT_ID:-}
+      OIDC_REDIRECT_URI: ${OIDC_REDIRECT_URI:-}
+      OIDC_SCOPES: ${OIDC_SCOPES:-openid profile email}
       SEED_DATA_DIR: /seed/data
     volumes:
       - ./Frontend/src/data:/seed/data:ro

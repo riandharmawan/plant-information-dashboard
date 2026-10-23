@@ -16,9 +16,13 @@ import { useLocale } from '../../i18n/LocaleContext.tsx'
 import { DateRangeFilter } from '../daily-production/DateRangeFilter.tsx'
 import { CommodityFilter } from '../live-ops/CommodityFilter.tsx'
 import { DailyQualityChart, HourlyQualityDialog } from './RefineryHistoryDialog.tsx'
+import { QcDetailDialog, QcPanelOpen } from './qcDialogs.tsx'
+import { QcKpi } from './qcKpi.tsx'
 import { useParam, type ParamCode } from './qcChrome.tsx'
 import { QcTabs } from './qcNav.tsx'
 import { Flow, ProductPill, type FlowStep } from './qcVisual.tsx'
+
+type RefineryDialog = null | 'hours' | 'finished' | 'feed' | 'byproduct' | 'flow' | 'readings'
 
 const useApi = import.meta.env.VITE_DATA_SOURCE === 'api'
 
@@ -76,6 +80,7 @@ export function RefineryQualityPage() {
   const [view, setView] = useState<View>('table')
   const [oils, setOils] = useState<string[] | null>(null)
   const [hourDate, setHourDate] = useState<string | null>(null)
+  const [dialog, setDialog] = useState<RefineryDialog>(null)
   useEffect(() => {
     if (!useApi) return
     let cancelled = false
@@ -128,32 +133,32 @@ export function RefineryQualityPage() {
       </header>
       <QcTabs start={start} end={end} />
       <section className="prod-kpis" aria-label={t.refineryQuality}>
-        <Kpi label={t.hoursLogged} value={snapshot.productionDate ? String(snapshot.hoursLogged) : '-'} />
-        <Kpi
+        <QcKpi label={t.hoursLogged} value={snapshot.productionDate ? String(snapshot.hoursLogged) : '-'} onOpen={() => setDialog('hours')} />
+        <QcKpi
           label={snapshot.figures.finishedFfa ? `${t.finishedFfa} %, ${snapshot.figures.finishedFfa.oil}` : `${t.finishedFfa} %`}
           value={snapshot.figures.finishedFfa ? band(param, snapshot.figures.finishedFfa.low, snapshot.figures.finishedFfa.high) : '-'}
+          onOpen={() => setDialog('finished')}
         />
-        <Kpi
+        <QcKpi
           label={snapshot.figures.feedFfa ? `${t.feedFfa} %, ${snapshot.figures.feedFfa.oil}` : `${t.feedFfa} %`}
           value={snapshot.figures.feedFfa ? param('ffa', snapshot.figures.feedFfa.value) : '-'}
+          onOpen={() => setDialog('feed')}
         />
-        <Kpi label={`${t.byproductFfa} %`} value={snapshot.figures.byproductFfa ? param('ffa', snapshot.figures.byproductFfa.value) : '-'} />
+        <QcKpi label={`${t.byproductFfa} %`} value={snapshot.figures.byproductFfa ? param('ffa', snapshot.figures.byproductFfa.value) : '-'} onOpen={() => setDialog('byproduct')} />
       </section>
       {flows.length > 0 ? (
-        <section className="prod-panel" aria-label={t.dayFlow}>
-          <h2 className="card__title">
-            {t.dayFlow}
-            {snapshot.productionDate ? ` · ${formatDay(snapshot.productionDate, locale)}` : ''}
-          </h2>
+        <QcPanelOpen
+          title={`${t.dayFlow}${snapshot.productionDate ? ` · ${formatDay(snapshot.productionDate, locale)}` : ''}`}
+          onOpen={() => setDialog('flow')}
+        >
           <div className="qc-flows">
             {flows.map((steps, index) => <Flow key={index} label={t.dayFlow} steps={steps} />)}
           </div>
-        </section>
+        </QcPanelOpen>
       ) : null}
       <DailyQualityChart start={start} end={end} oil={chartOil} points={useApi ? (remoteHistory?.points ?? []) : undefined} onDay={setHourDate} />
-      <section className="prod-panel">
+      <QcPanelOpen title={t.readingsTitle} onOpen={() => setDialog('readings')}>
         <div className="section-head">
-          <h2 className="card__title">{t.readingsTitle}</h2>
           <div className="section-head__tools">
             <div className="view-toggle" role="group" aria-label={t.readingsTitle}>
               <button type="button" aria-pressed={view === 'table'} onClick={() => setView('table')}>{t.tableView}</button>
@@ -193,7 +198,29 @@ export function RefineryQualityPage() {
             ))}
           </div>
         )}
-      </section>
+      </QcPanelOpen>
+      <QcDetailDialog
+        open={dialog != null}
+        title={dialog === 'readings' || dialog === 'hours' ? t.readingsTitle : t.refineryQuality}
+        start={start}
+        end={end}
+        onClose={() => setDialog(null)}
+      >
+        {dialog === 'readings' || dialog === 'hours' ? <ReadingTable rows={rows} sort={sort} /> : null}
+        {dialog === 'finished' || dialog === 'feed' || dialog === 'byproduct' || dialog === 'flow' ? (
+          <dl className="qty-stats">
+            <div><dt>{t.hoursLogged}</dt><dd>{snapshot.productionDate ? snapshot.hoursLogged : '-'}</dd></div>
+            <div><dt>{t.finishedFfa}</dt><dd>{snapshot.figures.finishedFfa ? band(param, snapshot.figures.finishedFfa.low, snapshot.figures.finishedFfa.high) : '-'}</dd></div>
+            <div><dt>{t.feedFfa}</dt><dd>{snapshot.figures.feedFfa ? param('ffa', snapshot.figures.feedFfa.value) : '-'}</dd></div>
+            <div><dt>{t.byproductFfa}</dt><dd>{snapshot.figures.byproductFfa ? param('ffa', snapshot.figures.byproductFfa.value) : '-'}</dd></div>
+          </dl>
+        ) : null}
+        {dialog === 'flow' && flows.length > 0 ? (
+          <div className="qc-flows">
+            {flows.map((steps, index) => <Flow key={index} label={t.dayFlow} steps={steps} />)}
+          </div>
+        ) : null}
+      </QcDetailDialog>
       <HourlyQualityDialog date={hourDate} oil={chartOil} siteId={siteId} onClose={() => setHourDate(null)} />
     </div>
   )
@@ -231,15 +258,6 @@ function dayFlows(rows: ReadingRow[], param: Param, t: ReturnType<typeof useLoca
       { kicker: t.toTank, place: distinct(hours.map((row) => row.toTank)) },
     ]
   })
-}
-
-function Kpi({ label, value }: { label: string; value: string }) {
-  return (
-    <article className="prod-kpi">
-      <strong>{value}</strong>
-      <span>{label}</span>
-    </article>
-  )
 }
 
 function ReadingTable({

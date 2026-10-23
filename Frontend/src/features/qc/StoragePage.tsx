@@ -16,13 +16,16 @@ import {
 } from '../../domain/qc.ts'
 import { useQcFile } from '../../data/QcContext.tsx'
 import { useLocale } from '../../i18n/LocaleContext.tsx'
-import { Kpi, Num, QcChrome, useParam, type ParamCode } from './qcChrome.tsx'
+import { Num, QcChrome, useParam, type ParamCode } from './qcChrome.tsx'
+import { QcDetailDialog, QcPanelOpen, StorageLatestDetail } from './qcDialogs.tsx'
+import { QcKpi } from './qcKpi.tsx'
 import { SortHeader, sortRows, useColumnSort, useQcRange, type SortDir } from './qcNav.tsx'
 import { AgeDot, Bullet, Identity, Legend, ProductBoard, fill, type LegendItem } from './qcVisual.tsx'
 
 type Slot = { tankId: string; row: StorageRow | null }
 type View = 'table' | 'cards'
 type Group = 'sample' | 'core' | 'oxidation' | 'composition' | 'notes'
+type StorageDialog = null | 'tanks' | 'retest' | 'oils'
 
 type Column = {
   column: string
@@ -40,6 +43,7 @@ export function StoragePage() {
   const [params, setParams] = useSearchParams()
   const sort = useColumnSort()
   const [view, setView] = useState<View>('table')
+  const [dialog, setDialog] = useState<StorageDialog>(null)
   const openTank = params.get('tank')
   const dialogRef = useRef<HTMLDialogElement>(null)
   const inSpan = useMemo(() => storageInRange(start, end, qc), [qc, start, end])
@@ -92,14 +96,13 @@ export function StoragePage() {
       legend={<Legend items={legend} />}
     >
       <section className="prod-kpis" aria-label={t.qcStorage}>
-        <Kpi label={t.tanksLogged} value={String(withResult.length)} />
-        <Kpi label={t.retestDue} value={String(retests)} tone={retests > 0 ? 'alert' : undefined} />
-        <Kpi label={t.oilTypes} value={String(families)} />
+        <QcKpi label={t.tanksLogged} value={String(withResult.length)} onOpen={() => setDialog('tanks')} />
+        <QcKpi label={t.retestDue} value={String(retests)} tone={retests > 0 ? 'alert' : undefined} onOpen={() => setDialog('retest')} />
+        <QcKpi label={t.oilTypes} value={String(families)} onOpen={() => setDialog('oils')} />
       </section>
       <ProductBoard rows={withResult.map((slot) => slot.row)} slots={STORAGE_TANK_IDS.length} onOpen={setOpenTank} />
-      <section className="prod-panel">
+      <QcPanelOpen title={t.qcStorage} onOpen={() => setDialog('tanks')}>
         <div className="section-head">
-          <h2 className="card__title">{t.qcStorage}</h2>
           <div className="section-head__tools">
             <div className="view-toggle" role="group" aria-label={t.qcStorage}>
               <button type="button" aria-pressed={view === 'table'} onClick={() => setView('table')}>{t.tableView}</button>
@@ -164,7 +167,20 @@ export function StoragePage() {
             ))}
           </div>
         )}
-      </section>
+      </QcPanelOpen>
+      <QcDetailDialog
+        open={dialog != null}
+        title={dialog === 'retest' ? t.retestDue : dialog === 'oils' ? t.oilTypes : t.tanksLogged}
+        start={start}
+        end={end}
+        onClose={() => setDialog(null)}
+      >
+        {dialog === 'retest' ? (
+          <StorageLatestDetail rows={withResult.filter((slot) => retestDue(slot.row)).map((slot) => slot.row)} />
+        ) : (
+          <StorageLatestDetail rows={withResult.map((slot) => slot.row)} />
+        )}
+      </QcDetailDialog>
       <dialog
         ref={dialogRef}
         className="qc-dialog"

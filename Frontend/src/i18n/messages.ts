@@ -17,6 +17,10 @@ export interface Messages {
   showPassword: string
   hidePassword: string
   signIn: string
+  signInViaDwsHub: string
+  backToSignIn: string
+  ssoErrorTitle: string
+  ssoErrorFallback: string
   loginRequired: string
   copyright: string
   liveOps: string
@@ -479,6 +483,110 @@ export interface Messages {
   masterGroup: string
   refineryFractionation: string
   utility: string
+  utilityOverview: string
+  utilityBoiler: string
+  utilityCoal: string
+  utilityWater: string
+  utilityEffluent: string
+  utilityLoader: string
+  utilityPower: string
+  utilityNote: string
+  latestDay: string
+  logged: string
+  emptySheet: string
+  notSubmitted: string
+  notLogged: string
+  outsidePrinted: string
+  checklistNo: string
+  printedRange: string
+  periodRange: string
+  readingCount: string
+  daysLogged: string
+  daysLoggedOf: string
+  formsSubmitted: string
+  byHour: string
+  labBandCaption: string
+  date: string
+  shift: string
+  boilerDaysLogged: string
+  coalBuckets: string
+  coalRatio: string
+  printedRatio: string
+  attentionItems: string
+  sourceBoard: string
+  coalAndRatio: string
+  coalRatioCaption: string
+  waterCoverage: string
+  roCleaning: string
+  performedOn: string
+  doneBy: string
+  roVerifications: string
+  checkYes: string
+  checkNo: string
+  reasonOutside: string
+  reasonNotLogged: string
+  reasonEmpty: string
+  reasonChecklistNo: string
+  noUtilityRows: string
+  noDataDay: string
+  controlRoom: string
+  localPanel: string
+  boilerNote: string
+  hourlyLog: string
+  latestAgainstPrinted: string
+  boilerChemicals: string
+  chemicalNote: string
+  chemical: string
+  lastRemaining: string
+  lastLog: string
+  usedOnLogDays: string
+  daysWithLog: string
+  coalSteamNote: string
+  steamDistribution: string
+  steamMeterCaption: string
+  incomingCoalDays: string
+  incomingCoal: string
+  utilityPeriod: string
+  form: string
+  shiftLog: string
+  fuelClockLog: string
+  steamMeter: string
+  waterNote: string
+  boilerWaterGroup: string
+  wtpGroup: string
+  testsRecorded: string
+  samplePointsLogged: string
+  daysSinceRo: string
+  samplePoint: string
+  test: string
+  printedSpec: string
+  labRoster: string
+  wwtpCoverage: string
+  effluentCoverage: string
+  inletCod: string
+  outletCod: string
+  outletTss: string
+  inletVsOutlet: string
+  inlet: string
+  outlet: string
+  generalLevels: string
+  loaderNote: string
+  hoursRun: string
+  runs: string
+  fuelWritten: string
+  fuelRuns: string
+  checklistNoItems: string
+  dailyHours: string
+  loaderCaption: string
+  checklist: string
+  checklistAllYes: string
+  yesItems: string
+  runRoster: string
+  hourStart: string
+  hourEnd: string
+  printedTotal: string
+  fuelL: string
+  oilL: string
   coverage: string
   logsheetCatalog: string
   qualityRules: string
@@ -520,6 +628,10 @@ export const MESSAGES: Record<Locale, Messages> = {
     showPassword: 'Show password',
     hidePassword: 'Hide password',
     signIn: 'Sign In',
+    signInViaDwsHub: 'Sign in via Dws Hub',
+    backToSignIn: 'Back to sign in',
+    ssoErrorTitle: 'Sign-in could not be completed',
+    ssoErrorFallback: 'Downstream Hub could not sign you in. Try again, or use your username and password.',
     loginRequired: 'Enter your username and password.',
     copyright: '© {{year}} KPN Corporation. All rights reserved.',
     liveOps: 'Tank & Stock Dashboard',
@@ -982,6 +1094,110 @@ export const MESSAGES: Record<Locale, Messages> = {
     masterGroup: 'Master data',
     refineryFractionation: 'Refinery and fractionation',
     utility: 'Utility',
+    utilityOverview: 'Utility overview',
+    utilityBoiler: 'Boiler',
+    utilityCoal: 'Coal & fuel',
+    utilityWater: 'Water',
+    utilityEffluent: 'Effluent',
+    utilityLoader: 'Loader',
+    utilityPower: 'Power',
+    utilityNote: 'Values are shown as written on the utility logsheets. A range printed on the sheet is context, not a pass or fail. Boiler steam meters are not added to the refinery steam on the production report.',
+    latestDay: 'Latest day',
+    logged: 'Logged',
+    emptySheet: 'Empty sheet',
+    notSubmitted: 'Not submitted',
+    notLogged: 'Not logged',
+    outsidePrinted: 'Outside printed range',
+    checklistNo: 'Checklist no',
+    printedRange: 'printed {spec}',
+    periodRange: 'range in this period · {count} results',
+    readingCount: '{count} readings',
+    daysLogged: 'Days logged',
+    daysLoggedOf: '{logged} of {days} days',
+    formsSubmitted: '{submitted} of {total} forms submitted',
+    byHour: 'by hour',
+    labBandCaption: 'Shaded band runs from the daily low to the daily high. The grey band or dashed line is the range printed on the sheet.',
+    date: 'Date',
+    shift: 'Shift',
+    boilerDaysLogged: 'Boiler days logged (F/UTI-001)',
+    coalBuckets: 'Coal consumed (buckets)',
+    coalRatio: 'Latest coal ratio (kg/mt steam)',
+    printedRatio: 'Printed ratio (kg/mt steam)',
+    attentionItems: 'Items needing attention',
+    sourceBoard: 'Logsheets in this range',
+    coalAndRatio: 'Coal and ratio',
+    coalRatioCaption: 'Coal buckets per day, with the last printed ratio of each day on its own axis. A day without a sheet is a gap.',
+    waterCoverage: 'Water coverage',
+    roCleaning: 'RO cleaning',
+    performedOn: 'Performed on',
+    doneBy: 'Done by',
+    roVerifications: '{count} verifications after cleaning',
+    checkYes: 'Yes',
+    checkNo: 'No',
+    reasonOutside: '{value}, printed {spec}',
+    reasonNotLogged: 'Last log {date}',
+    reasonEmpty: 'Sheet for {date} has no rows',
+    reasonChecklistNo: 'Answered no on {date}',
+    noUtilityRows: 'No utility logs in this range.',
+    noDataDay: 'The sheet for this day has no readings.',
+    controlRoom: 'Control Room',
+    localPanel: 'Local',
+    boilerNote: 'Taihu 15 TPH. Wuxi 15 TPH has no submissions. The steam flowmeter is a meter reading and is not refinery steam. Click a number to see that tag across the range.',
+    hourlyLog: 'Hourly log',
+    latestAgainstPrinted: 'Latest hour against the printed range',
+    boilerChemicals: 'Boiler chemicals',
+    chemicalNote: 'Logged on {count} days in this range. Remaining is a spot reading, not a stock balance.',
+    chemical: 'Chemical',
+    lastRemaining: 'Last remaining',
+    lastLog: 'Last log',
+    usedOnLogDays: 'Used on log days',
+    daysWithLog: 'Days with a log',
+    coalSteamNote: 'Steam on this tab is the boiler meter. It is not added to the refinery steam on the production report. The ratio is shown as printed.',
+    steamDistribution: 'Steam distribution (kg, meter)',
+    steamMeterCaption: 'Steam distribution per day from the coal logsheet. A day without a sheet is a gap.',
+    incomingCoalDays: 'Days with incoming coal',
+    incomingCoal: 'Incoming coal (kg)',
+    utilityPeriod: '{start} – {end}',
+    form: 'Form',
+    shiftLog: 'Shift log',
+    fuelClockLog: 'Fuel clock log',
+    steamMeter: 'Steam (meter reading)',
+    waterNote: 'Each result is compared only with the range printed in its own tag. Click a result to see that test across the range.',
+    boilerWaterGroup: 'Boiler water',
+    wtpGroup: 'WTP & WWTP',
+    testsRecorded: 'Tests recorded',
+    samplePointsLogged: 'Sample points logged',
+    daysSinceRo: 'Days since RO cleaning',
+    samplePoint: 'Sample point',
+    test: 'Test',
+    printedSpec: 'Printed range',
+    labRoster: 'Results',
+    wwtpCoverage: 'WWTP log coverage',
+    effluentCoverage: '{logged} of {days} days in this range have a WWTP log.',
+    inletCod: 'Inlet COD',
+    outletCod: 'Outlet COD',
+    outletTss: 'Outlet TSS',
+    inletVsOutlet: 'Inlet and outlet',
+    inlet: 'Inlet',
+    outlet: 'Outlet',
+    generalLevels: 'General levels',
+    loaderNote: 'Totals are shown as printed on the sheet. Fuel and oil appear only on the runs where they were written.',
+    hoursRun: 'Hours run',
+    runs: 'Runs',
+    fuelWritten: 'Fuel written (L)',
+    fuelRuns: '{count} runs with fuel',
+    checklistNoItems: 'Checklist no items (latest day)',
+    dailyHours: 'Daily hours',
+    loaderCaption: 'Printed hours per day. Green dots mark the days fuel was written.',
+    checklist: 'Checklist',
+    checklistAllYes: 'Every item was answered yes.',
+    yesItems: '{count} yes items',
+    runRoster: 'Hour meter runs',
+    hourStart: 'Hour meter start',
+    hourEnd: 'Hour meter end',
+    printedTotal: 'Total (printed)',
+    fuelL: 'Fuel (L)',
+    oilL: 'Oil (L)',
     coverage: 'Coverage',
     logsheetCatalog: 'Logsheet catalog',
     qualityRules: 'Quality rules',
@@ -1021,6 +1237,10 @@ export const MESSAGES: Record<Locale, Messages> = {
     showPassword: 'Tampilkan kata sandi',
     hidePassword: 'Sembunyikan kata sandi',
     signIn: 'Masuk',
+    signInViaDwsHub: 'Masuk via Dws Hub',
+    backToSignIn: 'Kembali ke halaman masuk',
+    ssoErrorTitle: 'Masuk tidak dapat diselesaikan',
+    ssoErrorFallback: 'Downstream Hub tidak dapat memasukkan Anda. Coba lagi, atau gunakan nama pengguna dan kata sandi.',
     loginRequired: 'Masukkan nama pengguna dan kata sandi.',
     copyright: '© {{year}} KPN Corporation. Hak cipta dilindungi.',
     liveOps: 'Dasbor Tangki & Stok',
@@ -1483,6 +1703,110 @@ export const MESSAGES: Record<Locale, Messages> = {
     masterGroup: 'Data master',
     refineryFractionation: 'Refinery dan fraksinasi',
     utility: 'Utilitas',
+    utilityOverview: 'Ikhtisar utilitas',
+    utilityBoiler: 'Boiler',
+    utilityCoal: 'Batu bara & bahan bakar',
+    utilityWater: 'Air',
+    utilityEffluent: 'Limbah cair',
+    utilityLoader: 'Loader',
+    utilityPower: 'Listrik',
+    utilityNote: 'Nilai ditampilkan sesuai logsheet utilitas. Rentang yang tercetak di lembar hanya konteks, bukan lulus atau gagal. Meter steam boiler tidak ditambahkan ke steam refineri di laporan produksi.',
+    latestDay: 'Hari terakhir',
+    logged: 'Tercatat',
+    emptySheet: 'Lembar kosong',
+    notSubmitted: 'Tidak dikirim',
+    notLogged: 'Tidak tercatat',
+    outsidePrinted: 'Di luar rentang tercetak',
+    checklistNo: 'Checklist tidak',
+    printedRange: 'tercetak {spec}',
+    periodRange: 'rentang periode ini · {count} hasil',
+    readingCount: '{count} pembacaan',
+    daysLogged: 'Hari tercatat',
+    daysLoggedOf: '{logged} dari {days} hari',
+    formsSubmitted: '{submitted} dari {total} form dikirim',
+    byHour: 'per jam',
+    labBandCaption: 'Area berarsir dari nilai terendah hingga tertinggi harian. Pita abu-abu atau garis putus-putus adalah rentang yang tercetak di lembar.',
+    date: 'Tanggal',
+    shift: 'Shift',
+    boilerDaysLogged: 'Hari boiler tercatat (F/UTI-001)',
+    coalBuckets: 'Batu bara terpakai (bucket)',
+    coalRatio: 'Rasio batu bara terakhir (kg/mt steam)',
+    printedRatio: 'Rasio tercetak (kg/mt steam)',
+    attentionItems: 'Perlu perhatian',
+    sourceBoard: 'Logsheet pada periode ini',
+    coalAndRatio: 'Batu bara dan rasio',
+    coalRatioCaption: 'Bucket batu bara per hari, dengan rasio tercetak terakhir tiap hari pada sumbu sendiri. Hari tanpa lembar dibiarkan kosong.',
+    waterCoverage: 'Cakupan air',
+    roCleaning: 'Pembersihan RO',
+    performedOn: 'Dilakukan',
+    doneBy: 'Oleh',
+    roVerifications: '{count} verifikasi setelah pembersihan',
+    checkYes: 'Ya',
+    checkNo: 'Tidak',
+    reasonOutside: '{value}, tercetak {spec}',
+    reasonNotLogged: 'Log terakhir {date}',
+    reasonEmpty: 'Lembar {date} tidak berisi baris',
+    reasonChecklistNo: 'Dijawab tidak pada {date}',
+    noUtilityRows: 'Tidak ada log utilitas pada periode ini.',
+    noDataDay: 'Lembar hari ini tidak berisi pembacaan.',
+    controlRoom: 'Control Room',
+    localPanel: 'Lokal',
+    boilerNote: 'Taihu 15 TPH. Wuxi 15 TPH belum memiliki kiriman. Flowmeter steam adalah pembacaan meter, bukan steam refineri. Klik angka untuk melihat tag tersebut sepanjang periode.',
+    hourlyLog: 'Log per jam',
+    latestAgainstPrinted: 'Jam terakhir terhadap rentang tercetak',
+    boilerChemicals: 'Chemical boiler',
+    chemicalNote: 'Tercatat pada {count} hari di periode ini. Sisa adalah pembacaan sesaat, bukan saldo stok.',
+    chemical: 'Chemical',
+    lastRemaining: 'Sisa terakhir',
+    lastLog: 'Log terakhir',
+    usedOnLogDays: 'Terpakai pada hari log',
+    daysWithLog: 'Hari dengan log',
+    coalSteamNote: 'Steam pada tab ini adalah meter boiler. Tidak ditambahkan ke steam refineri di laporan produksi. Rasio ditampilkan sesuai cetakan.',
+    steamDistribution: 'Distribusi steam (kg, meter)',
+    steamMeterCaption: 'Distribusi steam per hari dari logsheet batu bara. Hari tanpa lembar dibiarkan kosong.',
+    incomingCoalDays: 'Hari dengan batu bara masuk',
+    incomingCoal: 'Batu bara masuk (kg)',
+    utilityPeriod: '{start} – {end}',
+    form: 'Formulir',
+    shiftLog: 'Log shift',
+    fuelClockLog: 'Log jam bahan bakar',
+    steamMeter: 'Steam (pembacaan meter)',
+    waterNote: 'Setiap hasil hanya dibandingkan dengan rentang yang tercetak pada tagnya sendiri. Klik hasil untuk melihat uji tersebut sepanjang periode.',
+    boilerWaterGroup: 'Air boiler',
+    wtpGroup: 'WTP & WWTP',
+    testsRecorded: 'Uji tercatat',
+    samplePointsLogged: 'Titik sampel tercatat',
+    daysSinceRo: 'Hari sejak pembersihan RO',
+    samplePoint: 'Titik sampel',
+    test: 'Uji',
+    printedSpec: 'Rentang tercetak',
+    labRoster: 'Hasil',
+    wwtpCoverage: 'Cakupan log WWTP',
+    effluentCoverage: '{logged} dari {days} hari pada periode ini memiliki log WWTP.',
+    inletCod: 'COD inlet',
+    outletCod: 'COD outlet',
+    outletTss: 'TSS outlet',
+    inletVsOutlet: 'Inlet dan outlet',
+    inlet: 'Inlet',
+    outlet: 'Outlet',
+    generalLevels: 'Level umum',
+    loaderNote: 'Total ditampilkan sesuai cetakan di lembar. Solar dan oli hanya muncul pada run yang mencatatnya.',
+    hoursRun: 'Jam operasi',
+    runs: 'Run',
+    fuelWritten: 'Solar tercatat (L)',
+    fuelRuns: '{count} run dengan solar',
+    checklistNoItems: 'Item checklist tidak (hari terakhir)',
+    dailyHours: 'Jam per hari',
+    loaderCaption: 'Jam tercetak per hari. Titik hijau menandai hari solar dicatat.',
+    checklist: 'Checklist',
+    checklistAllYes: 'Semua item dijawab ya.',
+    yesItems: '{count} item ya',
+    runRoster: 'Run hour meter',
+    hourStart: 'Hour meter awal',
+    hourEnd: 'Hour meter akhir',
+    printedTotal: 'Total (tercetak)',
+    fuelL: 'Solar (L)',
+    oilL: 'Oli (L)',
     coverage: 'Cakupan',
     logsheetCatalog: 'Katalog logsheet',
     qualityRules: 'Aturan mutu',
@@ -1504,5 +1828,46 @@ export const MESSAGES: Record<Locale, Messages> = {
     roleNameTaken: 'Nama peran sudah digunakan.',
     systemRoleLocked: 'Peran sistem tidak dapat dihapus.',
     roleInUse: 'Peran ini masih ditetapkan ke pengguna.',
+  },
+}
+
+export const SSO_ERROR_TEXT: Record<Locale, Record<string, string>> = {
+  en: {
+    oidc_disabled: 'Sign-in via Downstream Hub is turned off.',
+    oidc_not_configured: 'Sign-in via Downstream Hub is not configured yet.',
+    legacy_bridge_disabled: 'This Hub sign-in link is turned off.',
+    sso_not_configured: 'Sign-in via Downstream Hub is not configured yet.',
+    missing_token: 'Downstream Hub did not send a sign-in token.',
+    invalid_token: 'The Hub sign-in token is invalid or expired. Open the app from Downstream Hub again.',
+    missing_email_claim: 'The Hub sign-in token did not include an email address.',
+    missing_user_id: 'The Hub sign-in token did not include a user id.',
+    inactive_user: 'This account is inactive. Ask an administrator to turn it back on.',
+    no_linked_sso_user: 'No Plant Information Dashboard account uses this Hub email. Ask an administrator to add you first.',
+    oidc_sub_collision: 'This Hub account is already linked to a different user.',
+    email_not_verified: 'Confirm your email in Downstream Hub, then try again.',
+    invalid_state: 'This sign-in session expired. Start again from the login page.',
+    missing_code: 'Downstream Hub did not finish sign-in. Start again from the login page.',
+    missing_id_token: 'Downstream Hub did not finish sign-in. Start again from the login page.',
+    oidc_sign_in_failed: 'Downstream Hub could not sign you in. Try again, or use your username and password.',
+    sign_on_failed: 'Downstream Hub could not sign you in. Try again, or use your username and password.',
+  },
+  id: {
+    oidc_disabled: 'Masuk via Downstream Hub sedang dimatikan.',
+    oidc_not_configured: 'Masuk via Downstream Hub belum dikonfigurasi.',
+    legacy_bridge_disabled: 'Tautan masuk Hub ini sedang dimatikan.',
+    sso_not_configured: 'Masuk via Downstream Hub belum dikonfigurasi.',
+    missing_token: 'Downstream Hub tidak mengirim token masuk.',
+    invalid_token: 'Token masuk Hub tidak valid atau sudah kedaluwarsa. Buka aplikasi dari Downstream Hub lagi.',
+    missing_email_claim: 'Token masuk Hub tidak berisi alamat email.',
+    missing_user_id: 'Token masuk Hub tidak berisi id pengguna.',
+    inactive_user: 'Akun ini tidak aktif. Minta administrator untuk mengaktifkannya.',
+    no_linked_sso_user: 'Tidak ada akun Dasbor Informasi Pabrik untuk email Hub ini. Minta administrator menambahkan Anda terlebih dahulu.',
+    oidc_sub_collision: 'Akun Hub ini sudah tertaut ke pengguna lain.',
+    email_not_verified: 'Konfirmasi email Anda di Downstream Hub, lalu coba lagi.',
+    invalid_state: 'Sesi masuk ini sudah berakhir. Mulai lagi dari halaman masuk.',
+    missing_code: 'Downstream Hub tidak menyelesaikan masuk. Mulai lagi dari halaman masuk.',
+    missing_id_token: 'Downstream Hub tidak menyelesaikan masuk. Mulai lagi dari halaman masuk.',
+    oidc_sign_in_failed: 'Downstream Hub tidak dapat memasukkan Anda. Coba lagi, atau gunakan nama pengguna dan kata sandi.',
+    sign_on_failed: 'Downstream Hub tidak dapat memasukkan Anda. Coba lagi, atau gunakan nama pengguna dan kata sandi.',
   },
 }

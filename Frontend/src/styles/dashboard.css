@@ -2087,6 +2087,117 @@ button.prod-tab {
   font-size: var(--font-size-sm);
 }
 
+.prod-panel__open {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  margin: 0 0 8px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+}
+
+.prod-panel__open:hover .prod-panel__go {
+  transform: translateX(2px);
+}
+
+.prod-panel__open .card__title {
+  margin: 0;
+}
+
+.prod-panel__go {
+  flex-shrink: 0;
+  color: var(--color-sea-deep);
+  opacity: 0.55;
+  transition: transform 150ms ease, opacity 150ms ease;
+}
+
+.prod-panel__open:hover .prod-panel__go {
+  opacity: 1;
+}
+
+.qc-bullet--button {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: inherit;
+  cursor: pointer;
+}
+
+.qc-bullet--button:focus-visible {
+  outline: 2px solid var(--color-sea-deep);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+.utility-coverage--button {
+  display: block;
+  width: 100%;
+  margin: 0 0 10px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.utility-coverage--button:focus-visible {
+  outline: 2px solid var(--color-sea-deep);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+.qc-chip--button {
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+
+.qc-chip--button:focus-visible {
+  outline: 2px solid var(--color-sea-deep);
+  outline-offset: 2px;
+}
+
+.utility-coverage {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: var(--spacing-2);
+  align-items: center;
+  padding: 6px 0;
+}
+
+.utility-coverage__name {
+  color: var(--color-text-charcoal);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+}
+
+.utility-chip--silent {
+  border-style: dashed;
+  color: var(--color-text-steel);
+  cursor: default;
+}
+
+.utility-points {
+  flex-wrap: wrap;
+  margin-bottom: var(--spacing-3);
+}
+
+.utility-yes summary {
+  margin-top: var(--spacing-2);
+  color: var(--color-text-steel);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+}
+
 .qc-figure {
   margin: 0;
 }
@@ -2644,7 +2755,7 @@ button.prod-tab {
 @media (max-width: 1200px) {
   .prod-layout,
   .prod-kpis {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
 }
 
@@ -2665,7 +2776,7 @@ button.prod-tab {
 @media (max-width: 700px) {
   .prod-layout,
   .prod-kpis {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .commodity-stock__row {
