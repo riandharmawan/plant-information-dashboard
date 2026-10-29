@@ -3,6 +3,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import XLSX from 'xlsx'
+import { queueStaging } from './staging-outbox.mjs'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const frontend = path.resolve(here, '..')
@@ -391,7 +392,9 @@ async function main() {
         skipped.push({ day, tickets, reason: 'no analysis dated that day' })
         continue
       }
-      const stored = database([], { snapshotOn: day, revision: 1, tanks })
+      const payload = { snapshotOn: day, revision: 1, tanks }
+      const stored = database([], payload)
+      queueStaging('upsert-qco-day.js', payload)
       downloaded.push({ day, tickets, tanks: analysed, certificates: stored.certificates, history: stored.history })
     } catch (error) {
       failed.push({ day, reason: error instanceof Error ? error.message : String(error) })

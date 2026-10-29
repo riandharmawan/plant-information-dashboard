@@ -1,9 +1,11 @@
-# Registers one daily Windows task that runs every logsheet pull, one after another.
+# Registers one daily Windows task that runs every logsheet pull, then sends new days to staging.
 # Each form still writes its own sync report. The combined summary is Docs/exports/logsheet-sync/sync-report.txt.
-# Credentials stay in Frontend/.env.sync. The task itself does not store the password.
+# The send summary is Docs/exports/staging-outbox/push-report.txt.
+# Logsheet credentials stay in Frontend/.env.sync. Staging SSH settings stay in Frontend/.env.staging-push.
+# The task itself does not store the password.
 $ErrorActionPreference = 'Stop'
 $frontend = Split-Path -Parent $PSScriptRoot
-$script = Join-Path $PSScriptRoot 'sync-all.mjs'
+$script = Join-Path $PSScriptRoot 'sync-and-push-staging.mjs'
 $node = (Get-Command node -ErrorAction Stop).Source
 $at = if ($args.Count -gt 0) { $args[0] } else { '16:00' }
 
@@ -32,7 +34,7 @@ $settings = New-ScheduledTaskSettingsSet `
   -ExecutionTimeLimit (New-TimeSpan -Hours 8)
 Register-ScheduledTask `
   -TaskName 'Plant Dashboard logsheet sync' `
-  -Description 'Download every logsheet form through today, one after another, and write a combined sync report.' `
+  -Description 'Download every logsheet form through today, store it locally, then send the new days to staging.' `
   -Action $action `
   -Trigger $trigger `
   -Settings $settings `

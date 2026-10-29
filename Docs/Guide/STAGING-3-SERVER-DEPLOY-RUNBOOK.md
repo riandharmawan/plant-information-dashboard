@@ -246,6 +246,10 @@ export RUN_MIGRATE=1
 bash Backend/scripts/deploy-staging-api.sh deploy
 ```
 
+### Logsheet days
+
+New logsheet days are downloaded on the office PC and sent to this API host. The daily task, the re-run commands, and the one-time SSH key setup are in [STAGING-LOGSHEET-HANDOFF.md](STAGING-LOGSHEET-HANDOFF.md#ssh-login-for-the-daily-task). Before the first send, pull `sit` on the API host so `Backend/scripts/apply-staging-inbox.sh` is in `/opt/plant-information-dashboard`.
+
 ---
 
 ## 7. Rollback
@@ -266,7 +270,7 @@ bash Backend/scripts/deploy-staging-api.sh rollback
 - `JWT_SECRET` — API server only.
 - `CORS_ORIGIN` — every origin users open the app from (today `http://172.28.92.56:3091`; add the hostname later).
 - `COOKIE_SECURE=false` for HTTP staging; `true` once on HTTPS.
-- Logsheet credentials — API `Backend/.env` only.
+- Logsheet credentials for the daily handoff stay in `Frontend/.env.sync` on the office PC. See [STAGING-LOGSHEET-HANDOFF.md](STAGING-LOGSHEET-HANDOFF.md).
 
 ---
 

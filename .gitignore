@@ -19,6 +19,9 @@ dist-ssr/
 .DS_Store
 *.local
 
+# Queued logsheet payloads waiting to be sent to staging.
+Docs/exports/staging-outbox/
+
 # Staging database dumps (contain production-like data)
 pid_staging.dump
 *.dump

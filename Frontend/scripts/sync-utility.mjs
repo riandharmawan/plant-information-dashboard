@@ -3,6 +3,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { formForId, parseUtilityFile, utilityForms } from './parse-utility.mjs'
+import { queueStaging } from './staging-outbox.mjs'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const frontend = path.resolve(here, '..')
@@ -303,17 +304,19 @@ function storeForm(form, files, downloadedCount, skippedCount) {
   }
   const dates = days.map((day) => day.recordedOn).sort()
   let ingested = null
+  const payload = {
+    formCode: form.formCode,
+    externalId: form.id,
+    name: form.name,
+    from: dates[0] ?? null,
+    to: dates.at(-1) ?? null,
+    downloaded: downloadedCount,
+    skipped: skippedCount,
+    days,
+  }
   try {
-    ingested = ingestUtility({
-      formCode: form.formCode,
-      externalId: form.id,
-      name: form.name,
-      from: dates[0] ?? null,
-      to: dates.at(-1) ?? null,
-      downloaded: downloadedCount,
-      skipped: skippedCount,
-      days,
-    })
+    ingested = ingestUtility(payload)
+    if (days.length > 0) queueStaging('ingest-utility-day.js', payload)
   } catch (error) {
     failed.push({ day: dates.length ? `${dates[0]}..${dates.at(-1)}` : '-', reason: error instanceof Error ? error.message : String(error) })
   }

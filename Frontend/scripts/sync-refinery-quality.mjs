@@ -3,6 +3,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { parseRefineryWorkbook } from './map-refinery-quality.mjs'
+import { queueStaging } from './staging-outbox.mjs'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const frontend = path.resolve(here, '..')
@@ -340,6 +341,7 @@ async function main() {
           continue
         }
         const saved = insertDay(parsed)
+        queueStaging('upsert-refinery-quality.mjs', parsed)
         inserted.push({
           day,
           tickets,

@@ -3,6 +3,7 @@ import path from 'node:path'
 import { spawnSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
 import { parseRfa004B } from './parse-rfa004.mjs'
+import { queueStaging } from './staging-outbox.mjs'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const frontend = path.resolve(here, '..')
@@ -327,15 +328,17 @@ async function main() {
   }
   let ingested = null
   if (days.length > 0) {
+    const payload = {
+      formCode: 'F/RFA-004(B)',
+      from: days[0].productionDate,
+      to: days.at(-1).productionDate,
+      downloaded: downloaded.length,
+      skipped: skipped.length,
+      days,
+    }
     try {
-      ingested = ingestProduction({
-        formCode: 'F/RFA-004(B)',
-        from: days[0].productionDate,
-        to: days.at(-1).productionDate,
-        downloaded: downloaded.length,
-        skipped: skipped.length,
-        days,
-      })
+      ingested = ingestProduction(payload)
+      queueStaging('ingest-production-day.js', payload)
     } catch (error) {
       for (const saved of written) {
         if (!saved.existed) fs.unlinkSync(saved.file)

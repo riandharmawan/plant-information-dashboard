@@ -3,6 +3,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import XLSX from 'xlsx'
+import { queueStaging } from './staging-outbox.mjs'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const frontend = path.resolve(here, '..')
@@ -378,14 +379,16 @@ async function main() {
   }
   let ingested = null
   if (days.length > 0) {
+    const payload = {
+      from: days[0].recordedOn,
+      to: days.at(-1).recordedOn,
+      downloaded: downloaded.length,
+      skipped: skipped.length,
+      days,
+    }
     try {
-      ingested = ingestSoundings({
-        from: days[0].recordedOn,
-        to: days.at(-1).recordedOn,
-        downloaded: downloaded.length,
-        skipped: skipped.length,
-        days,
-      })
+      ingested = ingestSoundings(payload)
+      queueStaging('ingest-sounding-day.js', payload)
     } catch (error) {
       for (const saved of written) {
         if (!saved.existed) fs.unlinkSync(saved.file)
