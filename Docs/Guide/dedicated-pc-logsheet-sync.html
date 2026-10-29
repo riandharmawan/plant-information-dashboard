@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Daily logsheet job — dedicated PC</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 16mm 16mm 18mm;
+      @bottom-left {
+        content: "Daily logsheet job";
+        font-family: "Segoe UI", sans-serif;
+        font-size: 9pt;
+        color: #7a736a;
+      }
+      @bottom-right {
+        content: counter(page);
+        font-family: "Segoe UI", sans-serif;
+        font-size: 9pt;
+        color: #7a736a;
+      }
+    }
+    * { box-sizing: border-box; }
+    html { font-size: 11pt; }
+    body {
+      margin: 0;
+      color: #1c2430;
+      font-family: "Segoe UI", sans-serif;
+      line-height: 1.45;
+      background: white;
+    }
+    h1, h2, h3 { font-weight: 600; letter-spacing: -0.01em; }
+    h1 { font-size: 28pt; line-height: 1.1; margin: 0 0 8px; }
+    h2 {
+      font-size: 15pt;
+      margin: 0 0 8px;
+      page-break-after: avoid;
+    }
+    h3 { font-size: 12pt; margin: 14px 0 4px; page-break-after: avoid; }
+    p { margin: 0 0 8px; }
+    a { color: inherit; text-decoration: none; }
+    .cover { page-break-after: always; min-height: 250mm; }
+    .kicker {
+      color: #1f6b4a;
+      font-size: 10pt;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+    .lede { font-size: 13pt; max-width: 38em; color: #3a4450; }
+    .flow {
+      margin-top: 28px;
+      display: grid;
+      gap: 0;
+    }
+    .flow-item {
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: 12px;
+      padding: 10px 0;
+      border-top: 1px solid #e4ddd4;
+      page-break-inside: avoid;
+    }
+    .num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #1f6b4a;
+      color: white;
+      font-size: 11pt;
+      line-height: 28px;
+      text-align: center;
+    }
+    .flow-item strong { display: block; }
+    .flow-item span { color: #5c564e; }
+    section { page-break-before: always; }
+    section.follow { page-break-before: auto; margin-top: 18px; }
+    ol.steps { margin: 0; padding: 0; list-style: none; counter-reset: step; }
+    ol.steps > li {
+      counter-increment: step;
+      margin: 0 0 14px;
+      padding-left: 36px;
+      position: relative;
+      page-break-inside: avoid;
+    }
+    ol.steps > li::before {
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #efeae3;
+      color: #1c2430;
+      font-size: 10pt;
+      line-height: 24px;
+      text-align: center;
+    }
+    pre {
+      margin: 8px 0;
+      padding: 10px 12px;
+      background: #f6f3ee;
+      border-radius: 8px;
+      font-family: Consolas, "Cascadia Mono", monospace;
+      font-size: 9pt;
+      line-height: 1.4;
+      white-space: pre-wrap;
+      page-break-inside: avoid;
+    }
+    .see {
+      margin: 6px 0 0;
+      padding: 6px 10px;
+      border-left: 3px solid #1f6b4a;
+      background: #f3f8f5;
+      font-size: 10pt;
+      page-break-inside: avoid;
+    }
+    .see strong { color: #1f6b4a; font-weight: 600; }
+    .warn {
+      margin: 8px 0;
+      padding: 8px 10px;
+      background: #fbf6ee;
+      border-radius: 8px;
+      font-size: 10pt;
+      page-break-inside: avoid;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 8px 0 12px;
+      font-size: 10pt;
+      page-break-inside: avoid;
+    }
+    th, td {
+      text-align: left;
+      vertical-align: top;
+      padding: 7px 8px;
+      border-bottom: 1px solid #e4ddd4;
+    }
+    th { font-weight: 600; color: #5c564e; font-size: 9pt; }
+    code {
+      font-family: Consolas, "Cascadia Mono", monospace;
+      font-size: 0.92em;
+      background: #f6f3ee;
+      padding: 0 3px;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+  <div class="cover">
+    <p class="kicker">Plant Information Dashboard</p>
+    <h1>Set up the daily logsheet job</h1>
+    <p class="lede">This guide is for the Windows PC that downloads new logsheet days and sends them to staging. Staging cannot reach logsheet production. This PC can.</p>
+    <div class="flow">
+      <div class="flow-item"><div class="num">1</div><div><strong>Download</strong><span>New days from logsheet production.</span></div></div>
+      <div class="flow-item"><div class="num">2</div><div><strong>Store</strong><span>Each new day in the database on this PC.</span></div></div>
+      <div class="flow-item"><div class="num">3</div><div><strong>Send</strong><span>A JSON copy of each stored day to 172.28.92.57.</span></div></div>
+      <div class="flow-item"><div class="num">4</div><div><strong>Load</strong><span>Staging writes those files into its database.</span></div></div>
+    </div>
+    <p class="warn">The job runs every day at 16:00. The Windows task is named <strong>Plant Dashboard logsheet sync</strong>. It cannot type a password. Logins that the task uses must already be saved on this PC.</p>
+  </div>
+
+  <section>
+    <h2>Before you start</h2>
+    <p>Sign in to the dedicated PC as the Windows user who will own the daily task. Stay on that same user for every step below. The task uses that user’s SSH key.</p>
+    <table>
+      <tr><th>You need</th><th>Why</th></tr>
+      <tr><td>This PC can open logsheet production and 172.28.92.57</td><td>It downloads sheets here, then copies them to the API host.</td></tr>
+      <tr><td>The logsheet username and password</td><td>They go in <code>Frontend\.env.sync</code>. They are not copied to staging.</td></tr>
+      <tr><td>The root password for 172.28.92.57</td><td>Used once, while installing the SSH key.</td></tr>
+      <tr><td>A database dump from a PC that already stores Bekasi logsheets</td><td>An empty database cannot store the sheets. The site, tanks, and form definitions have to be there first.</td></tr>
+    </table>
+    <h3>Install these programs</h3>
+    <ol class="steps">
+      <li>Git.</li>
+      <li>Node.js 20 or newer. In PowerShell, <code>node -v</code> should print <code>v20</code> or higher.</li>
+      <li>Docker Desktop. Leave it running.</li>
+      <li>The Windows OpenSSH Client. In PowerShell, <code>ssh -V</code> should print a version line.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>1. Get the project</h2>
+    <p>Open PowerShell. Clone the <code>sit</code> branch. Use a folder path with no surprise spaces if you can. The examples below use <code>C:\PlantDashboard</code>.</p>
+    <pre>git clone -b sit `
+  https://github.com/riandharmawan/plant-information-dashboard.git `
+  C:\PlantDashboard
+cd C:\PlantDashboard
+cd Frontend
+npm ci
+cd ..\Backend
+npm ci</pre>
+    <p class="see"><strong>You should see</strong> both <code>npm ci</code> commands finish without an error. The daily job needs the Frontend packages to read Excel, and the Backend packages to write the database.</p>
+  </section>
+
+  <section>
+    <h2>2. Start the local database</h2>
+    <p>The job stores each day on this PC before it sends a copy. If the local store fails, that day is not sent.</p>
+    <ol class="steps">
+      <li>In the repo root, copy the example env file.
+        <pre>cd C:\PlantDashboard
+copy .env.dev.example .env.dev</pre>
+        <p class="see"><strong>You should see</strong> a file named <code>.env.dev</code>. Keep the database password that is already in the example, unless this PC already uses a different one. Do not put the staging database password here.</p>
+      </li>
+      <li>Start only the database.
+        <pre>docker compose --env-file .env.dev -f docker-compose.dev.yml up -d pid-db</pre>
+        <p class="see"><strong>You should see</strong> the container <code>pid-db</code> running. It listens on <code>127.0.0.1:5437</code>.</p>
+      </li>
+      <li>On a PC that already has the working database, create a dump from the repo root.
+        <pre>.\Backend\scripts\staging-pg-dump-local.ps1</pre>
+        <p class="see"><strong>You should see</strong> <code>pid_staging.dump</code> in that repo root. Copy the file to the dedicated PC with a USB drive or a private share. Do not commit it.</p>
+      </li>
+      <li>On the dedicated PC, restore the dump into <code>pid-db</code>.
+        <pre>docker cp .\pid_staging.dump pid-db:/tmp/pid_staging.dump
+docker exec pid-db pg_restore -U pid_user -d pid_db `
+  --clean --if-exists --no-owner --no-acl `
+  /tmp/pid_staging.dump</pre>
+        <p class="see"><strong>You should see</strong> the command return to PowerShell. A few “does not exist” lines on a new database can be ignored.</p>
+      </li>
+      <li>Check that the form list is present.
+        <pre>docker exec pid-db psql -U pid_user -d pid_db -c "SELECT count(*) FROM logsheet_definitions;"</pre>
+        <p class="see"><strong>You should see</strong> a count greater than 0. A count of 0 means the restore did not land. Do not register the daily task yet.</p>
+      </li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>3. Save the logsheet login</h2>
+    <ol class="steps">
+      <li>Copy the example.
+        <pre>cd C:\PlantDashboard\Frontend
+copy .env.example .env.sync</pre>
+      </li>
+      <li>Open <code>Frontend\.env.sync</code> and fill <code>LOGSHEET_IDENTIFIER</code> and <code>LOGSHEET_PASSWORD</code>. Leave the form ids already in the file. This file stays on this PC.</li>
+    </ol>
+    <p class="warn">Do not commit <code>.env.sync</code>. Do not copy the logsheet password into the staging server.</p>
+  </section>
+
+  <section class="follow">
+    <h2>4. Save the staging address</h2>
+    <pre>cd C:\PlantDashboard\Frontend
+copy .env.staging-push.example .env.staging-push</pre>
+    <p>The example already points at <code>root@172.28.92.57</code> and <code>/opt/plant-information-dashboard</code>. Leave those values unless the API host has changed. This file stays on this PC.</p>
+  </section>
+
+  <section>
+    <h2>5. Create an SSH key the task can use</h2>
+    <p>The daily task cannot type a password or a passphrase. The private key stays on this PC. Only the public key goes to the server.</p>
+    <ol class="steps">
+      <li>Create the key. Press Enter at both passphrase questions so the passphrase is empty. If Windows asks to overwrite a key that was never installed on the server, type <code>y</code>.
+        <pre>ssh-keygen -t ed25519 -f $env:USERPROFILE\.ssh\id_ed25519</pre>
+        <p class="warn">In PowerShell, <code>-N '""'</code> does not mean an empty passphrase. It locks the key, and the daily task cannot unlock it. Use the command above and press Enter.</p>
+      </li>
+      <li>Confirm the key is unlocked. Do not add <code>-P</code>. On this Windows OpenSSH, <code>ssh-keygen -y -P</code> prints <code>Too many arguments.</code>
+        <pre>ssh-keygen -y -f $env:USERPROFILE\.ssh\id_ed25519</pre>
+        <p class="see"><strong>You should see</strong> a line that starts with <code>ssh-ed25519</code>, with no passphrase question. If a passphrase question appears, press Ctrl+C and create the key again.</p>
+      </li>
+      <li>Install the public key. These are the only commands that should ask for the root password. The password will not appear as you type. Run them one at a time.
+        <pre>ssh root@172.28.92.57 "mkdir -p ~/.ssh; chmod 700 ~/.ssh"
+Get-Content $env:USERPROFILE\.ssh\id_ed25519.pub | ssh root@172.28.92.57 "cat &gt;&gt; ~/.ssh/authorized_keys"
+ssh root@172.28.92.57 "chmod 600 ~/.ssh/authorized_keys"</pre>
+        <p class="see"><strong>You should see</strong> a return to the <code>PS</code> prompt with no error after you type the password.</p>
+      </li>
+      <li>Prove the task can log in alone.
+        <pre>ssh -o BatchMode=yes root@172.28.92.57</pre>
+        <p class="see"><strong>You should see</strong> a Linux prompt and no password question. Type <code>exit</code>.</p>
+      </li>
+    </ol>
+    <p class="warn"><code>Permission denied (publickey,password)</code> means the server does not have this public key yet. Repeat step 3. Do not register the daily task until step 4 opens a shell.</p>
+  </section>
+
+  <section>
+    <h2>6. Confirm the load script is on the server</h2>
+    <p>The API host loads each JSON file with a script in the git checkout. The running container already knows how to write the database. You do not rebuild the API for this.</p>
+    <pre>ssh root@172.28.92.57</pre>
+    <p>Then on the server:</p>
+    <pre>cd /opt/plant-information-dashboard
+git pull origin sit
+ls Backend/scripts/apply-staging-inbox.sh
+exit</pre>
+    <p class="see"><strong>You should see</strong> <code>ls</code> print <code>Backend/scripts/apply-staging-inbox.sh</code>. If pull says the server has local edits, stop and ask before changing those files.</p>
+  </section>
+
+  <section>
+    <h2>7. Register the daily task</h2>
+    <p>Still in PowerShell, as the same Windows user:</p>
+    <pre>cd C:\PlantDashboard
+.\Frontend\scripts\install-logsheet-sync-task.ps1</pre>
+    <p class="see"><strong>You should see</strong> <code>Registered 'Plant Dashboard logsheet sync' daily at 16:00</code>.</p>
+    <p>To use another time, pass it. For example, <code>.\Frontend\scripts\install-logsheet-sync-task.ps1 18:30</code>. If the PC is off at that time, the task starts when the PC is next on. Leave the PC signed in as this user. The task runs for that user.</p>
+  </section>
+
+  <section>
+    <h2>8. Run it once and read the reports</h2>
+    <p>The first run on a new PC only downloads days that are not already saved as workbooks on this PC. A fresh clone has no workbooks, so the first run takes today. To send older days that staging does not have yet, add a range. Use the last date already on staging as <code>--from</code>.</p>
+    <pre>node C:\PlantDashboard\Frontend\scripts\sync-and-push-staging.mjs `
+  --from 2026-10-01 --to 2026-10-29</pre>
+    <p>Change those dates to the range you need. A later daily run does not need the dates. It continues after the newest workbook on this PC.</p>
+    <table>
+      <tr><th>Open this file</th><th>A good result</th></tr>
+      <tr><td><code>Docs\exports\logsheet-sync\sync-report.txt</code></td><td>Status: OK for the download and the local store.</td></tr>
+      <tr><td><code>Docs\exports\staging-outbox\push-report.txt</code></td><td>Status: OK, Failed: 0, Left in outbox: 0.</td></tr>
+    </table>
+    <p class="see"><strong>You should see</strong> the sent files listed by name. They move to <code>Docs\exports\staging-outbox\sent</code> on this PC. On the API host they move to <code>/opt/plant-information-dashboard/staging-inbox/applied</code>.</p>
+    <p>The last lines of the push report always mention where a failed file would remain. If <strong>Left in outbox</strong> is 0, nothing is still waiting.</p>
+    <p>Each form also writes its own report under <code>Docs\exports</code>, for example <code>Docs\exports\storage-tank-sounding\sync-report.txt</code>. History is appended to the matching <code>sync.log</code> and to <code>Docs\exports\staging-outbox\push-log.txt</code>.</p>
+  </section>
+
+  <section>
+    <h2>After it is running</h2>
+    <h3>Run the whole job again</h3>
+    <p>This downloads any days still missing, stores them, and sends whatever is still in the outbox.</p>
+    <pre>Start-ScheduledTask -TaskName "Plant Dashboard logsheet sync"</pre>
+    <p>The task runs in the background. Read the two report files when it finishes. To watch it in the window instead:</p>
+    <pre>node C:\PlantDashboard\Frontend\scripts\sync-and-push-staging.mjs</pre>
+    <h3>Fill a date gap</h3>
+    <pre>node C:\PlantDashboard\Frontend\scripts\sync-and-push-staging.mjs --from 2026-10-28 --to 2026-10-29</pre>
+    <h3>Send again without downloading</h3>
+    <p>Use this when the local store succeeded and only the copy or the staging load failed. Waiting files stay in <code>Docs\exports\staging-outbox</code>.</p>
+    <pre>node C:\PlantDashboard\Frontend\scripts\push-staging.mjs</pre>
+    <h3>If the send fails</h3>
+    <table>
+      <tr><th>The report says</th><th>What to do</th></tr>
+      <tr><td><code>Permission denied (publickey,password)</code></td><td>The SSH test in section 5 is failing. Fix the key, then run <code>push-staging.mjs</code> again. Do not download the sheets again.</td></tr>
+      <tr><td><code>apply-staging-inbox.sh: No such file or directory</code></td><td>On the API host, run <code>git pull origin sit</code> and check that the script exists. Then run <code>push-staging.mjs</code> again.</td></tr>
+      <tr><td>Left in outbox is greater than 0</td><td>Those files were not loaded. Read the Failed lines in <code>push-report.txt</code>, fix that cause, and run <code>push-staging.mjs</code> again.</td></tr>
+    </table>
+  </section>
+</body>
+</html>

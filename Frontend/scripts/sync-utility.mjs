@@ -4,6 +4,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { formForId, parseUtilityFile, utilityForms } from './parse-utility.mjs'
 import { queueStaging } from './staging-outbox.mjs'
+import { bridgeMode } from './bridge-mode.mjs'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const frontend = path.resolve(here, '..')
@@ -315,7 +316,7 @@ function storeForm(form, files, downloadedCount, skippedCount) {
     days,
   }
   try {
-    ingested = ingestUtility(payload)
+    if (!bridgeMode()) ingested = ingestUtility(payload)
     if (days.length > 0) queueStaging('ingest-utility-day.js', payload)
   } catch (error) {
     failed.push({ day: dates.length ? `${dates[0]}..${dates.at(-1)}` : '-', reason: error instanceof Error ? error.message : String(error) })

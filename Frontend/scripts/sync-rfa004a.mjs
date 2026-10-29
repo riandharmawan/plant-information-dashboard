@@ -4,6 +4,7 @@ import { spawnSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
 import { parseRfa004A } from './parse-rfa004.mjs'
 import { queueStaging } from './staging-outbox.mjs'
+import { bridgeMode } from './bridge-mode.mjs'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const frontend = path.resolve(here, '..')
@@ -337,7 +338,7 @@ async function main() {
       days,
     }
     try {
-      ingested = ingestProduction(payload)
+      if (!bridgeMode()) ingested = ingestProduction(payload)
       queueStaging('ingest-production-day.js', payload)
     } catch (error) {
       for (const saved of written) {

@@ -1,8 +1,15 @@
 # Staging logsheet handoff
 
-This PC downloads new logsheet days, stores them locally, and sends a copy to the staging API host (`172.28.92.57`). Staging loads that copy into its database.
+This PC downloads new logsheet days and sends a copy to the staging API host (`172.28.92.57`). Staging loads that copy into its database.
 
-The daily Windows task is **Plant Dashboard logsheet sync**.
+There are two kinds of PC for this job:
+
+| PC profile | Task name | Keeps a local database | Wrapper script |
+| --- | --- | --- | --- |
+| Standard | **Plant Dashboard logsheet sync** | Yes. It writes each day locally, then sends the same data. | `sync-and-push-staging.mjs` |
+| Bridge-only | **Plant Dashboard logsheet bridge sync** | No. It only downloads and sends. Staging does the write. | `sync-and-push-bridge.mjs` |
+
+The two tasks have different names and do not conflict. A PC runs one or the other, not both. Everything below describes the standard PC. The differences for a bridge-only PC are in [Bridge-only PC](#bridge-only-pc-no-local-database).
 
 ```mermaid
 flowchart TD
@@ -39,6 +46,27 @@ The daily run only downloads days after the newest workbook already saved on thi
 | Send to staging | `Docs/exports/staging-outbox/push-report.txt` |
 | Still waiting to be loaded | JSON files directly under `Docs/exports/staging-outbox` |
 | Already loaded | `Docs/exports/staging-outbox/sent` on this PC, and `/opt/plant-information-dashboard/staging-inbox/applied` on the API host |
+| Mail sent or skipped | `Docs/exports/logsheet-sync/notify.log` |
+
+## Email
+
+After each daily run, this PC sends one mail. The subject is **Plant logsheet sync OK** or **Plant logsheet sync FAILED**. The message contains the download result and the staging send result.
+
+Put the mail server settings in `Frontend/.env`:
+
+```
+SMTP_HOST=
+SMTP_PORT=587
+SMTP_SECURE=
+SMTP_USER=
+SMTP_PASSWORD=
+SMTP_FROM=
+SMTP_TO=
+```
+
+`SMTP_TO` can list several people, separated by commas. Leave `SMTP_SECURE` empty for port 587. Set `SMTP_SECURE=true` for port 465.
+
+Until `SMTP_HOST`, `SMTP_FROM`, and `SMTP_TO` are filled in, the run still completes and `notify.log` says the mail was skipped. A mail server that rejects the message is recorded in that same log.
 
 ## Run it again
 
@@ -86,6 +114,8 @@ node scripts/push-staging.mjs
 
 The default time is 16:00. Pass another time to change it, for example `.\Frontend\scripts\install-logsheet-sync-task.ps1 18:30`. If this PC is off at that time, the task starts when the PC is next on.
 
+If this PC has no local database, skip this step and use [Bridge-only PC](#bridge-only-pc-no-local-database) instead.
+
 4. On the API host, update the checkout so the load script is present:
 
 ```bash
@@ -94,6 +124,50 @@ git pull origin sit
 ```
 
 The file it needs is `Backend/scripts/apply-staging-inbox.sh`. The `pid-api` container loads each JSON file with the database login it already has.
+
+## Bridge-only PC (no local database)
+
+Use this on a PC that only forwards files. It never runs Docker and never writes `logsheet_submissions`, `soundings`, or any other table. It downloads a sheet, builds the same JSON payload the standard PC would store locally, and sends it straight to staging.
+
+Everything else about this PC is identical to the standard setup: get the project, create `Frontend/.env.sync` and `Frontend/.env.staging-push`, and do the [SSH login steps](#ssh-login-for-the-daily-task) below. The only difference is which script you register.
+
+### Register the bridge task
+
+```powershell
+.\Frontend\scripts\install-logsheet-bridge-task.ps1
+```
+
+This registers **Plant Dashboard logsheet bridge sync**, separate from **Plant Dashboard logsheet sync**. It does not touch, rename, or remove the standard task. Pass a time the same way, for example `.\Frontend\scripts\install-logsheet-bridge-task.ps1 18:30`.
+
+### Run it by hand
+
+```powershell
+node scripts\sync-and-push-bridge.mjs
+```
+
+This sets `BRIDGE_MODE=1` for the run. Each `sync-*.mjs` job reads that and skips every local database read and write. The JSON file it queues is exactly the same as on a standard PC, so staging loads it the same way.
+
+### What changes in the reports
+
+- `Docs/exports/*/sync-report.txt` for sounding, oil movement, both production logs, and utility shows **Database rows written: 0**. That is correct. Nothing was written here; it was written on staging.
+- The tank analytical report (`Docs/exports/daily-storage-tank-analytical`) finds its next date from its own last run instead of asking a database, since there is no database to ask.
+- The refinery quality report (`Docs/exports/daily-quality-refinery`) marks each day **queued for staging** instead of checking a database row count.
+- `Docs/exports/staging-outbox/push-report.txt` works exactly as it does on a standard PC.
+
+### Re-run it
+
+```powershell
+Start-ScheduledTask -TaskName "Plant Dashboard logsheet bridge sync"
+```
+
+To fill a date gap, or to resend without downloading again, use the same commands as the standard PC, with `sync-and-push-bridge.mjs` in place of `sync-and-push-staging.mjs`:
+
+```powershell
+node scripts\sync-and-push-bridge.mjs --from 2026-10-28 --to 2026-10-29
+node scripts\push-staging.mjs
+```
+
+`push-staging.mjs` is the same script on both kinds of PC. It only reads the outbox; it does not care which wrapper filled it.
 
 ## SSH login for the daily task
 

@@ -1,5 +1,6 @@
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { notifyRun } from './notify-run.mjs'
 import { pushStaging } from './push-staging.mjs'
 import { jobs, runAll } from './sync-all.mjs'
 
@@ -12,5 +13,6 @@ function isDirectRun() {
 if (isDirectRun()) {
   const report = runAll(jobs, process.argv)
   const push = pushStaging()
-  if (report.status !== 'OK' || push.status !== 'OK') process.exitCode = 1
+  const mail = await notifyRun(report, push)
+  if (report.status !== 'OK' || push.status !== 'OK' || mail.status === 'FAILED') process.exitCode = 1
 }

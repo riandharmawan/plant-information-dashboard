@@ -4,6 +4,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { parseRefineryWorkbook } from './map-refinery-quality.mjs'
 import { queueStaging } from './staging-outbox.mjs'
+import { bridgeMode } from './bridge-mode.mjs'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const frontend = path.resolve(here, '..')
@@ -340,7 +341,9 @@ async function main() {
           skipped.push({ day, tickets, reason: parsed.reason })
           continue
         }
-        const saved = insertDay(parsed)
+        const saved = bridgeMode()
+          ? { processUnit: parsed.processUnit, readings: parsed.readings.length }
+          : insertDay(parsed)
         queueStaging('upsert-refinery-quality.mjs', parsed)
         inserted.push({
           day,
@@ -359,7 +362,9 @@ async function main() {
         failed.push({ day, reason: message })
       }
     }
-    if (!stopped && inserted.length > 0) {
+    if (bridgeMode()) {
+      for (const item of inserted) item.database = 'queued for staging'
+    } else if (!stopped && inserted.length > 0) {
       const storedDays = verifyRange(from, to)
       for (const item of inserted) {
         const row = storedDays.find((stored) => stored.day === item.day && stored.unit === item.processUnit)

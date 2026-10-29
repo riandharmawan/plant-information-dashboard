@@ -1,5 +1,6 @@
 # Spreadsheets and PDFs stay local. Markdown, text, images, and other docs are tracked.
 *.pdf
+!Docs/Guide/Dedicated-PC-Logsheet-Sync.pdf
 *.xlsx
 
 # Dependencies and build output

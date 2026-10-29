@@ -4,6 +4,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import XLSX from 'xlsx'
 import { queueStaging } from './staging-outbox.mjs'
+import { bridgeMode } from './bridge-mode.mjs'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const frontend = path.resolve(here, '..')
@@ -387,7 +388,7 @@ async function main() {
       days,
     }
     try {
-      ingested = ingestSoundings(payload)
+      if (!bridgeMode()) ingested = ingestSoundings(payload)
       queueStaging('ingest-sounding-day.js', payload)
     } catch (error) {
       for (const saved of written) {

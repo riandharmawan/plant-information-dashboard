@@ -4,6 +4,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import XLSX from 'xlsx'
 import { queueStaging } from './staging-outbox.mjs'
+import { bridgeMode } from './bridge-mode.mjs'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const frontend = path.resolve(here, '..')
@@ -285,7 +286,20 @@ function database(args, payload) {
   return result.stdout.trim() ? JSON.parse(result.stdout) : null
 }
 
+function localCursor() {
+  if (!fs.existsSync(lastSync)) return null
+  try {
+    const data = JSON.parse(fs.readFileSync(lastSync, 'utf8'))
+    return data.to ?? null
+  } catch {
+    return null
+  }
+}
+
 function newestSnapshot() {
+  // A bridge PC has no local database to ask. It uses the `to` date from its own
+  // last run instead, which is written below regardless of where the data lands.
+  if (bridgeMode()) return localCursor()
   return database(['--cursor']).snapshotOn ?? null
 }
 
@@ -393,7 +407,7 @@ async function main() {
         continue
       }
       const payload = { snapshotOn: day, revision: 1, tanks }
-      const stored = database([], payload)
+      const stored = bridgeMode() ? { certificates: analysed.length, history: false } : database([], payload)
       queueStaging('upsert-qco-day.js', payload)
       downloaded.push({ day, tickets, tanks: analysed, certificates: stored.certificates, history: stored.history })
     } catch (error) {
@@ -403,12 +417,14 @@ async function main() {
   const report = { ranAt: ranAtLabel(), from, to, downloaded, skipped, failed }
   writeSyncLog(report)
   console.log(JSON.stringify(report, null, 2))
-  try {
-    database(['--record-run'], report)
-  } catch (error) {
-    const reason = error instanceof Error ? error.message : String(error)
-    writeSyncLog({ ...report, ranAt: ranAtLabel(), error: `Database run record failed. ${reason}` })
-    throw error
+  if (!bridgeMode()) {
+    try {
+      database(['--record-run'], report)
+    } catch (error) {
+      const reason = error instanceof Error ? error.message : String(error)
+      writeSyncLog({ ...report, ranAt: ranAtLabel(), error: `Database run record failed. ${reason}` })
+      throw error
+    }
   }
   if (failed.length > 0) process.exitCode = 1
 }

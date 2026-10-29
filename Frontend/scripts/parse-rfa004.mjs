@@ -68,6 +68,8 @@ export function parseRfa004A(file, productionDate) {
   const utilities = []
   const remarks = []
   const flowIndex = { feed: 0, product: 0, coproduct: 0 }
+  let earthRow = 0
+  let acidRow = 0
   let utilityIndex = 0
   let remarkIndex = 0
   for (const row of rows) {
@@ -115,6 +117,8 @@ export function parseRfa004A(file, productionDate) {
       flowIndex[section] += 1
     }
     if (section === 'earth' && isShift(label)) {
+      const rowIndex = earthRow
+      earthRow += 1
       const slots = [
         [1, row[1], row[2], row[3]],
         [2, row[4], row[5], row[6]],
@@ -128,6 +132,7 @@ export function parseRfa004A(file, productionDate) {
         materials.push({
           shiftText: cellText(label),
           material: 'bleaching_earth',
+          rowIndex,
           slot,
           quantity,
           tankVolume: null,
@@ -144,9 +149,12 @@ export function parseRfa004A(file, productionDate) {
       const totalQuantity = cellNumber(row[3])
       const lot = cellText(row[4])
       if (quantity == null && tankVolume == null && totalQuantity == null && !lot) continue
+      const rowIndex = acidRow
+      acidRow += 1
       materials.push({
         shiftText: cellText(label),
         material: 'phosphoric_acid',
+        rowIndex,
         slot: 1,
         quantity,
         tankVolume,

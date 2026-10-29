@@ -121,10 +121,10 @@ export async function ingestProductionDays(input) {
       for (const material of day.materials ?? []) {
         await client.query(
           `INSERT INTO production_materials (
-             day_id, shift_text, material, slot, quantity, tank_volume, total_quantity, unit, lot, grade
-           ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
+             day_id, shift_text, material, row_index, slot, quantity, tank_volume, total_quantity, unit, lot, grade
+           ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)`,
           [
-            dayId, material.shiftText, material.material, material.slot, material.quantity,
+            dayId, material.shiftText, material.material, material.rowIndex ?? 0, material.slot, material.quantity,
             material.tankVolume, material.totalQuantity, material.unit, material.lot, material.grade,
           ],
         )
