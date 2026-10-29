@@ -14,10 +14,11 @@ $ErrorActionPreference = 'Stop'
 $frontend = Split-Path -Parent $PSScriptRoot
 $script = Join-Path $PSScriptRoot 'sync-and-push-bridge.mjs'
 $node = (Get-Command node -ErrorAction Stop).Source
-$at = if ($args.Count -gt 0) { $args[0] } else { '16:00' }
+# Pass one or more times, e.g. .\install-logsheet-bridge-task.ps1 08:30 16:00
+$times = if ($args.Count -gt 0) { $args } else { @('16:00') }
 
 $action = New-ScheduledTaskAction -Execute $node -Argument "`"$script`"" -WorkingDirectory $frontend
-$trigger = New-ScheduledTaskTrigger -Daily -At $at
+$triggers = foreach ($t in $times) { New-ScheduledTaskTrigger -Daily -At $t }
 $settings = New-ScheduledTaskSettingsSet `
   -StartWhenAvailable `
   -DontStopOnIdleEnd `
@@ -27,10 +28,10 @@ Register-ScheduledTask `
   -TaskName 'Plant Dashboard logsheet bridge sync' `
   -Description 'Download every logsheet form through today and send the new days to staging. No local database on this PC.' `
   -Action $action `
-  -Trigger $trigger `
+  -Trigger $triggers `
   -Settings $settings `
   -Force | Out-Null
 
-Write-Output "Registered 'Plant Dashboard logsheet bridge sync' daily at $at"
+Write-Output "Registered 'Plant Dashboard logsheet bridge sync' daily at $($times -join ', ')"
 Write-Output "Node: $node"
 Write-Output "Script: $script"
