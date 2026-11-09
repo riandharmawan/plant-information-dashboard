@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
+import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import type { SaveResult } from '../../domain/master.ts'
 import { useLocale } from '../../i18n/LocaleContext.tsx'
@@ -32,6 +32,8 @@ interface MasterRecordPageProps<T extends { id: string }> {
   identityLabel?: string
   /** Rows are managed elsewhere (DataHub). Hides add, edit and remove. */
   readOnly?: boolean
+  /** Extra controls in each row's action cell. Shown even when read-only. */
+  rowActions?: (row: T) => ReactNode
 }
 
 export function MasterRecordPage<T extends { id: string }>({
@@ -49,6 +51,7 @@ export function MasterRecordPage<T extends { id: string }>({
   editHref,
   identityLabel,
   readOnly = false,
+  rowActions,
 }: MasterRecordPageProps<T>) {
   const { t } = useLocale()
   const dialogRef = useRef<HTMLDialogElement>(null)
@@ -198,6 +201,7 @@ export function MasterRecordPage<T extends { id: string }>({
                 <tr key={row.id}>
                   {columns.map((column) => <td key={column.key}>{column.value(row)}</td>)}
                   <td>
+                    {rowActions ? <div className="master-row-actions">{rowActions(row)}</div> : null}
                     {readOnly ? null : <div className="master-row-actions">
                       {editHref
                         ? <Link className="btn-text" to={editHref(row)}>{t.edit}</Link>

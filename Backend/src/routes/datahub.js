@@ -3,7 +3,10 @@ import { pool } from '../db.js'
 import { requireAuth, requirePermission } from '../access.js'
 import { fetchEntityCatalog, clearTokenCache, ENTITY_SLUGS } from '../datahub/client.js'
 import { getConfigForAdmin, getEffectiveConfig, recordSyncHealth, saveConfig } from '../datahub/config.js'
-import { ENTITY_TYPES, applyRun, linkLocalRow, pullAndStage } from '../datahub/sync.js'
+import { applyRun, linkLocalRow, pullAndStage } from '../datahub/sync.js'
+
+// The structure stops at the site. Plant sync still exists in the sync module but is not offered.
+const ENTITY_TYPES = ['company', 'site']
 
 const router = Router()
 router.use(requireAuth)
@@ -124,7 +127,7 @@ router.get('/runs', view, async (req, res, next) => {
 
 router.post('/runs', edit, async (req, res, next) => {
   const entity = req.body?.entityType
-  if (!ENTITY_TYPES.includes(entity)) return res.status(400).json({ error: 'entityType must be company, site or plant' })
+  if (!ENTITY_TYPES.includes(entity)) return res.status(400).json({ error: 'entityType must be company or site' })
   const cfg = await getEffectiveConfig(pool)
   if (!cfg.enabled || !cfg.baseUrl) return res.status(400).json({ error: 'DataHub is not configured.' })
   if (!cfg.publicKey || !cfg.privateKey) return res.status(400).json({ error: 'DataHub key pair is not configured.' })
@@ -207,7 +210,7 @@ router.post('/runs/:id(\\d+)/discard', edit, async (req, res, next) => {
 router.post('/link', edit, async (req, res, next) => {
   try {
     const { entityType, localId, hubCode } = req.body ?? {}
-    if (!ENTITY_TYPES.includes(entityType)) return res.status(400).json({ error: 'entityType must be company, site or plant' })
+    if (!ENTITY_TYPES.includes(entityType)) return res.status(400).json({ error: 'entityType must be company or site' })
     res.json(await linkLocalRow(pool, entityType, localId, hubCode))
   } catch (error) {
     if ([400, 404, 409].includes(error?.status)) return res.status(error.status).json({ error: error.message })

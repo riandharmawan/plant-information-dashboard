@@ -39,10 +39,7 @@ export function Topbar({ onToggleMenu }: { onToggleMenu: () => void }) {
         </div>
       </div>
       <div className="topbar__actions">
-        <div className="port-switcher">
-          <span className="port-switcher__name">{site?.siteName ?? 'Priscolin Bekasi'}</span>
-          <span className="port-switcher__tz">{site?.timezone ?? 'Asia/Jakarta'}</span>
-        </div>
+        <ScopeChip site={site} />
         <div className="notif">
           <button
             type="button"
@@ -85,6 +82,19 @@ export function Topbar({ onToggleMenu }: { onToggleMenu: () => void }) {
         />
       </div>
     </header>
+  )
+}
+
+/** Company and site identity: names on top, DataHub codes below. The timezone is in the tooltip. */
+function ScopeChip({ site }: { site: SiteContext | null }) {
+  const names = [site?.companyName, site?.siteName].filter(Boolean)
+  const codes = [site?.companyCode, site?.siteCode].filter(Boolean)
+  const title = [...names, ...codes, site?.timezone].filter(Boolean).join(' · ')
+  return (
+    <div className="port-switcher" title={title}>
+      <span className="port-switcher__name">{names.length ? names.join(' › ') : 'Priscolin Bekasi'}</span>
+      <span className="port-switcher__tz">{codes.length ? codes.join(' · ') : site?.timezone ?? 'Asia/Jakarta'}</span>
+    </div>
   )
 }
 

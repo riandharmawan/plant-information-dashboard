@@ -5,12 +5,11 @@ import { useAuth } from '../../data/AuthContext.tsx'
 import { useMaster } from '../../data/MasterContext.tsx'
 import { useLocale } from '../../i18n/LocaleContext.tsx'
 
-type Entity = 'company' | 'site' | 'plant'
+type Entity = 'company' | 'site'
 
 const ENTITIES: Array<{ key: Entity; label: string }> = [
   { key: 'company', label: 'Company' },
   { key: 'site', label: 'Site' },
-  { key: 'plant', label: 'Plant' },
 ]
 
 interface Config {
@@ -177,7 +176,7 @@ export function DataHubPage() {
     })
 
   const localOptions: Array<{ id: string; name: string }> =
-    link.entity === 'company' ? data.companies : link.entity === 'site' ? data.sites : data.plants
+    link.entity === 'company' ? data.companies : data.sites
 
   const staged = open?.run.status === 'staged'
 
@@ -188,8 +187,8 @@ export function DataHubPage() {
         <h1 className="page-title">DataHub</h1>
       </header>
       <p className="page-note">
-        Pull Company, Site and Plant from DataHub. Each pull is staged for review and nothing is written until you apply it.
-        Sync in order: Company, then Site, then Plant.
+        Pull Company and Site from DataHub. Each pull is staged for review and nothing is written until you apply it.
+        Sync in order: Company, then Site.
       </p>
       {notice ? <p className="admin-notice" role="status">{notice}</p> : null}
       {error ? <p className="master-error" role="alert">{error}</p> : null}

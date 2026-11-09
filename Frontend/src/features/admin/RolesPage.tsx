@@ -31,7 +31,7 @@ interface RoleDetail {
 
 const GROUPS: Array<{ title: keyof Messages; keys: string[] }> = [
   { title: 'operationsGroup', keys: ['live-ops', 'ops-analytics', 'qc', 'daily-production', 'refinery-fractionation', 'utility', 'coverage'] },
-  { title: 'masterGroup', keys: ['master-companies', 'master-sites', 'master-plants', 'master-commodities', 'master-calibration', 'master-tanks', 'master-logsheets', 'master-quality-rules'] },
+  { title: 'masterGroup', keys: ['master-companies', 'master-sites', 'master-commodities', 'master-calibration', 'master-tanks', 'master-logsheets', 'master-quality-rules'] },
   { title: 'administration', keys: ['admin-users', 'admin-roles', 'admin-datahub'] },
 ]
 
@@ -45,7 +45,6 @@ const LABELS: Record<string, keyof Messages> = {
   coverage: 'coverage',
   'master-companies': 'company',
   'master-sites': 'site',
-  'master-plants': 'plants',
   'master-commodities': 'commodities',
   'master-calibration': 'commoditiesCalibration',
   'master-tanks': 'tankFarm',

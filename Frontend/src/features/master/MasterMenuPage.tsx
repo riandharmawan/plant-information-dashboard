@@ -17,7 +17,6 @@ export function MasterMenuPage() {
         <div className="master-card-grid">
           <MasterCard to="/master/companies" badge={t.badgeDatahub} title={t.company} text={t.companyBlurb} open={t.openPage} />
           <MasterCard to="/master/sites" badge={t.badgeDatahub} title={t.site} text={t.siteBlurb} open={t.openPage} />
-          <MasterCard to="/master/plants" badge={t.badgeDatahub} title={t.plants} text={t.plantsBlurb} open={t.openPage} />
           <MasterCard to="/master/commodities" badge={t.badgeDatahub} title={t.commodities} text={t.commoditiesBlurb} open={t.openPage} />
         </div>
       </section>

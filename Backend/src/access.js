@@ -53,7 +53,7 @@ export async function loadSession(userId) {
     `SELECT s.id, s.name, s.timezone
      FROM user_sites us
      JOIN sites s ON s.id = us.site_id
-     WHERE us.user_id = $1
+     WHERE us.user_id = $1 AND s.is_activated
      ORDER BY s.name`,
     [row.id],
   )

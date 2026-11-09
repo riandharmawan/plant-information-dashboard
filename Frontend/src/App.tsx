@@ -16,7 +16,7 @@ import { PageGate, RequireAuth, SiteRequired } from './features/auth/guards.tsx'
 import { LoginPage } from './features/login/LoginPage.tsx'
 import { SsoErrorPage } from './features/login/SsoErrorPage.tsx'
 import { LiveOpsPage } from './features/live-ops/LiveOpsPage.tsx'
-import { CommoditiesPage, CompaniesPage, PlantsPage, SitesPage, TankFarmPage } from './features/master/masterPages.tsx'
+import { CommoditiesPage, CompaniesPage, SitesPage, TankFarmPage } from './features/master/masterPages.tsx'
 import { MasterMenuPage } from './features/master/MasterMenuPage.tsx'
 import { CommoditiesCalibrationPage } from './features/master/CommoditiesCalibrationPage.tsx'
 import { TankCalibrationPage } from './features/master/TankCalibrationPage.tsx'
@@ -104,10 +104,7 @@ export default function App() {
                         <Route element={<PageGate page="master-sites" />}>
                           <Route path="master/sites" element={<SitesPage />} />
                         </Route>
-                        <Route element={<PageGate page="master-plants" />}>
-                          <Route path="master/plants" element={<PlantsPage />} />
-                        </Route>
-                        <Route element={<PageGate page="master-commodities" />}>
+                                        <Route element={<PageGate page="master-commodities" />}>
                           <Route path="master/commodities" element={<CommoditiesPage />} />
                         </Route>
                         <Route element={<PageGate page="master-calibration" />}>

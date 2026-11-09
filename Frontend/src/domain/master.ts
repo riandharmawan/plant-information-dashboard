@@ -5,6 +5,8 @@ export interface CompanyRecord {
   name: string
   hubCode?: string | null
   isActive?: boolean
+  /** Switched on for this application. */
+  isActivated?: boolean
 }
 
 export interface SiteRecord {
@@ -14,6 +16,7 @@ export interface SiteRecord {
   timezone: string
   hubCode?: string | null
   isActive?: boolean
+  isActivated?: boolean
 }
 
 export interface PlantRecord {

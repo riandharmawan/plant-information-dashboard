@@ -105,6 +105,15 @@
   line-height: 1.15;
   padding: 6px 12px;
   border-radius: 999px;
+  min-width: 0;
+  max-width: min(46vw, 560px);
+}
+
+.port-switcher__name,
+.port-switcher__tz {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .port-switcher__name {

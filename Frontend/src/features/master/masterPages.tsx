@@ -1,12 +1,50 @@
+import { useState } from 'react'
+import type { MasterData } from '../../domain/master.ts'
+import { useAuth } from '../../data/AuthContext.tsx'
 import { useCalibration } from '../../data/CalibrationContext.tsx'
 import { useMaster } from '../../data/MasterContext.tsx'
-import { formatMeasure, formatPeriod, tankLabel } from '../../domain/format.ts'
+import { formatMeasure, tankLabel } from '../../domain/format.ts'
 import { canonicalTankId, emptyProfile } from '../../domain/tankCalibration.ts'
 import { useLocale } from '../../i18n/LocaleContext.tsx'
 import { MasterRecordPage } from './MasterRecordPage.tsx'
 
+/** The site a plant row belongs to. Plants are an internal key, so screens show the site. */
+function siteOfPlant(data: MasterData, plantId: string): string {
+  return data.plants.find((plant) => plant.id === plantId)?.siteId ?? ''
+}
+
+/** The plant row that carries a site's tanks and logsheets. */
+function internalPlantOf(data: MasterData, siteId: string): string {
+  const withTanks = data.tanks.find((tank) => siteOfPlant(data, tank.plantId) === siteId)
+  return withTanks?.plantId ?? data.plants.find((plant) => plant.siteId === siteId)?.id ?? ''
+}
+
 function nameOf(rows: Array<{ id: string; name: string }>, id: string, fallback: string): string {
   return rows.find((row) => row.id === id)?.name ?? fallback
+}
+
+function ActivationToggle({ entity, id, activated }: { entity: 'company' | 'site'; id: string; activated: boolean }) {
+  const { t } = useLocale()
+  const { can } = useAuth()
+  const master = useMaster()
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const page = entity === 'company' ? 'master-companies' : 'master-sites'
+  if (!can(page, 'edit')) return null
+  const toggle = async () => {
+    setBusy(true)
+    const code = await master.setActivation(entity, id, !activated)
+    setError(code === 'company_not_activated' ? t.activationNeedsCompany : code === 'company_has_active_sites' ? t.activationHasSites : code ? t.requestFailed : null)
+    setBusy(false)
+  }
+  return (
+    <>
+      <button type="button" className="btn-text" disabled={busy} onClick={() => void toggle()}>
+        {activated ? t.deactivate : t.activate}
+      </button>
+      {error ? <span className="master-error" role="alert">{error}</span> : null}
+    </>
+  )
 }
 
 export function CompaniesPage() {
@@ -22,9 +60,10 @@ export function CompaniesPage() {
         { key: 'code', label: t.code, value: (row) => row.code },
         { key: 'name', label: t.recordName, value: (row) => row.name },
         { key: 'hub', label: t.dataHubCode, value: (row) => row.hubCode ?? t.unavailable },
-        { key: 'status', label: t.status, value: (row) => (row.isActive === false ? t.inactiveStatus : t.activeStatus) },
+        { key: 'activation', label: t.inUse, value: (row) => (row.isActivated ? t.activated : t.notActivated) },
       ]}
       readOnly
+      rowActions={(row) => <ActivationToggle entity="company" id={row.id} activated={row.isActivated === true} />}
       rows={master.data.companies}
       fields={[
         { key: 'code', label: t.code, required: true },
@@ -52,8 +91,10 @@ export function SitesPage() {
         { key: 'company', label: t.company, value: (row) => nameOf(master.data.companies, row.companyId, t.unavailable) },
         { key: 'timezone', label: t.timezone, value: (row) => row.timezone },
         { key: 'hub', label: t.dataHubCode, value: (row) => row.hubCode ?? t.unavailable },
+        { key: 'activation', label: t.inUse, value: (row) => (row.isActivated ? t.activated : t.notActivated) },
       ]}
       readOnly
+      rowActions={(row) => <ActivationToggle entity="site" id={row.id} activated={row.isActivated === true} />}
       rows={master.data.sites}
       fields={[
         {
@@ -76,47 +117,6 @@ export function SitesPage() {
         timezone: draft.timezone ?? '',
       }, id)}
       onDelete={master.removeSite}
-      onRefresh={master.refresh}
-    />
-  )
-}
-
-export function PlantsPage() {
-  const { t, locale } = useLocale()
-  const master = useMaster()
-  return (
-    <MasterRecordPage
-      title={`${t.masterDash} ${t.plants}`}
-      description={t.plantsBlurb}
-      listTitle={t.plants}
-      entityLabel={t.plant}
-      columns={[
-        { key: 'name', label: t.recordName, value: (row) => row.name },
-        { key: 'site', label: t.site, value: (row) => nameOf(master.data.sites, row.siteId, t.unavailable) },
-        {
-          key: 'logsheets',
-          label: t.logsheets,
-          value: (row) => (row.logsheetPeriod ? formatPeriod(row.logsheetPeriod, locale) : t.unavailable),
-        },
-        { key: 'hub', label: t.dataHubCode, value: (row) => row.hubCode ?? t.unavailable },
-      ]}
-      readOnly
-      rows={master.data.plants}
-      fields={[
-        {
-          key: 'siteId',
-          label: t.site,
-          required: true,
-          options: master.data.sites.map((site) => ({ value: site.id, label: site.name })),
-        },
-        { key: 'name', label: t.recordName, required: true },
-      ]}
-      draftFrom={(row) => ({
-        siteId: row?.siteId ?? master.data.sites[0]?.id ?? '',
-        name: row?.name ?? '',
-      })}
-      onSave={(draft, id) => master.savePlant({ siteId: draft.siteId ?? '', name: draft.name ?? '' }, id)}
-      onDelete={master.removePlant}
       onRefresh={master.refresh}
     />
   )
@@ -161,7 +161,7 @@ export function TankFarmPage() {
       entityLabel={t.tank}
       columns={[
         { key: 'code', label: t.tank, value: (row) => tankLabel(row.code) },
-        { key: 'plant', label: t.plant, value: (row) => nameOf(master.data.plants, row.plantId, blank) },
+        { key: 'site', label: t.site, value: (row) => nameOf(master.data.sites, siteOfPlant(master.data, row.plantId), blank) },
         {
           key: 'capacity',
           label: t.capacity,
@@ -197,14 +197,17 @@ export function TankFarmPage() {
         { key: 'code', label: t.tank, required: true },
         {
           key: 'plantId',
-          label: t.plant,
+          label: t.site,
           required: true,
-          options: master.data.plants.map((plant) => ({ value: plant.id, label: plant.name })),
+          options: master.data.sites
+            .filter((site) => site.isActivated)
+            .map((site) => ({ value: internalPlantOf(master.data, site.id), label: site.name }))
+            .filter((option) => option.value),
         },
       ]}
       draftFrom={(row) => ({
         code: row?.code ?? '',
-        plantId: row?.plantId ?? master.data.tanks[0]?.plantId ?? master.data.plants[0]?.id ?? '',
+        plantId: row?.plantId ?? master.data.tanks[0]?.plantId ?? '',
       })}
       onSave={(draft, id) => master.saveTank({
         code: draft.code ?? '',

@@ -164,10 +164,6 @@ export function Sidebar({
             <MapPin className="sidebar-nav__icon" size={16} aria-hidden="true" />
             <span className="sidebar-nav__label">{t.site}</span>
           </NavLink>
-          <NavLink to="/master/plants" title={t.plants} className={({ isActive }) => (isActive ? 'active' : undefined)}>
-            <Factory className="sidebar-nav__icon" size={16} aria-hidden="true" />
-            <span className="sidebar-nav__label">{t.plants}</span>
-          </NavLink>
           <NavLink to="/master/commodities" title={t.commodities} className={({ isActive }) => (isActive ? 'active' : undefined)}>
             <Droplets className="sidebar-nav__icon" size={16} aria-hidden="true" />
             <span className="sidebar-nav__label">{t.commodities}</span>

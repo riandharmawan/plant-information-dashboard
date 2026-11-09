@@ -427,6 +427,13 @@ export interface Messages {
   roleManagementBlurb: string
   dataHub: string
   dataHubCode: string
+  inUse: string
+  activated: string
+  notActivated: string
+  activate: string
+  deactivate: string
+  activationNeedsCompany: string
+  activationHasSites: string
   managedInDataHub: string
   backToAdmin: string
   users: string
@@ -1041,6 +1048,13 @@ export const MESSAGES: Record<Locale, Messages> = {
     roleManagementBlurb: 'Define roles and the pages they can view, edit, or delete.',
     dataHub: 'DataHub',
     dataHubCode: 'DataHub code',
+    inUse: 'In use',
+    activated: 'Activated',
+    notActivated: 'Not activated',
+    activate: 'Activate',
+    deactivate: 'Deactivate',
+    activationNeedsCompany: 'Activate the company first.',
+    activationHasSites: 'Deactivate its sites first.',
     managedInDataHub: 'Managed in DataHub. Pull changes from Administration, DataHub.',
     backToAdmin: '← Back to Administration',
     users: 'Users',
@@ -1653,6 +1667,13 @@ export const MESSAGES: Record<Locale, Messages> = {
     roleManagementBlurb: 'Atur peran dan halaman yang dapat dilihat, diubah, atau dihapus.',
     dataHub: 'DataHub',
     dataHubCode: 'Kode DataHub',
+    inUse: 'Digunakan',
+    activated: 'Aktif',
+    notActivated: 'Tidak aktif',
+    activate: 'Aktifkan',
+    deactivate: 'Nonaktifkan',
+    activationNeedsCompany: 'Aktifkan perusahaan terlebih dahulu.',
+    activationHasSites: 'Nonaktifkan site-nya terlebih dahulu.',
     managedInDataHub: 'Dikelola di DataHub. Tarik perubahan dari Administrasi, DataHub.',
     backToAdmin: '← Kembali ke Administrasi',
     users: 'Pengguna',

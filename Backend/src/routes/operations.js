@@ -23,7 +23,8 @@ function compareTanks(a, b) {
 
 async function siteOf(siteId) {
   const result = await query(
-    `SELECT s.id, s.name, s.timezone, c.name AS company_name
+    `SELECT s.id, s.name, s.timezone, s.hub_code AS site_code,
+            c.name AS company_name, COALESCE(c.hub_code, c.code) AS company_code
      FROM sites s JOIN companies c ON c.id = s.company_id
      WHERE s.id = $1`,
     [siteId],
@@ -101,6 +102,7 @@ router.get('/sites', async (_req, res, next) => {
     const result = await query(
       `SELECT s.id, s.name, s.timezone, c.name AS "companyName"
        FROM sites s JOIN companies c ON c.id = s.company_id
+       WHERE s.is_activated
        ORDER BY s.name`,
     )
     res.json(result.rows)
@@ -115,7 +117,9 @@ router.get('/sites/:siteId', async (req, res, next) => {
     if (!site) return res.status(404).json({ error: 'Site not found' })
     res.json({
       companyName: site.company_name,
+      companyCode: site.company_code,
       siteName: site.name,
+      siteCode: site.site_code,
       timezone: site.timezone,
     })
   } catch (error) {

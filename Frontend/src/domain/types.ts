@@ -21,7 +21,9 @@ export type MassAvailability = 'known' | 'unavailable'
 
 export interface SiteContext {
   companyName: string
+  companyCode?: string | null
   siteName: string
+  siteCode?: string | null
   timezone: string
 }
 
