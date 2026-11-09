@@ -428,6 +428,21 @@ export interface Messages {
   dataHub: string
   dataHubCode: string
   inUse: string
+  allUsers: string
+  noEmail: string
+  noSiteAccess: string
+  searchUsers: string
+  allRoles: string
+  usersShown: string
+  clearFilters: string
+  deleteUserTitle: string
+  deleteUserBody: string
+  accountTab: string
+  newUserHint: string
+  activeHelp: string
+  sitesSelected: string
+  sitesKept: string
+  noAccessWarning: string
   activated: string
   notActivated: string
   activate: string
@@ -1049,6 +1064,21 @@ export const MESSAGES: Record<Locale, Messages> = {
     dataHub: 'DataHub',
     dataHubCode: 'DataHub code',
     inUse: 'In use',
+    allUsers: 'All users',
+    noEmail: 'No email',
+    noSiteAccess: 'No site access',
+    searchUsers: 'Search name, email, role or site',
+    allRoles: 'All roles',
+    usersShown: '{n} of {total} users',
+    clearFilters: 'Clear filters',
+    deleteUserTitle: 'Delete this user?',
+    deleteUserBody: '{name} will no longer be able to sign in. This cannot be undone.',
+    accountTab: 'Account',
+    newUserHint: 'Set up a sign-in, roles and site access',
+    activeHelp: 'Inactive users cannot sign in.',
+    sitesSelected: '{n} of {total} sites selected',
+    sitesKept: '{n} more kept as they are',
+    noAccessWarning: 'No site selected: this user cannot open any data.',
     activated: 'Activated',
     notActivated: 'Not activated',
     activate: 'Activate',
@@ -1668,6 +1698,21 @@ export const MESSAGES: Record<Locale, Messages> = {
     dataHub: 'DataHub',
     dataHubCode: 'Kode DataHub',
     inUse: 'Digunakan',
+    allUsers: 'Semua pengguna',
+    noEmail: 'Tanpa email',
+    noSiteAccess: 'Tanpa akses site',
+    searchUsers: 'Cari nama, email, peran, atau site',
+    allRoles: 'Semua peran',
+    usersShown: '{n} dari {total} pengguna',
+    clearFilters: 'Hapus filter',
+    deleteUserTitle: 'Hapus pengguna ini?',
+    deleteUserBody: '{name} tidak akan dapat masuk lagi. Tindakan ini tidak dapat dibatalkan.',
+    accountTab: 'Akun',
+    newUserHint: 'Atur akun masuk, peran, dan akses site',
+    activeHelp: 'Pengguna nonaktif tidak dapat masuk.',
+    sitesSelected: '{n} dari {total} site dipilih',
+    sitesKept: '{n} lainnya tetap seperti semula',
+    noAccessWarning: 'Belum ada site dipilih: pengguna ini tidak dapat membuka data apa pun.',
     activated: 'Aktif',
     notActivated: 'Tidak aktif',
     activate: 'Aktifkan',

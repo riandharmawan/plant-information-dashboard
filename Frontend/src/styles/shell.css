@@ -564,3 +564,13 @@ main {
     padding: var(--spacing-3);
   }
 }
+
+@media (max-width: 639px) {
+  .topbar__brand {
+    display: none;
+  }
+
+  .port-switcher {
+    max-width: 40vw;
+  }
+}

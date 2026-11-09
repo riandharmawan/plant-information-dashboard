@@ -61,6 +61,7 @@ export function MasterProvider({ children }: { children: ReactNode }) {
   const loadOrg = useCallback(async () => {
     try {
       const org = await http<OrgPayload>('/api/v1/master/org')
+      if (!Array.isArray(org?.companies) || !Array.isArray(org?.sites) || !Array.isArray(org?.plants)) return
       const period = new Map(MASTER_SEED.plants.map((plant) => [plant.id, plant.logsheetPeriod]))
       setData((current) => ({
         ...current,
