@@ -3,6 +3,8 @@ export interface CompanyRecord {
   id: string
   code: string
   name: string
+  hubCode?: string | null
+  isActive?: boolean
 }
 
 export interface SiteRecord {
@@ -10,6 +12,8 @@ export interface SiteRecord {
   companyId: string
   name: string
   timezone: string
+  hubCode?: string | null
+  isActive?: boolean
 }
 
 export interface PlantRecord {
@@ -18,6 +22,8 @@ export interface PlantRecord {
   name: string
   /** Report span of the logsheets loaded for this plant. Empty when none are loaded. */
   logsheetPeriod: string | null
+  hubCode?: string | null
+  isActive?: boolean
 }
 
 export interface CommodityRecord {

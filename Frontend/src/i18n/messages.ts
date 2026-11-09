@@ -426,6 +426,8 @@ export interface Messages {
   roleManagement: string
   roleManagementBlurb: string
   dataHub: string
+  dataHubCode: string
+  managedInDataHub: string
   backToAdmin: string
   users: string
   user: string
@@ -1038,6 +1040,8 @@ export const MESSAGES: Record<Locale, Messages> = {
     roleManagement: 'Role Management',
     roleManagementBlurb: 'Define roles and the pages they can view, edit, or delete.',
     dataHub: 'DataHub',
+    dataHubCode: 'DataHub code',
+    managedInDataHub: 'Managed in DataHub. Pull changes from Administration, DataHub.',
     backToAdmin: '← Back to Administration',
     users: 'Users',
     user: 'User',
@@ -1648,6 +1652,8 @@ export const MESSAGES: Record<Locale, Messages> = {
     roleManagement: 'Manajemen Peran',
     roleManagementBlurb: 'Atur peran dan halaman yang dapat dilihat, diubah, atau dihapus.',
     dataHub: 'DataHub',
+    dataHubCode: 'Kode DataHub',
+    managedInDataHub: 'Dikelola di DataHub. Tarik perubahan dari Administrasi, DataHub.',
     backToAdmin: '← Kembali ke Administrasi',
     users: 'Pengguna',
     user: 'Pengguna',

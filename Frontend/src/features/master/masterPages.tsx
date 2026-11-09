@@ -21,7 +21,10 @@ export function CompaniesPage() {
       columns={[
         { key: 'code', label: t.code, value: (row) => row.code },
         { key: 'name', label: t.recordName, value: (row) => row.name },
+        { key: 'hub', label: t.dataHubCode, value: (row) => row.hubCode ?? t.unavailable },
+        { key: 'status', label: t.status, value: (row) => (row.isActive === false ? t.inactiveStatus : t.activeStatus) },
       ]}
+      readOnly
       rows={master.data.companies}
       fields={[
         { key: 'code', label: t.code, required: true },
@@ -48,7 +51,9 @@ export function SitesPage() {
         { key: 'name', label: t.recordName, value: (row) => row.name },
         { key: 'company', label: t.company, value: (row) => nameOf(master.data.companies, row.companyId, t.unavailable) },
         { key: 'timezone', label: t.timezone, value: (row) => row.timezone },
+        { key: 'hub', label: t.dataHubCode, value: (row) => row.hubCode ?? t.unavailable },
       ]}
+      readOnly
       rows={master.data.sites}
       fields={[
         {
@@ -93,7 +98,9 @@ export function PlantsPage() {
           label: t.logsheets,
           value: (row) => (row.logsheetPeriod ? formatPeriod(row.logsheetPeriod, locale) : t.unavailable),
         },
+        { key: 'hub', label: t.dataHubCode, value: (row) => row.hubCode ?? t.unavailable },
       ]}
+      readOnly
       rows={master.data.plants}
       fields={[
         {

@@ -10,6 +10,7 @@ import auth from './routes/auth.js'
 import hubAuth from './routes/hub-auth.js'
 import admin from './routes/admin.js'
 import datahub from './routes/datahub.js'
+import master from './routes/master.js'
 
 const app = express()
 const port = Number(process.env.PORT || 3010)
@@ -28,6 +29,7 @@ app.get('/api/v1/health', (_req, res) => {
 
 app.use('/auth', hubAuth)
 app.use('/api/v1/auth', auth)
+app.use('/api/v1/master', master)
 app.use('/api/v1/admin/datahub', datahub)
 app.use('/api/v1/admin', admin)
 app.use('/api/v1', operations)

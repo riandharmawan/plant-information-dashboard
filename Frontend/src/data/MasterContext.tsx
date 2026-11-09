@@ -1,6 +1,10 @@
-import { createContext, useContext, useState, type ReactNode } from 'react'
+import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react'
+import { api as http } from './api.ts'
+import { useAuth } from './AuthContext.tsx'
 import type {
   CommodityRecord,
+  CompanyRecord,
+  PlantRecord,
   MasterData,
   SaveResult,
   SiteRecord,
@@ -25,6 +29,12 @@ interface MasterApi {
 
 const MasterContext = createContext<MasterApi | null>(null)
 
+interface OrgPayload {
+  companies: CompanyRecord[]
+  sites: SiteRecord[]
+  plants: Array<Omit<PlantRecord, 'logsheetPeriod'>>
+}
+
 function cloneSeed(): MasterData {
   return structuredClone(MASTER_SEED)
 }
@@ -41,11 +51,37 @@ function normalizeTankCode(code: string): string {
 }
 
 export function MasterProvider({ children }: { children: ReactNode }) {
+  const { user } = useAuth()
   const [data, setData] = useState<MasterData>(cloneSeed)
+
+  // Company, Site and Plant come from the database, which DataHub fills.
+  // The logsheet period is not stored there, so it is carried over from the seed by id.
+  const loadOrg = useCallback(async () => {
+    try {
+      const org = await http<OrgPayload>('/api/v1/master/org')
+      const period = new Map(MASTER_SEED.plants.map((plant) => [plant.id, plant.logsheetPeriod]))
+      setData((current) => ({
+        ...current,
+        companies: org.companies,
+        sites: org.sites,
+        plants: org.plants.map((plant) => ({ ...plant, logsheetPeriod: period.get(plant.id) ?? null })),
+      }))
+    } catch {
+      /* keep what is already shown */
+    }
+  }, [])
+
+  const userId = user?.id ?? null
+  useEffect(() => {
+    if (userId != null) void loadOrg()
+  }, [userId, loadOrg])
 
   const api: MasterApi = {
     data,
-    refresh: () => setData(cloneSeed()),
+    refresh: () => {
+      setData(cloneSeed())
+      void loadOrg()
+    },
     saveCompany(input, id) {
       const code = input.code.trim().toUpperCase()
       const name = input.name.trim()
