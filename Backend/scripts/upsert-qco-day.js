@@ -2,6 +2,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import dotenv from 'dotenv'
 import pg from 'pg'
+import { SITE_ID, PLANT_ID } from '../src/scope.js'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 dotenv.config({ path: path.resolve(here, '../../.env.dev') })
@@ -15,8 +16,8 @@ if (!process.env.DATABASE_URL && process.env.POSTGRES_USER && process.env.POSTGR
 }
 pg.types.setTypeParser(1082, (value) => value)
 
-const siteId = 'bekasi'
-const plantId = 'priscolin-proj-bekasi'
+const siteId = SITE_ID
+const plantId = PLANT_ID
 const CERT_TESTS = [
   ['ffa', 'lab.ffa'],
   ['moisture', 'lab.moisture'],

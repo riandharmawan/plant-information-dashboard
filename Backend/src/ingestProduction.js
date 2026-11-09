@@ -1,7 +1,8 @@
 import { pool } from './db.js'
+import { SITE_ID, PLANT_ID } from './scope.js'
 
-const siteId = 'bekasi'
-const plantId = 'priscolin-proj-bekasi'
+const siteId = SITE_ID
+const plantId = PLANT_ID
 
 const forms = {
   'F/RFA-004(A)': 'b1d7e44d-e90d-447f-9772-ffecba657b1e',

@@ -2,6 +2,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import dotenv from 'dotenv'
 import pg from 'pg'
+import { SITE_ID, PLANT_ID } from '../src/scope.js'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 dotenv.config({ path: path.join(here, '../.env') })
@@ -16,8 +17,8 @@ function databaseUrl() {
   return `postgresql://${encodeURIComponent(user)}:${encodeURIComponent(password)}@127.0.0.1:5437/${database}`
 }
 
-const siteId = 'bekasi'
-const plantId = 'priscolin-proj-bekasi'
+const siteId = SITE_ID
+const plantId = PLANT_ID
 
 function tankCode(text) {
   if (!text) return null

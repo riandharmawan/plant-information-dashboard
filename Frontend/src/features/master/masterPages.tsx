@@ -204,7 +204,7 @@ export function TankFarmPage() {
       ]}
       draftFrom={(row) => ({
         code: row?.code ?? '',
-        plantId: row?.plantId ?? 'priscolin-proj-bekasi',
+        plantId: row?.plantId ?? master.data.tanks[0]?.plantId ?? master.data.plants[0]?.id ?? '',
       })}
       onSave={(draft, id) => master.saveTank({
         code: draft.code ?? '',

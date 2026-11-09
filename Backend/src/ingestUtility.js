@@ -1,7 +1,8 @@
 import { pool } from './db.js'
+import { SITE_ID, PLANT_ID } from './scope.js'
 
-const siteId = 'bekasi'
-const plantId = 'priscolin-proj-bekasi'
+const siteId = SITE_ID
+const plantId = PLANT_ID
 
 async function definitionId(client, form) {
   const result = await client.query(

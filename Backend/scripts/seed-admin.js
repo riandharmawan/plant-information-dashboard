@@ -7,9 +7,10 @@
 import 'dotenv/config'
 import bcrypt from 'bcryptjs'
 import pg from 'pg'
+import { SITE_ID } from '../src/scope.js'
 
 const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL })
-const siteId = 'bekasi'
+const siteId = SITE_ID
 
 const client = await pool.connect()
 try {

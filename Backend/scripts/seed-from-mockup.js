@@ -4,13 +4,14 @@ import { fileURLToPath } from 'node:url'
 import bcrypt from 'bcryptjs'
 import dotenv from 'dotenv'
 import pg from 'pg'
+import { SITE_ID, PLANT_ID } from '../src/scope.js'
 
 dotenv.config()
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const dataDir = process.env.SEED_DATA_DIR || path.resolve(here, '../../Frontend/src/data')
-const siteId = 'bekasi'
-const plantId = 'priscolin-proj-bekasi'
+const siteId = SITE_ID
+const plantId = PLANT_ID
 const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL })
 
 const FORMS = [
