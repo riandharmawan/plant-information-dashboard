@@ -14,6 +14,15 @@ interface RoleOption {
 interface SiteOption {
   id: string
   name: string
+  siteCode?: string | null
+  companyId?: string
+  companyName?: string
+  companyCode?: string | null
+}
+
+/** Sites on a user row. The company name is there so two sites with the same name can be told apart. */
+function siteLabel(site: { name: string; companyName?: string }): string {
+  return site.companyName ? `${site.companyName} › ${site.name}` : site.name
 }
 
 interface UserRow {
@@ -78,14 +87,14 @@ export function UsersPage() {
         user.username,
         user.email,
         user.roles.map((role) => role.name).join(' '),
-        user.sites.map((site) => site.name).join(' '),
+        user.sites.map((site) => siteLabel(site)).join(' '),
       ].filter(Boolean).join(' ').toLowerCase()
       return haystack.includes(needle)
     })
     const valueOf = (user: UserRow) => {
       if (sortKey === 'email') return user.email ?? ''
       if (sortKey === 'roles') return user.roles.map((role) => role.name).join(', ')
-      if (sortKey === 'sites') return user.sites.map((site) => site.name).join(', ')
+      if (sortKey === 'sites') return user.sites.map((site) => siteLabel(site)).join(', ')
       if (sortKey === 'status') return user.isActive ? '1' : '0'
       return user.displayName || user.username
     }
@@ -164,7 +173,7 @@ export function UsersPage() {
                     </td>
                     <td>{user.email || '—'}</td>
                     <td>{user.roles.map((role) => role.name).join(', ') || '—'}</td>
-                    <td>{user.sites.map((site) => site.name).join(', ') || '—'}</td>
+                    <td>{user.sites.map((site) => siteLabel(site)).join(', ') || '—'}</td>
                     <td>
                       <span className={user.isActive ? 'admin-badge admin-badge--on' : 'admin-badge'}>
                         {user.isActive ? t.activeStatus : t.inactiveStatus}
@@ -263,7 +272,16 @@ function UserDialog({
   const [siteQuery, setSiteQuery] = useState('')
   const [formError, setFormError] = useState<string | null>(null)
 
-  const visibleSites = sites.filter((site) => site.name.toLowerCase().includes(siteQuery.trim().toLowerCase()))
+  const needle = siteQuery.trim().toLowerCase()
+  const visibleSites = sites.filter((site) =>
+    [site.name, site.siteCode, site.companyName, site.companyCode].filter(Boolean).join(' ').toLowerCase().includes(needle))
+  const groups = new Map<string, { name: string; code: string | null; sites: SiteOption[] }>()
+  for (const site of visibleSites) {
+    const key = site.companyId ?? ''
+    const group = groups.get(key) ?? { name: site.companyName ?? '', code: site.companyCode ?? null, sites: [] }
+    group.sites.push(site)
+    groups.set(key, group)
+  }
 
   const toggle = <T,>(list: T[], value: T, on: boolean) => (
     on ? [...new Set([...list, value])] : list.filter((item) => item !== value)
@@ -333,17 +351,41 @@ function UserDialog({
             <button type="button" className="btn btn--secondary" onClick={() => setSiteIds(siteIds.filter((id) => !visibleSites.some((site) => site.id === id)))}>{t.clearVisible}</button>
           </div>
           {sites.length === 0 ? <p className="page-note">{t.noSites}</p> : (
-            <div className="admin-checks admin-checks--scroll">
-              {visibleSites.map((site) => (
-                <label key={site.id} className="admin-check">
-                  <input
-                    type="checkbox"
-                    checked={siteIds.includes(site.id)}
-                    onChange={(event) => setSiteIds(toggle(siteIds, site.id, event.target.checked))}
-                  />
-                  {site.name}
-                </label>
-              ))}
+            <div className="admin-checks admin-checks--scroll admin-checks--grouped">
+              {[...groups.entries()].map(([companyId, group]) => {
+                const ids = group.sites.map((site) => site.id)
+                const chosen = ids.filter((id) => siteIds.includes(id)).length
+                return (
+                  <div key={companyId} className="admin-company-group">
+                    <label className="admin-check admin-check--company">
+                      <input
+                        type="checkbox"
+                        checked={chosen === ids.length}
+                        ref={(element) => {
+                          if (element) element.indeterminate = chosen > 0 && chosen < ids.length
+                        }}
+                        onChange={(event) =>
+                          setSiteIds(event.target.checked
+                            ? [...new Set([...siteIds, ...ids])]
+                            : siteIds.filter((id) => !ids.includes(id)))}
+                      />
+                      {group.name}
+                      {group.code ? <span className="admin-sub admin-sub--inline">{group.code}</span> : null}
+                    </label>
+                    {group.sites.map((site) => (
+                      <label key={site.id} className="admin-check admin-check--site">
+                        <input
+                          type="checkbox"
+                          checked={siteIds.includes(site.id)}
+                          onChange={(event) => setSiteIds(toggle(siteIds, site.id, event.target.checked))}
+                        />
+                        {site.name}
+                        {site.siteCode ? <span className="admin-sub admin-sub--inline">{site.siteCode}</span> : null}
+                      </label>
+                    ))}
+                  </div>
+                )
+              })}
             </div>
           )}
           <p className="page-note">{t.sitesHelp}</p>

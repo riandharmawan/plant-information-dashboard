@@ -195,3 +195,20 @@
   cursor: pointer;
   font: inherit;
 }
+
+.admin-checks--grouped {
+  display: block;
+  max-height: 280px;
+}
+
+.admin-company-group {
+  margin-bottom: var(--spacing-3);
+}
+
+.admin-check--company {
+  font-weight: var(--font-weight-semibold);
+}
+
+.admin-check--site {
+  margin-left: var(--spacing-4);
+}

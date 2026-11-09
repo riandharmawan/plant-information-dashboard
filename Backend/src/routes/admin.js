@@ -65,9 +65,12 @@ const userSelect = `
       WHERE ur.user_id = u.id
     ), '[]'::json) AS roles,
     COALESCE((
-      SELECT json_agg(json_build_object('id', s.id, 'name', s.name) ORDER BY s.name)
+      SELECT json_agg(json_build_object(
+        'id', s.id, 'name', s.name, 'companyName', c.name, 'isActivated', s.is_activated
+      ) ORDER BY c.name, s.name)
       FROM user_sites us
       JOIN sites s ON s.id = us.site_id
+      JOIN companies c ON c.id = s.company_id
       WHERE us.user_id = u.id
     ), '[]'::json) AS sites
   FROM users u
@@ -85,15 +88,35 @@ function presentUser(row) {
   }
 }
 
+/**
+ * Sites the signed-in user may grant. The system Administrator may grant every activated site.
+ * Anyone else may grant only the activated sites they have themselves.
+ */
+async function grantableSites(req) {
+  const own = req.sessionUser.sites.map((site) => site.id)
+  const result = await query(
+    `SELECT s.id, s.name, s.timezone, s.hub_code AS site_code,
+            c.id AS company_id, c.name AS company_name, COALESCE(c.hub_code, c.code) AS company_code
+     FROM sites s JOIN companies c ON c.id = s.company_id
+     WHERE s.is_activated AND c.is_activated AND ($1::boolean OR s.id = ANY($2::text[]))
+     ORDER BY c.name, s.name`,
+    [req.sessionUser.isAdministrator === true, own],
+  )
+  return result.rows
+}
+
 router.get('/sites', requirePermission('admin-users', 'view'), async (req, res, next) => {
   try {
-    const ids = req.sessionUser.sites.map((site) => site.id)
-    if (ids.length === 0) return res.json([])
-    const result = await query(
-      `SELECT id, name, timezone FROM sites WHERE id = ANY($1::text[]) ORDER BY name`,
-      [ids],
-    )
-    res.json(result.rows)
+    const rows = await grantableSites(req)
+    res.json(rows.map((row) => ({
+      id: row.id,
+      name: row.name,
+      timezone: row.timezone,
+      siteCode: row.site_code,
+      companyId: row.company_id,
+      companyName: row.company_name,
+      companyCode: row.company_code,
+    })))
   } catch (error) {
     next(error)
   }
@@ -316,7 +339,7 @@ router.post('/users', requirePermission('admin-users', 'edit'), async (req, res,
     )
     const userId = created.rows[0].id
     await replaceRoles(client, userId, roleIds)
-    const siteCount = await replaceSites(client, userId, siteIds, req.sessionUser.sites.map((site) => site.id))
+    const siteCount = await replaceSites(client, userId, siteIds, (await grantableSites(req)).map((site) => site.id))
     await client.query('COMMIT')
     res.status(201).json({ id: Number(userId), siteCount })
   } catch (error) {
@@ -368,7 +391,7 @@ router.put('/users/:id', requirePermission('admin-users', 'edit'), async (req, r
       )
     }
     await replaceRoles(client, id, roleIds)
-    const siteCount = await replaceSites(client, id, siteIds, req.sessionUser.sites.map((site) => site.id))
+    const siteCount = await replaceSites(client, id, siteIds, (await grantableSites(req)).map((site) => site.id))
     await client.query('COMMIT')
     res.json({ id, siteCount })
   } catch (error) {

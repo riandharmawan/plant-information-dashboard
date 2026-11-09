@@ -57,6 +57,11 @@ export async function loadSession(userId) {
      ORDER BY s.name`,
     [row.id],
   )
+  const adminRole = await query(
+    `SELECT 1 FROM user_roles ur JOIN roles r ON r.id = ur.role_id
+     WHERE ur.user_id = $1 AND r.name = 'Administrator' AND r.is_system_role = TRUE LIMIT 1`,
+    [row.id],
+  )
   const rights = await query(
     `SELECT p.resource_key,
             BOOL_OR(rp.can_view) AS can_view,
@@ -79,6 +84,8 @@ export async function loadSession(userId) {
     email: row.email,
     sites: sites.rows.map((site) => ({ id: site.id, name: site.name, timezone: site.timezone })),
     permissions,
+    // The system Administrator may grant any activated site. Other users grant only their own.
+    isAdministrator: adminRole.rows.length > 0,
   }
 }
 
