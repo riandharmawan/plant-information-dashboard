@@ -20,6 +20,7 @@ export const PAGE_KEYS = [
   'master-quality-rules',
   'admin-users',
   'admin-roles',
+  'admin-datahub',
 ]
 
 const COOKIE = 'pid_session'

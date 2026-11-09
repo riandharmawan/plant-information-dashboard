@@ -61,6 +61,7 @@ const PAGE_KEYS = [
   'live-ops', 'ops-analytics', 'qc', 'daily-production', 'refinery-fractionation', 'utility', 'coverage',
   'master-companies', 'master-sites', 'master-plants', 'master-commodities', 'master-calibration',
   'master-tanks', 'master-logsheets', 'master-quality-rules', 'admin-users', 'admin-roles',
+  'admin-datahub',
 ]
 const VIEWER_KEYS = new Set(['live-ops', 'ops-analytics', 'qc', 'daily-production'])
 

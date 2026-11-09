@@ -425,6 +425,7 @@ export interface Messages {
   userManagementBlurb: string
   roleManagement: string
   roleManagementBlurb: string
+  dataHub: string
   backToAdmin: string
   users: string
   user: string
@@ -1036,6 +1037,7 @@ export const MESSAGES: Record<Locale, Messages> = {
     userManagementBlurb: 'Create users, assign roles, and assign sites.',
     roleManagement: 'Role Management',
     roleManagementBlurb: 'Define roles and the pages they can view, edit, or delete.',
+    dataHub: 'DataHub',
     backToAdmin: '← Back to Administration',
     users: 'Users',
     user: 'User',
@@ -1645,6 +1647,7 @@ export const MESSAGES: Record<Locale, Messages> = {
     userManagementBlurb: 'Buat pengguna, tetapkan peran, dan tetapkan site.',
     roleManagement: 'Manajemen Peran',
     roleManagementBlurb: 'Atur peran dan halaman yang dapat dilihat, diubah, atau dihapus.',
+    dataHub: 'DataHub',
     backToAdmin: '← Kembali ke Administrasi',
     users: 'Pengguna',
     user: 'Pengguna',

@@ -11,7 +11,8 @@
     "dev": "node --watch src/index.js",
     "migrate": "node scripts/migrate.js",
     "seed": "node scripts/seed-from-mockup.js",
-    "seed:admin": "node scripts/seed-admin.js"
+    "seed:admin": "node scripts/seed-admin.js",
+    "test": "node --test src/datahub/datahub.test.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",

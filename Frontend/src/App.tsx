@@ -11,6 +11,7 @@ import { AppShell } from './layout/AppShell.tsx'
 import { AdminMenuPage } from './features/admin/AdminMenuPage.tsx'
 import { RolesPage } from './features/admin/RolesPage.tsx'
 import { UsersPage } from './features/admin/UsersPage.tsx'
+import { DataHubPage } from './features/admin/DataHubPage.tsx'
 import { PageGate, RequireAuth, SiteRequired } from './features/auth/guards.tsx'
 import { LoginPage } from './features/login/LoginPage.tsx'
 import { SsoErrorPage } from './features/login/SsoErrorPage.tsx'
@@ -120,6 +121,9 @@ export default function App() {
                       <Route path="admin" element={<AdminMenuPage />} />
                       <Route element={<PageGate page="admin-users" />}>
                         <Route path="admin/users" element={<UsersPage />} />
+                      </Route>
+                      <Route element={<PageGate page="admin-datahub" />}>
+                        <Route path="admin/datahub" element={<DataHubPage />} />
                       </Route>
                       <Route element={<PageGate page="admin-roles" />}>
                         <Route path="admin/roles" element={<RolesPage />} />

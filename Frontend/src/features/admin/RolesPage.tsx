@@ -32,7 +32,7 @@ interface RoleDetail {
 const GROUPS: Array<{ title: keyof Messages; keys: string[] }> = [
   { title: 'operationsGroup', keys: ['live-ops', 'ops-analytics', 'qc', 'daily-production', 'refinery-fractionation', 'utility', 'coverage'] },
   { title: 'masterGroup', keys: ['master-companies', 'master-sites', 'master-plants', 'master-commodities', 'master-calibration', 'master-tanks', 'master-logsheets', 'master-quality-rules'] },
-  { title: 'administration', keys: ['admin-users', 'admin-roles'] },
+  { title: 'administration', keys: ['admin-users', 'admin-roles', 'admin-datahub'] },
 ]
 
 const LABELS: Record<string, keyof Messages> = {
@@ -53,6 +53,7 @@ const LABELS: Record<string, keyof Messages> = {
   'master-quality-rules': 'qualityRules',
   'admin-users': 'userManagement',
   'admin-roles': 'roleManagement',
+  'admin-datahub': 'dataHub',
 }
 
 function blankRights(keys: string[]): Right[] {

@@ -182,7 +182,7 @@ export function Sidebar({
           </NavLink>
             </>
           ) : null}
-          {can('admin-users', 'view') || can('admin-roles', 'view') ? (
+          {can('admin-users', 'view') || can('admin-roles', 'view') || can('admin-datahub', 'view') ? (
             <>
           <p className="sidebar-nav__section">{t.administration}</p>
           <NavLink to="/admin" end title={t.adminMenuTitle} className={({ isActive }) => (isActive ? 'active' : undefined)}>
