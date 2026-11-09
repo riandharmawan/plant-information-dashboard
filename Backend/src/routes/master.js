@@ -80,4 +80,22 @@ async function setActivation(req, res, next) {
 
 router.put('/org/activation', setActivation)
 
+// Timezone is local to this application. DataHub has no timezone field.
+router.put('/org/sites/:id', async (req, res, next) => {
+  try {
+    if (!req.sessionUser?.permissions?.['master-sites']?.edit) return res.status(403).json({ error: 'forbidden' })
+    const timezone = String(req.body?.timezone ?? '').trim()
+    try {
+      new Intl.DateTimeFormat('en', { timeZone: timezone })
+    } catch {
+      return res.status(400).json({ error: 'invalid_timezone' })
+    }
+    const result = await query('UPDATE sites SET timezone = $2, updated_at = NOW() WHERE id = $1 RETURNING id', [req.params.id, timezone])
+    if (result.rows.length === 0) return res.status(404).json({ error: 'not_found' })
+    res.json({ ok: true, timezone })
+  } catch (error) {
+    next(error)
+  }
+})
+
 export default router

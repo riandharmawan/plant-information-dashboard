@@ -131,7 +131,13 @@ router.get('/roles', requireAny([['admin-roles', 'view'], ['admin-users', 'view'
                 FROM user_roles ur
                 JOIN users u ON u.id = ur.user_id AND u.deleted_at IS NULL
                 WHERE ur.role_id = r.id
-              ) AS user_count
+              ) AS user_count,
+              (SELECT COUNT(*)::int FROM role_permissions rp JOIN permissions p ON p.id = rp.permission_id
+                WHERE rp.role_id = r.id AND p.resource_type = 'page' AND rp.can_view) AS view_count,
+              (SELECT COUNT(*)::int FROM role_permissions rp JOIN permissions p ON p.id = rp.permission_id
+                WHERE rp.role_id = r.id AND p.resource_type = 'page' AND rp.can_edit) AS edit_count,
+              (SELECT COUNT(*)::int FROM role_permissions rp JOIN permissions p ON p.id = rp.permission_id
+                WHERE rp.role_id = r.id AND p.resource_type = 'page' AND rp.can_delete) AS delete_count
        FROM roles r
        ORDER BY r.is_system_role DESC, r.name`,
     )
@@ -141,6 +147,9 @@ router.get('/roles', requireAny([['admin-roles', 'view'], ['admin-users', 'view'
       description: row.description,
       isSystemRole: row.is_system_role === true,
       userCount: row.user_count,
+      viewCount: row.view_count,
+      editCount: row.edit_count,
+      deleteCount: row.delete_count,
     })))
   } catch (error) {
     next(error)

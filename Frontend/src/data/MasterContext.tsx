@@ -17,6 +17,8 @@ interface MasterApi {
   refresh: () => void
   /** Switch a company or site on or off. Resolves to an error code, or null when it worked. */
   setActivation: (entityType: 'company' | 'site', id: string, activated: boolean) => Promise<string | null>
+  /** Set a site's timezone. Resolves to an error code, or null when it worked. */
+  setSiteTimezone: (id: string, timezone: string) => Promise<string | null>
   saveCompany: (input: { code: string; name: string }, id: string | null) => SaveResult
   removeCompany: (id: string) => SaveResult
   saveSite: (input: { companyId: string; name: string; timezone: string }, id: string | null) => SaveResult
@@ -84,6 +86,18 @@ export function MasterProvider({ children }: { children: ReactNode }) {
     refresh: () => {
       setData(cloneSeed())
       void loadOrg()
+    },
+    async setSiteTimezone(id, timezone) {
+      try {
+        await http(`/api/v1/master/org/sites/${encodeURIComponent(id)}`, {
+          method: 'PUT',
+          body: JSON.stringify({ timezone }),
+        })
+        await loadOrg()
+        return null
+      } catch (error) {
+        return error instanceof ApiError ? error.code : 'request_failed'
+      }
     },
     async setActivation(entityType, id, activated) {
       try {

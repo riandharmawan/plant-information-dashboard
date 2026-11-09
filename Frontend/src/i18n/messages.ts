@@ -428,6 +428,38 @@ export interface Messages {
   dataHub: string
   dataHubCode: string
   inUse: string
+  searchRoles: string
+  rolesShown: string
+  roleAccess: string
+  roleInUseHint: string
+  deleteRoleTitle: string
+  deleteRoleBody: string
+  detailsTab: string
+  permissionsTab: string
+  presets: string
+  presetReadOnly: string
+  presetFull: string
+  presetClear: string
+  selectAllFor: string
+  systemRoleNote: string
+  newRoleHint: string
+  rolesSummary: string
+  allLabel: string
+  notInUse: string
+  inactiveInDataHub: string
+  searchCompanies: string
+  searchSites: string
+  allCompanies: string
+  companiesShown: string
+  sitesShown: string
+  noCompaniesYet: string
+  noSitesYet: string
+  pullFromDataHub: string
+  sitesInUse: string
+  activatedNotice: string
+  deactivatedNotice: string
+  timezoneSaved: string
+  invalidTimezone: string
   allUsers: string
   noEmail: string
   noSiteAccess: string
@@ -1064,6 +1096,38 @@ export const MESSAGES: Record<Locale, Messages> = {
     dataHub: 'DataHub',
     dataHubCode: 'DataHub code',
     inUse: 'In use',
+    searchRoles: 'Search roles',
+    rolesShown: '{n} of {total} roles',
+    roleAccess: 'Access',
+    roleInUseHint: 'Assigned to {n} user(s). Remove it from them first.',
+    deleteRoleTitle: 'Delete this role?',
+    deleteRoleBody: '{name} will be removed. This cannot be undone.',
+    detailsTab: 'Details',
+    permissionsTab: 'Permissions',
+    presets: 'Presets',
+    presetReadOnly: 'Read only',
+    presetFull: 'Full access',
+    presetClear: 'Clear all',
+    selectAllFor: 'Select all: {what}',
+    systemRoleNote: 'System roles keep their name.',
+    newRoleHint: 'Name the role and choose what it may do',
+    rolesSummary: 'View {v} · Edit {e} · Delete {d}',
+    allLabel: 'All',
+    notInUse: 'Not in use',
+    inactiveInDataHub: 'Inactive in DataHub',
+    searchCompanies: 'Search name or code',
+    searchSites: 'Search site, company or code',
+    allCompanies: 'All companies',
+    companiesShown: '{n} of {total} companies',
+    sitesShown: '{n} of {total} sites',
+    noCompaniesYet: 'No companies yet. Pull them from DataHub.',
+    noSitesYet: 'No sites yet. Pull them from DataHub.',
+    pullFromDataHub: 'Pull from DataHub',
+    sitesInUse: '{n} of {total} sites in use',
+    activatedNotice: '{name} is now in use.',
+    deactivatedNotice: '{name} is no longer in use.',
+    timezoneSaved: '{name} timezone set to {zone}.',
+    invalidTimezone: 'That timezone is not valid.',
     allUsers: 'All users',
     noEmail: 'No email',
     noSiteAccess: 'No site access',
@@ -1698,6 +1762,38 @@ export const MESSAGES: Record<Locale, Messages> = {
     dataHub: 'DataHub',
     dataHubCode: 'Kode DataHub',
     inUse: 'Digunakan',
+    searchRoles: 'Cari peran',
+    rolesShown: '{n} dari {total} peran',
+    roleAccess: 'Akses',
+    roleInUseHint: 'Dipakai {n} pengguna. Lepaskan dari mereka terlebih dahulu.',
+    deleteRoleTitle: 'Hapus peran ini?',
+    deleteRoleBody: '{name} akan dihapus. Tindakan ini tidak dapat dibatalkan.',
+    detailsTab: 'Detail',
+    permissionsTab: 'Izin',
+    presets: 'Preset',
+    presetReadOnly: 'Hanya lihat',
+    presetFull: 'Akses penuh',
+    presetClear: 'Hapus semua',
+    selectAllFor: 'Pilih semua: {what}',
+    systemRoleNote: 'Peran sistem mempertahankan namanya.',
+    newRoleHint: 'Beri nama peran dan pilih apa yang boleh dilakukan',
+    rolesSummary: 'Lihat {v} · Ubah {e} · Hapus {d}',
+    allLabel: 'Semua',
+    notInUse: 'Tidak digunakan',
+    inactiveInDataHub: 'Nonaktif di DataHub',
+    searchCompanies: 'Cari nama atau kode',
+    searchSites: 'Cari site, perusahaan, atau kode',
+    allCompanies: 'Semua perusahaan',
+    companiesShown: '{n} dari {total} perusahaan',
+    sitesShown: '{n} dari {total} site',
+    noCompaniesYet: 'Belum ada perusahaan. Tarik dari DataHub.',
+    noSitesYet: 'Belum ada site. Tarik dari DataHub.',
+    pullFromDataHub: 'Tarik dari DataHub',
+    sitesInUse: '{n} dari {total} site digunakan',
+    activatedNotice: '{name} sekarang digunakan.',
+    deactivatedNotice: '{name} tidak lagi digunakan.',
+    timezoneSaved: 'Zona waktu {name} diatur ke {zone}.',
+    invalidTimezone: 'Zona waktu tidak valid.',
     allUsers: 'Semua pengguna',
     noEmail: 'Tanpa email',
     noSiteAccess: 'Tanpa akses site',
