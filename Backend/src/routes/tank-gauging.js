@@ -53,11 +53,11 @@ router.get('/sites/:siteId/overview', view, withSite, async (req, res, next) => 
       pool.query(
         `SELECT t.id, t.code, t.name, t.sort_order, l.source_unit_name, l.source_base_url, l.product_name,
                 l.level_mm, l.temperature_c, l.total_mass, l.observed_density_kg_m3, l.total_observed_volume,
-                l.status_text, l.recorded_at, l.fetched_at, l.capacity, p.capacity AS profile_capacity, p.capacity_unit
+                l.status_text, l.recorded_at, l.fetched_at, t.stock_group, i.max_capacity_litre, i.tank_state
          FROM tanks t
          JOIN plants pl ON pl.id = t.plant_id
          LEFT JOIN tank_gauging_latest l ON l.tank_id = t.id
-         LEFT JOIN tank_profiles p ON p.tank_id = t.id
+         LEFT JOIN tank_gauging_info i ON i.tank_id = t.id
          WHERE pl.site_id = $1 AND t.source = 'atg'
          ORDER BY t.sort_order, t.code`,
         [siteId],
@@ -81,7 +81,9 @@ router.get('/sites/:siteId/overview', view, withSite, async (req, res, next) => 
         statusText: row.status_text,
         recordedAt: row.recorded_at,
         fetchedAt: row.fetched_at,
-        capacity: row.capacity ?? row.profile_capacity ?? null,
+        capacityLitre: row.max_capacity_litre == null ? null : Number(row.max_capacity_litre),
+        tankState: row.tank_state,
+        stockGroup: row.stock_group,
       })),
     })
   } catch (error) {

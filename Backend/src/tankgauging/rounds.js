@@ -110,7 +110,7 @@ function number(value) {
 export function roundValues(sample) {
   const pick = (id, column) => {
     const parameter = parameterOf(sample, id)
-    if (parameter && BAD_STATUS.has(String(parameter.statusString || '').toUpperCase().replace(/s+/g, ''))) return null
+    if (parameter && BAD_STATUS.has(String(parameter.statusString || '').toUpperCase().replace(/\s+/g, ''))) return null
     return number(sample[column])
   }
   let massTon = pick(730, 'total_mass')

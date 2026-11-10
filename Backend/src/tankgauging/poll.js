@@ -6,10 +6,14 @@
  */
 import { slugify } from '../datahub/sync.js'
 import {
+  fetchTankInfo,
   fetchTankMeta,
   fetchTankParameters,
+  openSession,
+  parseTankInfoResponse,
   parseTankMetaResponse,
   parseTankParameterResponse,
+  productToGroupCode,
   readingToRawPayload,
   trimBaseUrl,
   unitTankKey,
@@ -147,22 +151,22 @@ async function storeReading(db, base, unitName, tankId, reading, fetchedAt) {
     `INSERT INTO tank_gauging_latest (
        tank_id, product_name, tank_comment, level_mm, temperature_c, observed_density_kg_m3,
        total_observed_volume, total_mass, flow_rate_tph, status_text, tank_status_code, level_movement,
-       gauge_ref_height_mm, capacity, recorded_at, fetched_at, raw_payload, source, source_base_url, source_unit_name
-     ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17::jsonb,'tankvision-gwt',$18,$19)
+       gauge_ref_height_mm, recorded_at, fetched_at, raw_payload, source, source_base_url, source_unit_name
+     ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16::jsonb,'tankvision-gwt',$17,$18)
      ON CONFLICT (tank_id) DO UPDATE SET
        product_name = EXCLUDED.product_name, tank_comment = EXCLUDED.tank_comment, level_mm = EXCLUDED.level_mm,
        temperature_c = EXCLUDED.temperature_c, observed_density_kg_m3 = EXCLUDED.observed_density_kg_m3,
        total_observed_volume = EXCLUDED.total_observed_volume, total_mass = EXCLUDED.total_mass,
        flow_rate_tph = EXCLUDED.flow_rate_tph, status_text = EXCLUDED.status_text,
        tank_status_code = EXCLUDED.tank_status_code, level_movement = EXCLUDED.level_movement,
-       gauge_ref_height_mm = EXCLUDED.gauge_ref_height_mm, capacity = COALESCE(EXCLUDED.capacity, tank_gauging_latest.capacity),
+       gauge_ref_height_mm = EXCLUDED.gauge_ref_height_mm,
        recorded_at = EXCLUDED.recorded_at, fetched_at = EXCLUDED.fetched_at, raw_payload = EXCLUDED.raw_payload,
        source_base_url = EXCLUDED.source_base_url, source_unit_name = EXCLUDED.source_unit_name`,
     [
       tankId, reading.productName, reading.tankComment, reading.levelMm, reading.temperatureC,
       reading.observedDensityKgM3, reading.totalObservedVolume, reading.totalMass, reading.flowRateTph,
       reading.statusText, reading.tankStatusCode, reading.levelMovement, reading.gaugeRefHeightMm,
-      reading.capacity ?? null, recordedAt, fetchedAt, raw, base, unitName,
+      recordedAt, fetchedAt, raw, base, unitName,
     ],
   )
   await db.query(
@@ -178,11 +182,80 @@ async function storeReading(db, base, unitName, tankId, reading, fetchedAt) {
   )
 }
 
+/**
+ * A gauged tank counts under the commodity card of the product the gauge says it holds, so the
+ * card follows a product change. A tank with no product keeps its previous group.
+ */
+async function assignStockGroup(db, siteId, tankId, productName) {
+  const code = productToGroupCode(productName)
+  if (!code) return
+  await db.query(
+    `INSERT INTO stock_groups (site_id, code, name, sort_order)
+     VALUES ($1, $2, $2, COALESCE((SELECT MAX(sort_order) + 1 FROM stock_groups WHERE site_id = $1), 0))
+     ON CONFLICT (site_id, code) DO NOTHING`,
+    [siteId, code],
+  )
+  await db.query('UPDATE tanks SET stock_group = $2 WHERE id = $1 AND stock_group IS DISTINCT FROM $2', [tankId, code])
+}
+
+/** How long a tank's capacity is trusted before it is read again. */
+const INFO_REFRESH_DAYS = 7
+
+/**
+ * Read each tank's detail page (capacity, height, state) when it has not been read for a week.
+ * Sequential and paced, because the units are slow. Returns counts. Never throws.
+ */
+export async function refreshTankInfo(db, { fetchOpts, units, tankByKey, delayMs }) {
+  const result = { read: 0, failed: 0, fresh: 0 }
+  try {
+    const ids = [...tankByKey.values()]
+    const fresh = await db.query(
+      `SELECT tank_id FROM tank_gauging_info WHERE tank_id = ANY($1::text[]) AND fetched_at > NOW() - make_interval(days => $2)`,
+      [ids, INFO_REFRESH_DAYS],
+    )
+    const done = new Set(fresh.rows.map((row) => row.tank_id))
+    const pause = Number.isFinite(Number(delayMs)) ? Number(delayMs) : 250
+    for (const unit of units) {
+      for (const tank of unit.tanks) {
+        const tankId = tankByKey.get(unitTankKey(unit.name, tank.externalTankId))
+        if (!tankId) continue
+        if (done.has(tankId)) {
+          result.fresh += 1
+          continue
+        }
+        try {
+          const res = await fetchTankInfo({ ...fetchOpts, tankId: tank.externalTankId })
+          const info = res.ok ? parseTankInfoResponse(res.text) : null
+          if (!info) {
+            result.failed += 1
+            continue
+          }
+          await db.query(
+            `INSERT INTO tank_gauging_info (tank_id, max_capacity_litre, tank_height_mm, tank_location, tank_state, roof_status, fetched_at, raw_payload)
+             VALUES ($1,$2,$3,$4,$5,$6,NOW(),$7::jsonb)
+             ON CONFLICT (tank_id) DO UPDATE SET max_capacity_litre = EXCLUDED.max_capacity_litre,
+               tank_height_mm = EXCLUDED.tank_height_mm, tank_location = EXCLUDED.tank_location,
+               tank_state = EXCLUDED.tank_state, roof_status = EXCLUDED.roof_status,
+               fetched_at = NOW(), raw_payload = EXCLUDED.raw_payload`,
+            [tankId, info.maxCapacityLitre, info.tankHeightMm, info.tankLocation, info.tankState, info.roofStatus, JSON.stringify(info)],
+          )
+          result.read += 1
+        } catch {
+          result.failed += 1
+        }
+        if (pause > 0) await new Promise((resolve) => setTimeout(resolve, pause))
+      }
+    }
+  } catch {
+    result.failed += 1
+  }
+  return result
+}
+
 /** Poll one source. Never throws: a failure is returned and recorded on the source. */
 export async function pollSource(db, source, opts = {}) {
   const base = trimBaseUrl(source.baseUrl)
   const fetchOpts = { baseUrl: base, auth: source.auth, fetchImpl: opts.fetchImpl, retryDelayMs: opts.retryDelayMs, timeoutMs: opts.timeoutMs }
-  const capacityParamId = opts.capacityParamId ?? process.env.TANK_GAUGING_CAPACITY_PARAMID ?? null
 
   const finish = async (result) => {
     await updateSourcePollHealth(db, source.id, { ok: result.ok, error: result.error })
@@ -190,6 +263,8 @@ export async function pollSource(db, source, opts = {}) {
   }
 
   try {
+    // One session for the whole poll. The unit is slow to open one, and each call would open another.
+    fetchOpts.cookie = await openSession(base, fetchOpts)
     const metaRes = await fetchTankMeta(fetchOpts)
     if (!metaRes.ok) return finish({ ok: false, error: `Tank list HTTP ${metaRes.status}${metaRes.status === 204 ? ' (empty)' : ''}`, fetched: 0, stored: 0 })
     const meta = parseTankMetaResponse(metaRes.text)
@@ -207,7 +282,7 @@ export async function pollSource(db, source, opts = {}) {
     const problems = []
 
     for (const unit of units) {
-      const res = await fetchTankParameters({ ...fetchOpts, tankList: tankLists.get(unit), capacityParamId })
+      const res = await fetchTankParameters({ ...fetchOpts, tankList: tankLists.get(unit) })
       if (!res.ok) {
         problems.push(`${unit.name || base}: live values HTTP ${res.status}`)
         continue
@@ -217,7 +292,7 @@ export async function pollSource(db, source, opts = {}) {
         const product = meta.productByUnitTank.get(unitTankKey(unit.name, tank.externalTankId))
         if (product) productByTankId.set(tank.externalTankId, product)
       }
-      const { readings, parseMode } = parseTankParameterResponse(res.text, productByTankId, { capacityParamId })
+      const { readings, parseMode } = parseTankParameterResponse(res.text, productByTankId)
       if (readings.length === 0) {
         problems.push(`${unit.name || base}: no readings (${parseMode})`)
         continue
@@ -230,11 +305,17 @@ export async function pollSource(db, source, opts = {}) {
           continue
         }
         await storeReading(db, base, unit.name, tankId, reading, fetchedAt)
+        await assignStockGroup(db, source.siteId, tankId, reading.productName)
         stored += 1
       }
     }
+
+    // Capacity and the like change rarely. Read them after the live values, so a slow unit never
+    // delays a reading, and a failure here does not fail the poll.
+    const info = await refreshTankInfo(db, { fetchOpts, units, tankByKey, delayMs: opts.infoDelayMs })
+
     const ok = problems.length === 0 && stored > 0
-    return finish({ ok, error: ok ? null : problems.join('; ') || 'nothing stored', fetched, stored, unmapped, tanksCreated: created, units: units.length })
+    return finish({ ok, error: ok ? null : problems.join('; ') || 'nothing stored', fetched, stored, unmapped, tanksCreated: created, units: units.length, info })
   } catch (error) {
     return finish({ ok: false, error: error?.message || String(error), fetched: 0, stored: 0 })
   }

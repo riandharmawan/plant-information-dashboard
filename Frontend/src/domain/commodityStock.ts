@@ -7,9 +7,13 @@ import type { TankLive } from './types.ts'
  * IV 64 is kept apart from olein, matching the report.
  * The report leaves the last label blank; its formula is the PFAD total.
  */
-const GROUPS = ['CPO', 'RBDPO', 'OLEIN', 'RBDPS', 'IV 64', 'PMF', 'PFAD'] as const
+const GROUPS: readonly string[] = ['CPO', 'RBDPO', 'OLEIN', 'RBDPS', 'IV 64', 'PMF', 'PFAD']
 
-export type StockGroup = (typeof GROUPS)[number]
+/**
+ * A commodity card. The seven above are the stock report's groups for a logsheet site. A tank read by
+ * a gauge system brings its own group, which follows the product the gauge assigns to it.
+ */
+export type StockGroup = string
 
 /**
  * Tank blocks on the 13 Oct 2026 stock report. The lab name on a card can
@@ -70,8 +74,33 @@ export function stockGroupOf(productName: string): StockGroup | null {
   return null
 }
 
-export function stockGroupFor(tank: Pick<TankLive, 'tankId' | 'productName'>): StockGroup | null {
+/** A tank read by a gauge system says so, and then its own group is the only one that counts. */
+function isGauged(tank: Pick<TankLive, 'readingKind'>): boolean {
+  return tank.readingKind === 'live' || tank.readingKind === 'round'
+}
+
+export function stockGroupFor(tank: Pick<TankLive, 'tankId' | 'productName' | 'readingKind' | 'stockGroup'>): StockGroup | null {
+  if (isGauged(tank)) return tank.stockGroup ?? null
   return REPORT_TANKS[tank.tankId] ?? stockGroupOf(tank.productName)
+}
+
+/**
+ * The cards to show. A logsheet site always shows the report's seven. When tanks come from a gauge
+ * system, the cards are the groups those tanks are in: the report's groups first, in their order,
+ * then the rest with the most capacity first.
+ */
+function cardCodes(tanks: TankLive[]): StockGroup[] {
+  if (!tanks.some(isGauged)) return [...GROUPS]
+  const capacity = new Map<StockGroup, number>()
+  for (const tank of tanks) {
+    const code = stockGroupFor(tank)
+    if (code) capacity.set(code, (capacity.get(code) ?? 0) + (tank.capacityKg ?? 0))
+  }
+  const known = GROUPS.filter((code) => capacity.has(code))
+  const others = [...capacity.keys()]
+    .filter((code) => !GROUPS.includes(code))
+    .sort((left, right) => (capacity.get(right) ?? 0) - (capacity.get(left) ?? 0) || left.localeCompare(right))
+  return [...known, ...others]
 }
 
 export function commoditySources(tanks: TankLive[], code: StockGroup): TankLive[] {
@@ -98,7 +127,8 @@ interface Bucket {
 
 export function commodityStock(tanks: TankLive[]): CommodityStockRow[] {
   const totals = new Map<StockGroup, Bucket>()
-  for (const code of GROUPS) totals.set(code, { quantityKg: 0, capacityKg: 0, tankCount: 0, holding: [] })
+  const codes = cardCodes(tanks)
+  for (const code of codes) totals.set(code, { quantityKg: 0, capacityKg: 0, tankCount: 0, holding: [] })
 
   for (const tank of tanks) {
     const code = stockGroupFor(tank)
@@ -111,7 +141,7 @@ export function commodityStock(tanks: TankLive[]): CommodityStockRow[] {
     if (tank.quantityKg != null && tank.quantityKg > 0) bucket.holding.push(tank)
   }
 
-  return GROUPS.map((code) => {
+  return codes.map((code) => {
     const bucket = totals.get(code) ?? { quantityKg: 0, capacityKg: 0, tankCount: 0, holding: [] }
     const hasCapacity = bucket.capacityKg > 0
     return {

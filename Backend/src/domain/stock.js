@@ -95,21 +95,44 @@ export function stockFromProfile(profile, tables, levelM, tempC, method) {
   }
 }
 
+const positive = (value) => (value != null && Number.isFinite(Number(value)) && Number(value) > 0 ? Number(value) : null)
+
 /**
  * Stock for a tank read by a gauge system. The gauge reports total mass directly, so no
- * calibration table is used. Free space needs a capacity, and loadable stock also needs a bottom stock.
+ * calibration table is used.
+ *
+ * Capacity comes from a capacity saved for the tank in the master (in kilograms) when there is one.
+ * Otherwise it is the gauge's Max Tank Capacity in litres times the density now measured, which is
+ * the mass the tank would hold of this product when full.
+ *
+ * The level percent is the observed volume over the capacity in litres, when both are known. That
+ * does not depend on density, so it stays right when density is not reported. Without a volume it
+ * falls back to mass over capacity.
+ *
+ * Free space needs a capacity. Loadable stock also needs a bottom stock, which a gauge does not give.
+ *
  * @param {number} massKg
- * @param {{ capacityKg: number|null, bottomStockKg: number|null } | undefined} profile
+ * @param {{ capacityKg?: number|null, bottomStockKg?: number|null } | undefined} profile saved in the master
+ * @param {{ capacityLitre?: number|null, volumeLitre?: number|null, densityKgM3?: number|null }} [gauge]
  */
-export function stockFromGauge(massKg, profile) {
-  const capacityKg = profile?.capacityKg ?? null
+export function stockFromGauge(massKg, profile, gauge = {}) {
+  const manualKg = positive(profile?.capacityKg)
+  const capacityLitre = positive(gauge.capacityLitre)
+  const density = positive(gauge.densityKgM3)
+  const derivedKg = capacityLitre != null && density != null ? (capacityLitre * density) / 1000 : null
+  const capacityKg = manualKg ?? derivedKg
   const bottomStockKg = profile?.bottomStockKg ?? null
-  const ok = capacityKg != null && capacityKg > 0
+
+  let levelRatio = null
+  if (manualKg != null) levelRatio = massKg / manualKg
+  else if (capacityLitre != null && gauge.volumeLitre != null && Number(gauge.volumeLitre) >= 0) levelRatio = Number(gauge.volumeLitre) / capacityLitre
+  else if (capacityKg != null) levelRatio = massKg / capacityKg
+
   return {
     capacityKg,
     quantityKg: massKg,
-    emptySpaceKg: ok ? capacityKg - massKg : null,
+    emptySpaceKg: capacityKg != null ? capacityKg - massKg : null,
     loadableKg: bottomStockKg != null ? massKg - bottomStockKg : null,
-    levelRatio: ok ? massKg / capacityKg : null,
+    levelRatio,
   }
 }

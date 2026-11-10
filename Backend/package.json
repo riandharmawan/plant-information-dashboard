@@ -12,7 +12,8 @@
     "migrate": "node scripts/migrate.js",
     "seed": "node scripts/seed-from-mockup.js",
     "seed:admin": "node scripts/seed-admin.js",
-    "test": "node --test src/datahub/datahub.test.js src/tankgauging/tankgauging.test.js"
+    "test": "node --test src/datahub/datahub.test.js src/tankgauging/tankgauging.test.js src/tankgauging/capacity.test.js",
+    "poll:loop": "node scripts/poll-loop.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",

@@ -7,16 +7,23 @@ import { formatMeasure } from '../../domain/format.ts'
 import { useMass } from './massUnit.ts'
 import { useLocale } from '../../i18n/LocaleContext.tsx'
 import { CommodityTrendDialog } from './CommodityTrendDialog.tsx'
+import { LiveBadge } from './LiveBadge.tsx'
 import { fillTone } from './tankAlerts.ts'
 
 export function CommodityStock({ tanks, day, averageTemperature }: { tanks: TankLive[]; day: string; averageTemperature: number | null }) {
   const { t } = useLocale()
   const rows = commodityStock(tanks)
   const [openCode, setOpenCode] = useState<StockGroup | null>(null)
+  // Only a gauge reading taken for today is live. The newest of them says how fresh the screen is.
+  const readings = tanks.filter((tank) => tank.readingKind === 'live' && tank.readingAt).map((tank) => tank.readingAt as string).sort()
+  const liveAt = readings.at(-1) ?? null
 
   return (
     <section className="commodity-stock" aria-label={t.commodityStock}>
-      <h2 className="card__title">{t.commodityStock}</h2>
+      <h2 className="card__title">
+        {t.commodityStock}
+        <LiveBadge readingAt={liveAt} />
+      </h2>
       <ul className="commodity-grid">
         {rows.map((row) => (
           <li key={row.code}>

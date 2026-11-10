@@ -46,8 +46,11 @@ function timeoutMs(opts) {
   return Number.isFinite(n) && n > 0 ? n : 15000
 }
 
-/** Open a session the way the web page does and return its cookie. Failure is not fatal. */
-async function warmSession(baseUrl, opts) {
+/**
+ * Open a session the way the web page does and return its cookie. Failure is not fatal.
+ * A poll opens one and passes it to every call, so a unit is not asked to open fifteen.
+ */
+export async function openSession(baseUrl, opts = {}) {
   const fetchImpl = opts.fetchImpl ?? fetch
   try {
     const res = await fetchImpl(`${baseUrl}/index.esp`, {
@@ -69,7 +72,7 @@ async function gwtGet(searchParams, opts = {}) {
   const url = new URL(`${baseUrl}/GWTHandler.esp`)
   for (const [key, value] of Object.entries(searchParams)) url.searchParams.set(key, String(value))
 
-  const cookie = await warmSession(baseUrl, opts)
+  const cookie = opts.cookie ?? (await openSession(baseUrl, opts))
   const attempt = async () => {
     const res = await fetchImpl(url, {
       headers: buildAuthHeaders(baseUrl, opts.auth, cookie),
@@ -95,17 +98,80 @@ export function fetchTankMeta(opts = {}) {
 
 /** DATATYPE=47: live parameter values for a list of tank numbers. */
 export function fetchTankParameters(opts = {}) {
-  const paramIds = [opts.paramIdList || process.env.TANK_GAUGING_PARAMIDLIST || DEFAULT_TANK_PARAM_IDS]
-  if (opts.capacityParamId) paramIds.push(String(opts.capacityParamId))
   return gwtGet(
     {
       DATATYPE: '47',
       TANKLIST: opts.tankList || '1|2|3|4|5|6|7|8|9|10|11|12|13|14|15',
-      PARAMIDLIST: paramIds.join('|'),
+      PARAMIDLIST: opts.paramIdList || process.env.TANK_GAUGING_PARAMIDLIST || DEFAULT_TANK_PARAM_IDS,
       TYPE: 'DATA',
     },
     opts,
   )
+}
+
+/**
+ * DATATYPE=31: what the unit says about one tank itself, from its tank detail page. Includes the
+ * Max Tank Capacity, which the live values do not carry.
+ */
+export function fetchTankInfo(opts = {}) {
+  return gwtGet({ DATATYPE: '31', TANKID: opts.tankId }, opts)
+}
+
+/**
+ * A number with a unit as the unit prints it, such as "+5'696'217 L" or "+19'800 mm".
+ * @returns {{ value: number, unit: string } | null}
+ */
+export function parseQuantity(raw) {
+  if (raw == null) return null
+  const match = /^\s*([+-]?[\d',.\s]*\d)\s*([A-Za-z][A-Za-z0-9³²/%]*)?\s*$/.exec(String(raw))
+  if (!match) return null
+  const value = parseTankNumber(match[1].replace(/\s/g, ''))
+  return value == null ? null : { value, unit: match[2] ?? '' }
+}
+
+/** Litres from a printed volume. Cubic metres and kilolitres are converted. Anything else is not guessed. */
+export function litresOf(raw) {
+  const quantity = parseQuantity(raw)
+  if (!quantity) return null
+  const unit = quantity.unit.toLowerCase().replace('³', '3')
+  if (unit === 'l' || unit === 'lt' || unit === 'ltr' || unit === '') return quantity.value
+  if (unit === 'kl' || unit === 'm3') return quantity.value * 1000
+  return null
+}
+
+/** The tank detail reply: capacity in litres, height in millimetres, and where the tank stands. */
+export function parseTankInfoResponse(text) {
+  const raw = String(text ?? '').trim()
+  if (!raw.startsWith('{')) return null
+  try {
+    const header = JSON.parse(raw)?.tankInfoHeader
+    if (!header || typeof header !== 'object') return null
+    const height = parseQuantity(header.tankHeight)
+    const clean = (value) => {
+      const text = String(value ?? '').trim()
+      return text && text !== 'N/A' ? text : null
+    }
+    return {
+      maxCapacityLitre: litresOf(header.maxTankCap),
+      tankHeightMm: height && /^mm$/i.test(height.unit) ? height.value : null,
+      tankLocation: clean(header.tankLocation),
+      tankState: clean(header.tankStatus),
+      roofStatus: clean(header.roofStatus),
+    }
+  } catch {
+    return null
+  }
+}
+
+/**
+ * A product as a stock group code. The gauge spells some products oddly ("FAME_", "COUSTIC SODA"),
+ * so the code is tidied. An empty or placeholder product gives null.
+ */
+const PRODUCT_FIXES = { 'COUSTIC SODA': 'CAUSTIC SODA' }
+export function productToGroupCode(name) {
+  const text = String(name ?? '').replace(/_+$/g, '').replace(/\s+/g, ' ').trim().toUpperCase()
+  if (!text || text === '-' || text === 'N/A') return null
+  return PRODUCT_FIXES[text] ?? text
 }
 
 /**
@@ -252,7 +318,7 @@ function tankInfoMap(data) {
   return out
 }
 
-function readingFromTank(tank, infoById, product, capacityParamId) {
+function readingFromTank(tank, infoById, product) {
   const list = tank.parameterlist || []
   const id = Number.parseInt(tank.tankId, 10)
   const level = paramById(list, 622)
@@ -261,7 +327,6 @@ function readingFromTank(tank, infoById, product, capacityParamId) {
   const volume = paramById(list, 717)
   const flow = paramById(list, 724)
   const mass = paramById(list, 730)
-  const capacity = capacityParamId ? paramById(list, Number(capacityParamId)) : null
   const stamp = Number(
     level?.timestamp || temp?.timestamp || density?.timestamp || volume?.timestamp || flow?.timestamp || mass?.timestamp || 0,
   )
@@ -279,7 +344,6 @@ function readingFromTank(tank, infoById, product, capacityParamId) {
     totalObservedVolume: parseTankNumber(volume?.value ?? volume?.valueString),
     flowRateTph: parseTankNumber(flow?.value ?? flow?.valueString),
     totalMass: parseTankNumber(mass?.value ?? mass?.valueString),
-    capacity: capacity ? parseTankNumber(capacity.value ?? capacity.valueString) : null,
     statusText: pickWorstStatusString([level, temp, density, volume, flow, mass].map((p) => p?.statusString)),
     recordedAt: stamp > 0 ? new Date(stamp * 1000).toISOString() : null,
     parameterlist: list,
@@ -290,9 +354,8 @@ function readingFromTank(tank, infoById, product, capacityParamId) {
  * Parse DATATYPE=47 into one reading per tank.
  * @param {string} text
  * @param {Map<number,string>} [productByTankId] product per tank number, for the unit being read
- * @param {{ capacityParamId?: number|string }} [opts]
  */
-export function parseTankParameterResponse(text, productByTankId = new Map(), opts = {}) {
+export function parseTankParameterResponse(text, productByTankId = new Map()) {
   const raw = String(text ?? '').trim()
   if (!raw) return { readings: [], parseMode: 'empty' }
   if (!raw.startsWith('{') && !raw.startsWith('[')) return { readings: [], parseMode: 'unrecognized' }
@@ -302,7 +365,7 @@ export function parseTankParameterResponse(text, productByTankId = new Map(), op
     const bulk = data?.multiTankTgvData?.multiTankBulkRealTimeData
     if (!Array.isArray(bulk)) return { readings: [], parseMode: 'unrecognized' }
     const readings = bulk
-      .map((tank) => readingFromTank(tank, infoById, productByTankId.get(Number.parseInt(tank.tankId, 10)), opts.capacityParamId))
+      .map((tank) => readingFromTank(tank, infoById, productByTankId.get(Number.parseInt(tank.tankId, 10))))
       .filter((reading) => reading.externalTankId != null)
     return { readings, parseMode: 'multiTankBulkRealTimeData' }
   } catch {

@@ -66,6 +66,19 @@ export interface TankLive {
   /** Quantity divided by capacity. Null when either figure is unknown. */
   fillRatio: number | null
   quality: TankQuality | null
+  /**
+   * Only for a tank read by a gauge system. live is the reading just taken, round is a saved
+   * daily round. A tank filled from logsheets leaves it out.
+   */
+  readingKind?: 'live' | 'round' | null
+  /** When the gauge reading was taken. */
+  readingAt?: string | null
+  /** The commodity card this gauged tank counts under. It follows the product the gauge assigns. */
+  stockGroup?: string | null
+  /** Max Tank Capacity the gauge reports, in litres. */
+  capacityLitre?: number | null
+  /** What the gauge says the tank is doing, such as In Operation or In Maintenance. */
+  tankState?: string | null
 }
 
 export interface LogisticsVehicle {
@@ -140,4 +153,6 @@ export interface SnapshotMeta {
   /** Calendar days that carry a sounding, lab, or gate sample. */
   dataDates: string[]
   roundCount: number
+  /** When a gauge system was last read for this site. Null for a site filled from logsheets. */
+  liveAsOf?: string | null
 }

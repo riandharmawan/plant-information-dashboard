@@ -30,6 +30,9 @@ interface GaugedTank {
   levelMm: number | null
   temperatureC: number | null
   totalMassTon: number | null
+  capacityLitre?: number | null
+  tankState?: string | null
+  stockGroup?: string | null
   statusText: string | null
   recordedAt: string | null
   fetchedAt: string | null
@@ -380,7 +383,7 @@ export function TankGaugingPage() {
         ) : (
           <div className="um-table-wrap">
             <table className="um-table">
-              <thead><tr><th>Tank</th><th>Unit</th><th>Product</th><th className="um-num">Level (m)</th><th className="um-num">Temp (°C)</th><th className="um-num">Mass (t)</th><th>Reading</th><th>Updated</th></tr></thead>
+              <thead><tr><th>Tank</th><th>Unit</th><th>Product</th><th className="um-num">Level (m)</th><th className="um-num">Temp (°C)</th><th className="um-num">Mass (t)</th><th className="um-num">Capacity (kL)</th><th>Reading</th><th>Updated</th></tr></thead>
               <tbody>
                 {tanks.map((tank) => {
                   const tone = statusTone(tank.statusText)
@@ -392,6 +395,9 @@ export function TankGaugingPage() {
                       <td className="um-num">{fmt(tank.levelMm == null ? null : tank.levelMm / 1000, 3)}</td>
                       <td className="um-num">{fmt(tank.temperatureC, 1)}</td>
                       <td className="um-num">{fmt(tank.totalMassTon, 1)}</td>
+                      <td className="um-num" title={tank.tankState ?? ''}>
+                        {tank.capacityLitre ? fmt(tank.capacityLitre / 1000, 1) : tank.capacityLitre === 0 ? 'Not in use' : '—'}
+                      </td>
                       <td><span className={`um-chip${tone === 'ok' ? ' um-chip--ok' : tone === 'bad' ? ' um-chip--bad' : ''}`}>{tank.statusText ?? '—'}</span></td>
                       <td><span className="um-muted" title={tank.fetchedAt ?? ''}>{ago(tank.fetchedAt, now)}</span></td>
                     </tr>

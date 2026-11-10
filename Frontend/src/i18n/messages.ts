@@ -430,6 +430,8 @@ export interface Messages {
   dataHub: string
   dataHubCode: string
   inUse: string
+  liveLabel: string
+  lastReading: string
   switchSite: string
   searchRoles: string
   rolesShown: string
@@ -1101,6 +1103,8 @@ export const MESSAGES: Record<Locale, Messages> = {
     dataHub: 'DataHub',
     dataHubCode: 'DataHub code',
     inUse: 'In use',
+    liveLabel: 'Live',
+    lastReading: 'Last reading',
     switchSite: 'Switch site',
     searchRoles: 'Search roles',
     rolesShown: '{n} of {total} roles',
@@ -1770,6 +1774,8 @@ export const MESSAGES: Record<Locale, Messages> = {
     dataHub: 'DataHub',
     dataHubCode: 'Kode DataHub',
     inUse: 'Digunakan',
+    liveLabel: 'Langsung',
+    lastReading: 'Pembacaan terakhir',
     switchSite: 'Ganti site',
     searchRoles: 'Cari peran',
     rolesShown: '{n} dari {total} peran',
