@@ -18,8 +18,9 @@ import {
 } from '../../domain/management.ts'
 import { useLocale } from '../../i18n/LocaleContext.tsx'
 import { TankDialog } from './TankDialog.tsx'
+import { MixStrip } from './MixTip.tsx'
 import { Count, stagger } from './motion.tsx'
-import { Change, ClassDot, DataBadge, FillText, Kpi, Legend, MixStrip, Skeleton, StatusChip, StockBar, fill, useClassLabel } from './parts.tsx'
+import { Change, ClassDot, DataBadge, FillText, Kpi, Legend, Skeleton, StatusChip, StockBar, fill, useClassLabel } from './parts.tsx'
 
 const REFRESH_MS = 60000
 const FLAG_KINDS: TankStatus[] = ['near-full', 'over', 'empty', 'no-data']
@@ -310,7 +311,11 @@ function Overview({
                   </small>
                 </span>
                 <span className="num mg-fill"><FillText ratio={site.fillRatio} /></span>
-                <MixStrip classes={site.classes} />
+                <MixStrip
+                  site={site}
+                  onOpenClass={(siteId, cls) => go({ site: siteId, cls })}
+                  onOpenTank={(siteId, tankId) => go({ tank: `${siteId}/${tankId}` })}
+                />
                 <span className="num">
                   <Change kg={site.changeKg} />
                 </span>

@@ -25,6 +25,7 @@
   color: var(--mg-ink);
   container-type: inline-size;
   container-name: mg;
+  position: relative;
 }
 
 .mg-c--crude { background: var(--mg-c-crude); }
@@ -497,3 +498,102 @@ button.mg-row:focus-visible::after { opacity: 1; right: 11px; }
   .mg *::before,
   .mg *::after { animation: none !important; transition: none !important; }
 }
+
+/* The card behind a mix segment: detail, the largest tanks, and a way in. */
+.mg-mix__seg { cursor: pointer; }
+.mg-mix__seg:hover,
+.mg-mix__seg.is-open { filter: brightness(1.08); }
+
+.mg-tip {
+  --arrow: 24px;
+  position: absolute;
+  z-index: 40;
+  padding: 12px 14px 10px;
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg-white);
+  box-shadow: var(--shadow-lg), 0 12px 28px rgba(0, 0, 0, 0.12);
+  font-size: var(--font-size-sm);
+  animation: mg-tip-in 0.16s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  transform-origin: var(--arrow) top;
+}
+.mg-tip--above { transform-origin: var(--arrow) bottom; }
+.mg-tip::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: calc(var(--arrow) - 6px);
+  width: 10px;
+  height: 10px;
+  border-top: 1px solid var(--color-border-medium);
+  border-left: 1px solid var(--color-border-medium);
+  background: var(--color-bg-white);
+  transform: rotate(45deg);
+}
+.mg-tip--above::before { top: auto; bottom: -6px; transform: rotate(225deg); }
+@keyframes mg-tip-in {
+  from { opacity: 0; transform: translateY(4px) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+.mg-tip--above { animation-name: mg-tip-in-above; }
+@keyframes mg-tip-in-above {
+  from { opacity: 0; transform: translateY(-4px) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+
+.mg-tip__head { display: flex; align-items: center; gap: 6px; font-size: var(--font-size-base); }
+.mg-tip__head .mg-dot { margin-right: 0; }
+.mg-tip__big { display: flex; align-items: baseline; gap: 6px; margin: 6px 0 8px; font-size: 24px; font-weight: var(--font-weight-semibold); font-variant-numeric: tabular-nums; }
+.mg-tip__big small { color: var(--mg-muted); font-size: var(--font-size-sm); font-weight: var(--font-weight-normal); }
+.mg-tip__big span { margin-left: auto; color: var(--mg-muted); font-size: var(--font-size-sm); font-weight: var(--font-weight-normal); }
+.mg-tip__stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0 0 8px; padding: 8px 0; border-block: 1px solid var(--mg-line); }
+.mg-tip__stats dt { color: var(--mg-muted); font-size: var(--font-size-xs); }
+.mg-tip__stats dd { margin: 2px 0 0; font-weight: var(--font-weight-semibold); font-variant-numeric: tabular-nums; }
+.mg-tip__flags { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 8px; }
+.mg-tip__flag { display: inline-flex; align-items: center; gap: 4px; }
+.mg-tip__title { margin: 0 0 4px; color: var(--mg-muted); font-size: var(--font-size-xs); font-weight: var(--font-weight-semibold); letter-spacing: 0.04em; text-transform: uppercase; }
+.mg-tip__tanks { margin: 0 0 6px; padding: 0; list-style: none; }
+.mg-tip__tanks button {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(40px, 1fr) 34px 54px;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 5px 6px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.mg-tip__tanks button:hover,
+.mg-tip__tanks button:focus-visible { background: var(--color-bg-lighter); }
+.mg-tip__tank { display: flex; flex-direction: column; min-width: 0; line-height: 1.25; }
+.mg-tip__tank small { overflow: hidden; color: var(--mg-muted); text-overflow: ellipsis; white-space: nowrap; font-size: var(--font-size-xs); }
+.mg-tip__fill .mg-bar__track { height: 6px; animation: none; }
+.mg-tip__pct,
+.mg-tip__qty { text-align: right; font-variant-numeric: tabular-nums; }
+.mg-tip__pct { font-weight: var(--font-weight-semibold); }
+.mg-tip__open {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 2px;
+  padding: 7px 8px;
+  border: 0;
+  border-top: 1px solid var(--mg-line);
+  background: none;
+  color: var(--color-sea-mid);
+  font: inherit;
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+}
+.mg-tip__open:hover { background: var(--color-bg-lighter); }
+.mg-tip__open svg { transition: transform 0.15s; }
+.mg-tip__open:hover svg { transform: translateX(3px); }
+
+@media print { .mg-tip { display: none; } }

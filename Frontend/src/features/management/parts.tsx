@@ -1,10 +1,7 @@
 import { ArrowDown, ArrowUp, Ban, CircleHelp, TriangleAlert } from 'lucide-react'
 import type { ReactNode } from 'react'
 import {
-  CLASS_ORDER,
   formatPercent,
-  formatTonnes,
-  type ClassTotals,
   type CommodityClass,
   type PortfolioSite,
   type TankStatus,
@@ -83,30 +80,6 @@ export function StockBar({
         <div className="mg-bar__fill" style={{ width: `${stock}%` }} />
         {tick != null ? <span className="mg-bar__tick" style={{ left: `${tick * 100}%` }} /> : null}
       </div>
-    </div>
-  )
-}
-
-/** The mix of stock by commodity class, one thin segment each with a gap between them. */
-export function MixStrip({ classes }: { classes: ClassTotals[] }) {
-  const { locale } = useLocale()
-  const label = useClassLabel()
-  const total = classes.reduce((sum, row) => sum + row.quantityKg, 0)
-  const ordered = CLASS_ORDER.map((code) => classes.find((row) => row.code === code)).filter(
-    (row): row is ClassTotals => row != null && row.quantityKg > 0,
-  )
-  return (
-    <div className="mg-mix" role="img" aria-label={ordered.map((row) => `${label(row.code)} ${formatTonnes(row.quantityKg, locale)} t`).join(', ')}>
-      {total > 0
-        ? ordered.map((row) => (
-            <span
-              key={row.code}
-              className={`mg-mix__seg mg-c--${row.code}`}
-              style={{ flexGrow: row.quantityKg }}
-              title={`${label(row.code)}: ${formatTonnes(row.quantityKg, locale)} t (${formatPercent(row.quantityKg / total, locale, 0)})`}
-            />
-          ))
-        : null}
     </div>
   )
 }

@@ -614,6 +614,9 @@ export interface Messages {
   mgBackTo: string
   mgClose: string
   mgNoTanks: string
+  mgTipShare: string
+  mgTipLargest: string
+  mgTipOpen: string
   masterGroup: string
   refineryFractionation: string
   utility: string
@@ -1359,6 +1362,9 @@ export const MESSAGES: Record<Locale, Messages> = {
     mgBackTo: 'Back to {where}',
     mgClose: 'Close',
     mgNoTanks: 'No tanks to show.',
+    mgTipShare: '{pct} of site stock',
+    mgTipLargest: 'Largest tanks',
+    mgTipOpen: 'Open {cls} at {site}',
     masterGroup: 'Master data',
     refineryFractionation: 'Refinery and fractionation',
     utility: 'Utility',
@@ -2102,6 +2108,9 @@ export const MESSAGES: Record<Locale, Messages> = {
     mgBackTo: 'Kembali ke {where}',
     mgClose: 'Tutup',
     mgNoTanks: 'Tidak ada tangki.',
+    mgTipShare: '{pct} dari stok site',
+    mgTipLargest: 'Tangki terbesar',
+    mgTipOpen: 'Buka {cls} di {site}',
     masterGroup: 'Data master',
     refineryFractionation: 'Refinery dan fraksinasi',
     utility: 'Utilitas',
