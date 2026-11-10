@@ -16,6 +16,8 @@ import type { HistoryMetric } from './quantitySeries.ts'
 import { isCritical, isEmptyTank } from './tankAlerts.ts'
 import { MassUnitContext, useMassUnitState } from './massUnit.ts'
 import { KpiDetailDialog, type KpiKind } from './KpiDetailDialog.tsx'
+import { sourceOfTanks, type DataSource } from '../../domain/dataSource.ts'
+import { SourceBadge } from '../dataSource/SourceBadge.tsx'
 
 type TankView = 'table' | 'grid'
 
@@ -103,6 +105,7 @@ export function LiveOpsPage() {
             <span className="site-pill__dot" aria-hidden="true" />
             {t.siteLabel} {site?.siteName ?? 'Priscolin Bekasi'}
           </span>
+          {sourceOfTanks(tanks) ? <SourceBadge source={sourceOfTanks(tanks) as DataSource} /> : null}
           <span className="page-meta">
             {farmDay ? formatDay(farmDay, locale) : t.noSounding}
           </span>

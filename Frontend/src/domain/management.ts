@@ -1,5 +1,7 @@
 /** What the management Stock Overview reads from /api/v1/portfolio/stock. */
 
+import type { DataSource } from './dataSource.ts'
+
 export type TankStatus = 'ok' | 'near-full' | 'over' | 'empty' | 'no-data'
 
 export type CommodityClass = 'crude' | 'refined' | 'byproduct' | 'biodiesel' | 'glycerin' | 'chemical' | 'other'
@@ -9,6 +11,7 @@ export const CLASS_ORDER: readonly CommodityClass[] = ['crude', 'refined', 'bypr
 
 export interface PortfolioTank {
   tankId: string
+  source: DataSource
   productName: string
   stockGroup: string | null
   commodityClass: CommodityClass
@@ -36,6 +39,7 @@ export interface PortfolioSite {
   companyName: string | null
   timezone: string
   kind: 'live' | 'rounds'
+  source: DataSource
   day: string | null
   asOf: string | null
   ageMinutes: number | null

@@ -1,0 +1,43 @@
+/* Where the figures come from: the tank gauging system or the logsheets. */
+
+.ds-badge {
+  --ds-ink: #0b5a68;
+  --ds-bg: #e1f0f3;
+  --ds-line: #b7dbe2;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  padding: 2px 10px 2px 8px;
+  border: 1px solid var(--ds-line);
+  border-radius: 999px;
+  background: var(--ds-bg);
+  color: var(--ds-ink);
+  font-family: var(--font-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.4;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.ds-badge--logsheet {
+  --ds-ink: #54447f;
+  --ds-bg: #ece8f6;
+  --ds-line: #d2c9ea;
+}
+
+.ds-badge svg { flex: none; }
+.ds-badge__name { overflow: hidden; text-overflow: ellipsis; }
+
+.ds-badge--compact {
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border-radius: 50%;
+}
+
+@media print {
+  .ds-badge { border-color: #999; background: none; color: #222; }
+}

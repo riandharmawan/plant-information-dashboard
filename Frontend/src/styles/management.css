@@ -543,6 +543,9 @@ button.mg-row:focus-visible::after { opacity: 1; right: 11px; }
 
 .mg-tip__head { display: flex; align-items: center; gap: 6px; font-size: var(--font-size-base); }
 .mg-tip__head .mg-dot { margin-right: 0; }
+.mg-tip__head .ds-badge { margin-left: auto; }
+.mg-datacell { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; min-width: 0; }
+.mg-sitecell { display: inline-flex; align-items: center; gap: 8px; }
 .mg-tip__big { display: flex; align-items: baseline; gap: 6px; margin: 6px 0 8px; font-size: 24px; font-weight: var(--font-weight-semibold); font-variant-numeric: tabular-nums; }
 .mg-tip__big small { color: var(--mg-muted); font-size: var(--font-size-sm); font-weight: var(--font-weight-normal); }
 .mg-tip__big span { margin-left: auto; color: var(--mg-muted); font-size: var(--font-size-sm); font-weight: var(--font-weight-normal); }

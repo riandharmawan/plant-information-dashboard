@@ -617,6 +617,11 @@ export interface Messages {
   mgTipShare: string
   mgTipLargest: string
   mgTipOpen: string
+  dsSource: string
+  dsAtg: string
+  dsLogsheet: string
+  dsAtgHint: string
+  dsLogsheetHint: string
   masterGroup: string
   refineryFractionation: string
   utility: string
@@ -1365,6 +1370,11 @@ export const MESSAGES: Record<Locale, Messages> = {
     mgTipShare: '{pct} of site stock',
     mgTipLargest: 'Largest tanks',
     mgTipOpen: 'Open {cls} at {site}',
+    dsSource: 'Data source',
+    dsAtg: 'ATG Tank Vision',
+    dsLogsheet: 'Logsheet',
+    dsAtgHint: 'Read automatically from the tank gauging system.',
+    dsLogsheetHint: 'Entered by operators on the daily logsheets.',
     masterGroup: 'Master data',
     refineryFractionation: 'Refinery and fractionation',
     utility: 'Utility',
@@ -2111,6 +2121,11 @@ export const MESSAGES: Record<Locale, Messages> = {
     mgTipShare: '{pct} dari stok site',
     mgTipLargest: 'Tangki terbesar',
     mgTipOpen: 'Buka {cls} di {site}',
+    dsSource: 'Sumber data',
+    dsAtg: 'ATG Tank Vision',
+    dsLogsheet: 'Logsheet',
+    dsAtgHint: 'Dibaca otomatis dari sistem tank gauging.',
+    dsLogsheetHint: 'Diisi operator pada logsheet harian.',
     masterGroup: 'Data master',
     refineryFractionation: 'Refinery dan fraksinasi',
     utility: 'Utilitas',

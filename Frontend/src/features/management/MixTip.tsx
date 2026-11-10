@@ -11,6 +11,7 @@ import {
   type PortfolioSite,
   type TankStatus,
 } from '../../domain/management.ts'
+import { SourceBadge } from '../dataSource/SourceBadge.tsx'
 import { useLocale } from '../../i18n/LocaleContext.tsx'
 import { ClassDot, StatusChip, StockBar, fill, useClassLabel } from './parts.tsx'
 
@@ -177,6 +178,7 @@ function MixCard({
         <ClassDot code={tip.code} />
         <strong>{label(tip.code)}</strong>
         <span className="mg-muted">· {site.name}</span>
+        <SourceBadge source={site.source} />
       </header>
 
       <p className="mg-tip__big">

@@ -18,6 +18,7 @@ import {
 } from '../../domain/management.ts'
 import { useLocale } from '../../i18n/LocaleContext.tsx'
 import { TankDialog } from './TankDialog.tsx'
+import { SourceBadge } from '../dataSource/SourceBadge.tsx'
 import { MixStrip } from './MixTip.tsx'
 import { Count, stagger } from './motion.tsx'
 import { Change, ClassDot, DataBadge, FillText, Kpi, Legend, Skeleton, StatusChip, StockBar, fill, useClassLabel } from './parts.tsx'
@@ -319,7 +320,8 @@ function Overview({
                 <span className="num">
                   <Change kg={site.changeKg} />
                 </span>
-                <span>
+                <span className="mg-datacell">
+                  <SourceBadge source={site.source} />
                   <DataBadge site={site} />
                 </span>
               </button>
@@ -421,7 +423,10 @@ function SiteView({ site, onClass, onHighlight }: { site: PortfolioSite; onClass
         <Kpi label={t.mgKpiTanks} value={`${site.tanksReporting} / ${site.tanksTotal}`} count={{ value: site.tanksReporting, format: (n) => `${Math.round(n)} / ${site.tanksTotal}` }} />
         <div className="mg-kpi">
           <span className="mg-kpi__label">{t.mgColData}</span>
-          <DataBadge site={site} />
+          <span className="mg-datacell">
+            <SourceBadge source={site.source} />
+            <DataBadge site={site} />
+          </span>
         </div>
       </div>
       <Legend classes={site.classes.filter((row) => row.quantityKg > 0).map((row) => row.code)} onHighlight={onHighlight} onPick={onClass} />
@@ -469,7 +474,8 @@ function SitesForClass({ sites, cls, onSite }: { sites: PortfolioSite[]; cls: Co
           <button type="button" className="mg-row mg-row--class" onClick={() => onSite(site.id)}>
             <span className="mg-name">
               <strong>{site.name}</strong>
-              <small>
+              <small className="mg-datacell">
+                <SourceBadge source={site.source} />
                 <DataBadge site={site} />
               </small>
             </span>
@@ -504,7 +510,10 @@ function FlaggedView({
           <li key={site.id} style={stagger(index)}>
             <button type="button" className="mg-row mg-row--flat" onClick={() => onSite(site.id)}>
               <span className="mg-name"><strong>{site.name}</strong></span>
-              <DataBadge site={site} />
+              <span className="mg-datacell">
+                <SourceBadge source={site.source} />
+                <DataBadge site={site} />
+              </span>
             </button>
           </li>
         ))}
@@ -548,7 +557,14 @@ function TankTable({
         <tbody>
           {rows.map(({ site, tank }, index) => (
             <tr key={`${site.id}/${tank.tankId}`} className="mg-tr" style={stagger(index)} tabIndex={0} onClick={() => onTank(site.id, tank.tankId)} onKeyDown={(event) => event.key === 'Enter' && onTank(site.id, tank.tankId)}>
-              {showSite ? <td>{site.name}</td> : null}
+              {showSite ? (
+                <td>
+                  <span className="mg-sitecell">
+                    <SourceBadge source={tank.source} compact />
+                    {site.name}
+                  </span>
+                </td>
+              ) : null}
               <td>
                 <strong>{tank.tankId}</strong>
               </td>

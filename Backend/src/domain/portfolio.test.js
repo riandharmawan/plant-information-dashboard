@@ -1,7 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { commodityClassOf } from './commodityClass.js'
-import { isInUse, sameTankDelta, summarisePortfolio, summariseSite, tankStatus } from './portfolio.js'
+import { isInUse, sameTankDelta, sourceOf, summarisePortfolio, summariseSite, tankStatus } from './portfolio.js'
 
 test('products from every site land in the same few classes', () => {
   const expected = {
@@ -114,4 +114,15 @@ test('a spare gauge slot is not a tank in use, but a faulty tank with a capacity
   assert.equal(s.tanksTotal, 1)
   assert.equal(s.counts['no-data'], 0)
   assert.deepEqual(s.tanks.map((x) => x.tankId), ['1'])
+})
+
+test('a site says whether its figures come from a gauge system or from logsheets', () => {
+  assert.equal(sourceOf(tank('1', 1, 10, { readingKind: 'live' })), 'atg')
+  assert.equal(sourceOf(tank('1', 1, 10, { readingKind: 'round' })), 'atg')
+  assert.equal(sourceOf(tank('1', 1, 10)), 'logsheet')
+  const gauged = summariseSite(site, [tank('1', 1, 10, { readingKind: 'live' })], { day: '2026-11-10', live: true, now: NOW })
+  assert.equal(gauged.source, 'atg')
+  assert.equal(gauged.tanks[0].source, 'atg')
+  const sheet = summariseSite(site, [tank('T1', 1, 10)], { day: '2026-11-09', live: false, now: NOW })
+  assert.equal(sheet.source, 'logsheet')
 })

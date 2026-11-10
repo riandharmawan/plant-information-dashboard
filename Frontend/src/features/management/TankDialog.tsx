@@ -4,6 +4,7 @@ import { CartesianGrid, Line, LineChart, ReferenceLine, ResponsiveContainer, Too
 import { api } from '../../data/api.ts'
 import { formatPercent, formatTonnes, type PortfolioSite, type PortfolioTank, type TankHistoryPoint } from '../../domain/management.ts'
 import { useLocale } from '../../i18n/LocaleContext.tsx'
+import { SourceBadge } from '../dataSource/SourceBadge.tsx'
 import { prefersReducedMotion } from './motion.tsx'
 import { ClassDot, StatusChip, StockBar, useClassLabel } from './parts.tsx'
 
@@ -56,6 +57,9 @@ export function TankDialog({ site, tank, onClose }: { site: PortfolioSite; tank:
             <p className="mg-dialog__sub">
               <ClassDot code={tank.commodityClass} /> {label(tank.commodityClass)}
               {tank.productName ? ` · ${tank.productName}` : ''}
+            </p>
+            <p className="mg-dialog__sub">
+              <SourceBadge source={tank.source} />
             </p>
           </div>
           <button type="button" className="mg-icon-btn" aria-label={t.mgClose} onClick={close}>

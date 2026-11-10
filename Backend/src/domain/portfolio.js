@@ -37,9 +37,15 @@ export function isInUse(tank) {
   )
 }
 
+/** Where a tank's figures come from: the tank gauging system (ATG) or the operators' logsheets. */
+export function sourceOf(tank) {
+  return tank.readingKind === 'live' || tank.readingKind === 'round' ? 'atg' : 'logsheet'
+}
+
 export function slimTank(tank, nearFull = NEAR_FULL) {
   return {
     tankId: tank.tankId,
+    source: sourceOf(tank),
     productName: tank.productName ?? '',
     stockGroup: tank.stockGroup ?? null,
     commodityClass: commodityClassOf(tank.productName, tank.stockGroup),
@@ -126,6 +132,8 @@ export function summariseSite(site, tanks, context) {
     companyName: site.companyName ?? null,
     timezone: site.timezone,
     kind: context.live ? 'live' : 'rounds',
+    // A site read by a gauge system says so on its tanks. Anything else is filled from logsheets.
+    source: used.some((tank) => sourceOf(tank) === 'atg') ? 'atg' : 'logsheet',
     day: context.day ?? null,
     asOf: context.live ? (newest ? newest.toISOString() : null) : (context.day ?? null),
     ageMinutes,
