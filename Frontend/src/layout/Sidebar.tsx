@@ -176,6 +176,10 @@ export function Sidebar({
             <Warehouse className="sidebar-nav__icon" size={16} aria-hidden="true" />
             <span className="sidebar-nav__label">{t.tankFarm}</span>
           </NavLink>
+          <NavLink to="/master/tank-gauging" title={t.tankGauging} className={({ isActive }) => (isActive ? 'active' : undefined)}>
+            <Gauge className="sidebar-nav__icon" size={16} aria-hidden="true" />
+            <span className="sidebar-nav__label">{t.tankGauging}</span>
+          </NavLink>
             </>
           ) : null}
           {can('admin-users', 'view') || can('admin-roles', 'view') || can('admin-datahub', 'view') ? (

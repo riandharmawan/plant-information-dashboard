@@ -1081,3 +1081,120 @@
   color: var(--color-text-charcoal);
   font-weight: var(--font-weight-semibold);
 }
+
+/* Tank gauging */
+
+.um-header__tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.um-tile--static {
+  cursor: default;
+}
+
+.um-tile--static:hover {
+  border-color: var(--color-border-light);
+}
+
+.um-tile__count--text {
+  font-size: var(--font-size-h3);
+  line-height: 1.5;
+}
+
+.um-section {
+  margin-bottom: var(--spacing-3);
+  padding: var(--spacing-3) 0 0;
+}
+
+.um-section__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-3);
+  padding: 0 var(--spacing-3) var(--spacing-3);
+}
+
+.um-section__head h2 {
+  margin: 0 0 2px;
+  font-size: var(--font-size-lg);
+}
+
+.um-section__head p {
+  margin: 0;
+}
+
+.um-inline-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--spacing-3);
+  padding: 0 var(--spacing-3) var(--spacing-3);
+}
+
+.um-inline-form .um-field {
+  flex: 1;
+  min-width: 220px;
+}
+
+.um-field--narrow {
+  flex: 0 0 160px !important;
+  min-width: 140px !important;
+}
+
+.um-field select {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-white);
+  color: var(--color-text-charcoal);
+  font: inherit;
+}
+
+.um-chip--ok {
+  border-color: transparent;
+  background: rgba(16, 185, 129, 0.14);
+  color: #0b6b4b;
+  font-weight: var(--font-weight-semibold);
+}
+
+.um-chip--bad {
+  border-color: transparent;
+  background: rgba(220, 38, 38, 0.1);
+  color: var(--color-brand-red-deep);
+  font-weight: var(--font-weight-semibold);
+}
+
+.um-ok-text {
+  color: #0b6b4b;
+}
+
+.um-bad-text {
+  color: var(--color-brand-red-deep);
+}
+
+.um-status--bad {
+  color: var(--color-brand-red-deep);
+}
+
+.um-status--bad i {
+  background: var(--color-brand-red-deep);
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
+}
+
+.um-num {
+  text-align: right !important;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.um-dialog--narrow {
+  width: min(560px, 100%);
+}
+
+.um-dialog__body--auto {
+  min-height: 0;
+}

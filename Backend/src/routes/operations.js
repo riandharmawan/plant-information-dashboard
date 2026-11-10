@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { query } from '../db.js'
 import { loadCatalog } from '../catalog.js'
-import { stockFromProfile } from '../domain/stock.js'
+import { massToKg, stockFromGauge, stockFromProfile } from '../domain/stock.js'
 import { assessStorage, oilFamilyOf, presentLogistics, presentTank } from '../domain/present.js'
 
 const router = Router()
@@ -41,7 +41,26 @@ function soundingFrom(row) {
     soundingLevelM: num(row.level_m),
     temperatureC: num(row.temperature_c),
     operationalStatus: row.operational_status ?? '',
+    massKg: num(row.mass_kg),
+    tankPk: row.tank_pk ?? null,
   }
+}
+
+/** Capacity and bottom stock, in kilograms, for tanks read by a gauge system. Keyed by tank id. */
+async function loadGaugeProfiles(tankIds) {
+  const out = new Map()
+  if (tankIds.length === 0) return out
+  const result = await query(
+    'SELECT tank_id, capacity, capacity_unit, bottom_stock FROM tank_profiles WHERE tank_id = ANY($1::text[])',
+    [tankIds],
+  )
+  for (const row of result.rows) {
+    out.set(row.tank_id, {
+      capacityKg: massToKg(num(row.capacity), row.capacity_unit),
+      bottomStockKg: massToKg(num(row.bottom_stock), row.capacity_unit),
+    })
+  }
+  return out
 }
 
 const LAB_LABEL = {
@@ -173,8 +192,8 @@ router.get('/sites/:siteId/live/tanks', async (req, res, next) => {
     const from = req.query.from || null
     const to = req.query.to || null
     const soundings = await query(
-      `SELECT t.code AS tank_code, s.recorded_on, s.round_index, s.product_name,
-              s.level_m, s.temperature_c, s.operational_status
+      `SELECT t.code AS tank_code, t.id AS tank_pk, s.recorded_on, s.round_index, s.product_name,
+              s.level_m, s.temperature_c, s.operational_status, s.mass_kg
        FROM soundings s JOIN tanks t ON t.id = s.tank_id
        WHERE s.site_id = $1
        ORDER BY s.recorded_on, s.round_index`,
@@ -194,6 +213,7 @@ router.get('/sites/:siteId/live/tanks', async (req, res, next) => {
       if (row.recorded_on === day) thatDay.set(row.tank_code, soundingFrom(row))
     }
     const catalog = await loadCatalog()
+    const gaugeProfiles = await loadGaugeProfiles([...new Set(soundings.rows.filter((row) => row.mass_kg != null).map((row) => row.tank_pk))])
     const tanks = [...known].map((tankId) => {
       const sounding = thatDay.get(tankId) ?? {
         roundIndex: 0,
@@ -206,7 +226,9 @@ router.get('/sites/:siteId/live/tanks', async (req, res, next) => {
       }
       const lab = certificateAsOf(labs.rows.filter((row) => row.tank_code === tankId).map(labFrom), sounding.recordedOn)
       const profile = catalog.profiles.get(tankId)
-      const stock = profile
+      const stock = sounding.massKg != null
+        ? stockFromGauge(sounding.massKg, gaugeProfiles.get(sounding.tankPk))
+        : profile
         ? stockFromProfile(profile, catalog.tables, sounding.soundingLevelM, sounding.temperatureC, sounding.operationalStatus)
         : { capacityKg: null, quantityKg: null, emptySpaceKg: null, loadableKg: null, levelRatio: null }
       return presentTank(sounding, lab, stock, site.timezone)
@@ -274,8 +296,10 @@ router.get('/sites/:siteId/live/logistics', async (req, res, next) => {
 router.get('/sites/:siteId/tanks/:tankId/soundings', async (req, res, next) => {
   try {
     const result = await query(
-      `SELECT s.recorded_on, s.round_index, s.level_m, s.temperature_c, s.operational_status
+      `SELECT s.recorded_on, s.round_index, s.level_m, s.temperature_c, s.operational_status, s.mass_kg,
+              p.capacity, p.capacity_unit
        FROM soundings s JOIN tanks t ON t.id = s.tank_id
+       LEFT JOIN tank_profiles p ON p.tank_id = t.id
        WHERE s.site_id = $1 AND t.code = $2
        ORDER BY s.recorded_on, s.round_index`,
       [req.params.siteId, req.params.tankId],
@@ -286,6 +310,8 @@ router.get('/sites/:siteId/tanks/:tankId/soundings', async (req, res, next) => {
       soundingLevelM: num(row.level_m),
       temperatureC: num(row.temperature_c),
       operationalStatus: row.operational_status ?? '',
+      massKg: num(row.mass_kg),
+      capacityKg: row.mass_kg == null ? null : massToKg(num(row.capacity), row.capacity_unit),
       storageVerdict: 'spec-pending',
     })))
   } catch (error) {

@@ -94,3 +94,22 @@ export function stockFromProfile(profile, tables, levelM, tempC, method) {
     levelRatio: quantity / capacityKg,
   }
 }
+
+/**
+ * Stock for a tank read by a gauge system. The gauge reports total mass directly, so no
+ * calibration table is used. Free space needs a capacity, and loadable stock also needs a bottom stock.
+ * @param {number} massKg
+ * @param {{ capacityKg: number|null, bottomStockKg: number|null } | undefined} profile
+ */
+export function stockFromGauge(massKg, profile) {
+  const capacityKg = profile?.capacityKg ?? null
+  const bottomStockKg = profile?.bottomStockKg ?? null
+  const ok = capacityKg != null && capacityKg > 0
+  return {
+    capacityKg,
+    quantityKg: massKg,
+    emptySpaceKg: ok ? capacityKg - massKg : null,
+    loadableKg: bottomStockKg != null ? massKg - bottomStockKg : null,
+    levelRatio: ok ? massKg / capacityKg : null,
+  }
+}

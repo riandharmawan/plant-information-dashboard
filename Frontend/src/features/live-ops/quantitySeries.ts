@@ -1,5 +1,5 @@
 import { parameter } from '../../domain/format.ts'
-import { stockOf } from '../../domain/tankStock.ts'
+import { stockFromPoint } from '../../domain/tankStock.ts'
 import type { LabHistoryPoint, SoundingPoint } from '../../domain/types.ts'
 
 export type HistoryKind = 'measured' | 'gap'
@@ -46,7 +46,7 @@ function daysFrom(start: string, end: string): string[] {
 function soundingValue(tankId: string, point: SoundingPoint, metric: HistoryMetric): number | null {
   if (metric === 'level') return point.soundingLevelM
   if (metric === 'temperature') return point.temperatureC
-  const stock = stockOf(tankId, point.soundingLevelM, point.temperatureC, point.operationalStatus)
+  const stock = stockFromPoint(tankId, point)
   if (metric === 'quantity') return stock.quantityKg
   if (metric === 'emptySpace') return stock.emptySpaceKg
   if (metric === 'loadable') return stock.loadableKg
@@ -124,7 +124,7 @@ export function commodityQuantitySeries(
     for (const history of byTank) {
       const point = history.byDay.get(day)
       if (!point) continue
-      const stock = stockOf(history.tankId, point.soundingLevelM, point.temperatureC, point.operationalStatus)
+      const stock = stockFromPoint(history.tankId, point)
       if (stock.quantityKg == null) continue
       measured = true
       total += stock.quantityKg
@@ -138,7 +138,7 @@ export function commodityQuantitySeries(
 export function commodityDayReading(tankId: string, points: SoundingPoint[], day: string): CommodityDayReading | null {
   const point = points.find((row) => row.recordedOn === day)
   if (!point) return null
-  const stock = stockOf(tankId, point.soundingLevelM, point.temperatureC, point.operationalStatus)
+  const stock = stockFromPoint(tankId, point)
   return {
     soundingLevelM: point.soundingLevelM,
     quantityKg: stock.quantityKg,

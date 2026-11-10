@@ -94,6 +94,10 @@ export interface SoundingPoint {
   temperatureC: number | null
   /** Sounding method, such as ISI LK or EMPTY. */
   operationalStatus: string
+  /** Total mass in kilograms when a gauge system reported it. Stock then uses it directly. */
+  massKg?: number | null
+  /** Tank capacity in kilograms, when known. Used with the gauge mass for free space and level. */
+  capacityKg?: number | null
   storageVerdict: StorageVerdict
 }
 

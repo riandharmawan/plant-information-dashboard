@@ -141,6 +141,8 @@ export interface Messages {
   tankFarm: string
   tanks: string
   tankFarmBlurb: string
+  tankGauging: string
+  tankGaugingBlurb: string
   badgeDatahub: string
   badgeThisPlant: string
   openPage: string
@@ -809,6 +811,8 @@ export const MESSAGES: Record<Locale, Messages> = {
     tankFarm: 'Tank Farm',
     tanks: 'Tanks',
     tankFarmBlurb: 'Tanks and the calibration numbers the Tank & Stock Dashboard uses for quantity. Managed in this application.',
+    tankGauging: 'Tank gauging',
+    tankGaugingBlurb: 'Tanks read from the gauge system (TankVision): which units a site is read from, when daily rounds are taken, and what each tank reads now.',
     badgeDatahub: 'DataHub',
     badgeThisPlant: 'This plant',
     openPage: 'Open →',
@@ -1475,6 +1479,8 @@ export const MESSAGES: Record<Locale, Messages> = {
     tankFarm: 'Tank Farm',
     tanks: 'Tangki',
     tankFarmBlurb: 'Tangki dan angka kalibrasi yang dipakai Dasbor Tangki & Stok untuk kuantitas. Dikelola di aplikasi ini.',
+    tankGauging: 'Pengukuran tangki',
+    tankGaugingBlurb: 'Tangki yang dibaca dari sistem pengukuran (TankVision): unit mana yang dibaca untuk sebuah site, kapan ronde harian diambil, dan pembacaan terkini tiap tangki.',
     badgeDatahub: 'DataHub',
     badgeThisPlant: 'Pabrik ini',
     openPage: 'Buka →',

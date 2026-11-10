@@ -18,6 +18,7 @@ import { SsoErrorPage } from './features/login/SsoErrorPage.tsx'
 import { LiveOpsPage } from './features/live-ops/LiveOpsPage.tsx'
 import { CommoditiesPage, TankFarmPage } from './features/master/masterPages.tsx'
 import { CompaniesPage, SitesPage } from './features/master/OrgPages.tsx'
+import { TankGaugingPage } from './features/master/TankGaugingPage.tsx'
 import { MasterMenuPage } from './features/master/MasterMenuPage.tsx'
 import { CommoditiesCalibrationPage } from './features/master/CommoditiesCalibrationPage.tsx'
 import { TankCalibrationPage } from './features/master/TankCalibrationPage.tsx'
@@ -113,6 +114,7 @@ export default function App() {
                         </Route>
                         <Route element={<PageGate page="master-tanks" />}>
                           <Route path="master/tank-farm" element={<TankFarmPage />} />
+                          <Route path="master/tank-gauging" element={<TankGaugingPage />} />
                           <Route path="master/tank-farm/:tankId" element={<TankCalibrationPage />} />
                         </Route>
                       </Route>
