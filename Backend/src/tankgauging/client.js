@@ -98,9 +98,12 @@ export function fetchTankMeta(opts = {}) {
 
 /** DATATYPE=47: live parameter values for a list of tank numbers. */
 export function fetchTankParameters(opts = {}) {
+  // A host with several units is asked for one unit at a time: DATATYPE=39 with REMOTE=<unit name>.
+  // A host with a single unit answers DATATYPE=47 directly.
+  const multi = opts.remote ? { DATATYPE: '39', REMOTE: opts.remote } : { DATATYPE: '47' }
   return gwtGet(
     {
-      DATATYPE: '47',
+      ...multi,
       TANKLIST: opts.tankList || '1|2|3|4|5|6|7|8|9|10|11|12|13|14|15',
       PARAMIDLIST: opts.paramIdList || process.env.TANK_GAUGING_PARAMIDLIST || DEFAULT_TANK_PARAM_IDS,
       TYPE: 'DATA',
@@ -114,7 +117,7 @@ export function fetchTankParameters(opts = {}) {
  * Max Tank Capacity, which the live values do not carry.
  */
 export function fetchTankInfo(opts = {}) {
-  return gwtGet({ DATATYPE: '31', TANKID: opts.tankId }, opts)
+  return gwtGet({ DATATYPE: '31', TANKID: opts.tankId, ...(opts.remote ? { REMOTE: opts.remote } : {}) }, opts)
 }
 
 /**
@@ -301,9 +304,14 @@ export function pickWorstStatusString(statuses) {
   return worst
 }
 
+/** DATATYPE=47 wraps its values in multiTankTgvData, DATATYPE=39 (one unit of several) in ttvData. */
+function dataRoot(data) {
+  return data?.multiTankTgvData ?? data?.ttvData ?? null
+}
+
 function tankInfoMap(data) {
   const out = new Map()
-  for (const info of data?.multiTankTgvData?.multiTankInfoData || []) {
+  for (const info of dataRoot(data)?.multiTankInfoData || []) {
     const id = Number.parseInt(info.tankId, 10)
     if (!Number.isFinite(id)) continue
     const comment = String(info.tankComment ?? '').trim()
@@ -362,7 +370,7 @@ export function parseTankParameterResponse(text, productByTankId = new Map()) {
   try {
     const data = JSON.parse(raw)
     const infoById = tankInfoMap(data)
-    const bulk = data?.multiTankTgvData?.multiTankBulkRealTimeData
+    const bulk = dataRoot(data)?.multiTankBulkRealTimeData
     if (!Array.isArray(bulk)) return { readings: [], parseMode: 'unrecognized' }
     const readings = bulk
       .map((tank) => readingFromTank(tank, infoById, productByTankId.get(Number.parseInt(tank.tankId, 10))))

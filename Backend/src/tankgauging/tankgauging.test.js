@@ -9,7 +9,7 @@ import {
   tankvisionNameToCode,
   unitTankKey,
 } from './client.js'
-import { tankListFor } from './poll.js'
+import { remoteFor, tankListFor } from './poll.js'
 import { hasEvidence, localDate, parseRoundTimes, roundStatus, roundValues, zonedTimeToUtc } from './rounds.js'
 import { normalizeSourceUrl } from './sources.js'
 import { stockFromGauge } from '../domain/stock.js'
@@ -92,11 +92,29 @@ test('a controller with several units keeps tank numbers apart', () => {
   assert.deepEqual(meta.units[0].tanks.map((t) => t.code), ['5101', '5702'])
 })
 
-test('a host with several units is refused for now, not guessed', () => {
+test('a host with several units is read one unit at a time, each by name', () => {
   const meta = parseTankMetaResponse(multiUnitMeta)
-  assert.throws(() => tankListFor(meta.units, meta.units[0]), /2 units/)
+  assert.equal(tankListFor(meta.units, meta.units[0]), '1|2')
+  assert.equal(remoteFor(meta.units, meta.units[1]), 'TS-02')
   const one = parseTankMetaResponse(singleUnitMeta)
   assert.equal(tankListFor(one.units, one.units[0]), '1|2')
+  assert.equal(remoteFor(one.units, one.units[0]), undefined, 'a single unit is read without naming it')
+})
+
+test('one unit of several answers with ttvData, and reads like the single-unit reply', () => {
+  const reply = JSON.stringify({
+    ttvData: {
+      multiTankBulkRealTimeData: [
+        { tankId: 1, parameterlist: [{ id: 622, value: 53, timestamp: 1794279953, statusString: 'Ok' }, { id: 717, value: 52306, timestamp: 1794279953, statusString: 'Ok' }] },
+      ],
+      multiTankInfoData: [{ tankId: 1, tankName: 'TK3104', tankComment: '-', tankStatus: 649, levelMovement: 0 }],
+    },
+  })
+  const { readings } = parseTankParameterResponse(reply, new Map([[1, 'FAME']]))
+  assert.equal(readings.length, 1)
+  assert.equal(readings[0].levelMm, 53)
+  assert.equal(readings[0].totalObservedVolume, 52306)
+  assert.equal(readings[0].productName, 'FAME')
 })
 
 test('readings carry values, product, comment and the worst status', () => {

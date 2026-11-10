@@ -132,15 +132,10 @@ export async function syncTankMap(db, siteId, baseUrl, units) {
 
 /**
  * The tank numbers to ask for in one live-values call.
- * A host with a single unit lists its tank numbers. A controller with several units needs
- * the unit addressed as well, which is not set up yet, so it is reported instead of guessed.
+ * Tank numbers repeat from 1 in every unit, so a host with several units is read one unit at a time
+ * (see remoteFor), each with its own list.
  */
 export function tankListFor(units, unit) {
-  if (units.length > 1) {
-    throw new Error(
-      `This host has ${units.length} units (${units.map((u) => u.name).join(', ')}). Reading several units from one host is not set up yet.`,
-    )
-  }
   return unit.tanks.map((t) => t.externalTankId).join('|')
 }
 
@@ -216,6 +211,8 @@ export async function refreshTankInfo(db, { fetchOpts, units, tankByKey, delayMs
     const done = new Set(fresh.rows.map((row) => row.tank_id))
     const pause = Number.isFinite(Number(delayMs)) ? Number(delayMs) : 250
     for (const unit of units) {
+      // A unit that cannot give tank details would fail on every tank. Give up on it after a few misses.
+      let misses = 0
       for (const tank of unit.tanks) {
         const tankId = tankByKey.get(unitTankKey(unit.name, tank.externalTankId))
         if (!tankId) continue
@@ -223,13 +220,19 @@ export async function refreshTankInfo(db, { fetchOpts, units, tankByKey, delayMs
           result.fresh += 1
           continue
         }
+        if (misses >= 3) {
+          result.failed += 1
+          continue
+        }
         try {
-          const res = await fetchTankInfo({ ...fetchOpts, tankId: tank.externalTankId })
+          const res = await fetchTankInfo({ ...fetchOpts, tankId: tank.externalTankId, remote: remoteFor(units, unit) })
           const info = res.ok ? parseTankInfoResponse(res.text) : null
           if (!info) {
             result.failed += 1
+            misses += 1
             continue
           }
+          misses = 0
           await db.query(
             `INSERT INTO tank_gauging_info (tank_id, max_capacity_litre, tank_height_mm, tank_location, tank_state, roof_status, fetched_at, raw_payload)
              VALUES ($1,$2,$3,$4,$5,$6,NOW(),$7::jsonb)
@@ -242,6 +245,7 @@ export async function refreshTankInfo(db, { fetchOpts, units, tankByKey, delayMs
           result.read += 1
         } catch {
           result.failed += 1
+          misses += 1
         }
         if (pause > 0) await new Promise((resolve) => setTimeout(resolve, pause))
       }
@@ -250,6 +254,11 @@ export async function refreshTankInfo(db, { fetchOpts, units, tankByKey, delayMs
     result.failed += 1
   }
   return result
+}
+
+/** The unit to address in a request. Only a host with several units needs one. */
+export function remoteFor(units, unit) {
+  return units.length > 1 && unit.name ? unit.name : undefined
 }
 
 /** Poll one source. Never throws: a failure is returned and recorded on the source. */
@@ -282,7 +291,7 @@ export async function pollSource(db, source, opts = {}) {
     const problems = []
 
     for (const unit of units) {
-      const res = await fetchTankParameters({ ...fetchOpts, tankList: tankLists.get(unit) })
+      const res = await fetchTankParameters({ ...fetchOpts, tankList: tankLists.get(unit), remote: remoteFor(units, unit) })
       if (!res.ok) {
         problems.push(`${unit.name || base}: live values HTTP ${res.status}`)
         continue
