@@ -297,3 +297,203 @@ button.mg-row:focus-visible { outline: 2px solid var(--color-sea-light); outline
   .mg-kpi,
   .mg-attention { border-color: #bbb; }
 }
+
+/* ------------------------------------------------------------------ motion */
+
+@keyframes mg-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes mg-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes mg-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+@keyframes mg-slide-forward {
+  from { opacity: 0; transform: translateX(28px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes mg-slide-back {
+  from { opacity: 0; transform: translateX(-28px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes mg-grow {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+@keyframes mg-pop {
+  from { opacity: 0; transform: translateY(10px) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes mg-pop-out {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: translateY(8px) scale(0.97); }
+}
+@keyframes mg-shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
+/* Moving down a level slides in from the right, going back from the left, a tab switch fades. */
+.mg-level { animation: mg-fade 0.25s ease both; }
+.mg-level--forward { animation: mg-slide-forward 0.34s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.mg-level--back { animation: mg-slide-back 0.34s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+
+/* Rows, chips and cards rise in one after another. */
+.mg-list > li,
+.mg-attention li,
+.mg-table tbody tr,
+.mg-legend li {
+  animation: mg-rise 0.4s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: calc(var(--i, 0) * 45ms);
+}
+.mg-kpi { animation: mg-rise 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both; transition: box-shadow 0.2s, transform 0.2s; }
+.mg-kpi:nth-child(2) { animation-delay: 50ms; }
+.mg-kpi:nth-child(3) { animation-delay: 100ms; }
+.mg-kpi:nth-child(4) { animation-delay: 150ms; }
+.mg-kpi:nth-child(5) { animation-delay: 200ms; }
+.mg-kpi:hover { transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+.mg-headline { animation: mg-fade 0.4s ease both; }
+
+/* Bars grow from the left and glide when a refresh changes them. */
+.mg-bar__track {
+  transform-origin: left center;
+  transition: width 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  animation: mg-grow 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: calc(var(--i, 0) * 45ms + 120ms);
+}
+.mg-bar__fill { transition: width 0.6s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.mg-mix {
+  transform-origin: left center;
+  animation: mg-grow 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: calc(var(--i, 0) * 45ms + 160ms);
+}
+.mg-mix__seg { transition: flex-grow 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.2s; }
+.mg-mix:hover .mg-mix__seg:not(:hover) { opacity: 0.35; }
+
+/* A row says it can be opened: a chevron slides in on hover or focus. */
+.mg-row { padding-right: 34px; position: relative; }
+button.mg-row { transition: background 0.15s; }
+button.mg-row::after {
+  content: '';
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  border-top: 2px solid var(--mg-muted);
+  border-right: 2px solid var(--mg-muted);
+  opacity: 0;
+  transform: translateY(-50%) rotate(45deg);
+  transition: opacity 0.15s, right 0.15s;
+}
+button.mg-row:hover::after,
+button.mg-row:focus-visible::after { opacity: 1; right: 11px; }
+.mg-tr { transition: background 0.15s; }
+
+.mg-flag { transition: background 0.15s, transform 0.15s, box-shadow 0.15s; }
+.mg-flag:hover { transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+.mg-flag > svg:last-child { transition: transform 0.15s; }
+.mg-flag:hover > svg:last-child { transform: translateX(3px); }
+
+.mg-tabs button { position: relative; border-bottom: 0; transition: color 0.15s; }
+.mg-tabs button.is-active { border-bottom: 0; }
+.mg-tabs button::after {
+  content: '';
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: -1px;
+  height: 2px;
+  background: var(--color-sea-mid);
+  transform: scaleX(0);
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.mg-tabs button.is-active::after { transform: scaleX(1); }
+
+/* The legend lights up one commodity everywhere and opens it on click. */
+.mg-legend { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 var(--spacing-2); padding: 0; list-style: none; }
+.mg-legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border: 1px solid var(--mg-line);
+  border-radius: 999px;
+  background: var(--color-bg-white);
+  color: var(--mg-ink);
+  font: inherit;
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: background 0.15s, opacity 0.2s, border-color 0.15s;
+}
+.mg-legend__item:hover,
+.mg-legend__item:focus-visible { background: var(--color-secondary-hover); border-color: var(--color-border-medium); }
+.mg-legend__item .mg-dot { margin-right: 0; }
+
+.mg-row[data-class] { transition: background 0.15s, opacity 0.2s; }
+.mg[data-hl="crude"] .mg-mix__seg:not(.mg-c--crude),
+.mg[data-hl="refined"] .mg-mix__seg:not(.mg-c--refined),
+.mg[data-hl="byproduct"] .mg-mix__seg:not(.mg-c--byproduct),
+.mg[data-hl="biodiesel"] .mg-mix__seg:not(.mg-c--biodiesel),
+.mg[data-hl="glycerin"] .mg-mix__seg:not(.mg-c--glycerin),
+.mg[data-hl="chemical"] .mg-mix__seg:not(.mg-c--chemical),
+.mg[data-hl="other"] .mg-mix__seg:not(.mg-c--other) { opacity: 0.2; }
+.mg[data-hl="crude"] .mg-legend__item:not([data-class="crude"]),
+.mg[data-hl="refined"] .mg-legend__item:not([data-class="refined"]),
+.mg[data-hl="byproduct"] .mg-legend__item:not([data-class="byproduct"]),
+.mg[data-hl="biodiesel"] .mg-legend__item:not([data-class="biodiesel"]),
+.mg[data-hl="glycerin"] .mg-legend__item:not([data-class="glycerin"]),
+.mg[data-hl="chemical"] .mg-legend__item:not([data-class="chemical"]),
+.mg[data-hl="other"] .mg-legend__item:not([data-class="other"]) { opacity: 0.5; }
+.mg[data-hl="crude"] .mg-row[data-class]:not([data-class="crude"]),
+.mg[data-hl="refined"] .mg-row[data-class]:not([data-class="refined"]),
+.mg[data-hl="byproduct"] .mg-row[data-class]:not([data-class="byproduct"]),
+.mg[data-hl="biodiesel"] .mg-row[data-class]:not([data-class="biodiesel"]),
+.mg[data-hl="glycerin"] .mg-row[data-class]:not([data-class="glycerin"]),
+.mg[data-hl="chemical"] .mg-row[data-class]:not([data-class="chemical"]),
+.mg[data-hl="other"] .mg-row[data-class]:not([data-class="other"]) { opacity: 0.4; }
+
+/* The tank dialog fades and lifts in, and back out. */
+.mg-overlay { animation: mg-fade 0.18s ease both; }
+.mg-dialog { animation: mg-pop 0.24s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.mg-overlay.is-closing { animation: mg-fade-out 0.16s ease both; }
+.mg-overlay.is-closing .mg-dialog { animation: mg-pop-out 0.16s ease both; }
+
+/* Loading shows the shape of the page. */
+.mg-skel { display: grid; gap: var(--spacing-3); }
+.mg-skel__line,
+.mg-skel__block,
+.mg-skel__panel {
+  display: block;
+  border-radius: var(--radius-md);
+  background: linear-gradient(90deg, #e6edeb 25%, #f4f8f7 50%, #e6edeb 75%);
+  background-size: 200% 100%;
+  animation: mg-shimmer 1.4s linear infinite;
+}
+.mg-skel__line { height: 22px; }
+.mg-skel__line--wide { width: min(560px, 90%); }
+.mg-skel__kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--spacing-2); }
+.mg-skel__block { height: 76px; }
+.mg-skel__panel { height: 110px; }
+.mg-skel__panel--tall { height: 190px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .mg *,
+  .mg *::before,
+  .mg *::after {
+    animation-duration: 0.001ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+@media print {
+  .mg *,
+  .mg *::before,
+  .mg *::after { animation: none !important; transition: none !important; }
+}

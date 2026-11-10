@@ -18,7 +18,8 @@ import {
 } from '../../domain/management.ts'
 import { useLocale } from '../../i18n/LocaleContext.tsx'
 import { TankDialog } from './TankDialog.tsx'
-import { Change, ClassDot, DataBadge, Kpi, MixStrip, StatusChip, StockBar, fill, useClassLabel } from './parts.tsx'
+import { Count, stagger } from './motion.tsx'
+import { Change, ClassDot, DataBadge, FillText, Kpi, Legend, MixStrip, Skeleton, StatusChip, StockBar, fill, useClassLabel } from './parts.tsx'
 
 const REFRESH_MS = 60000
 const FLAG_KINDS: TankStatus[] = ['near-full', 'over', 'empty', 'no-data']
@@ -72,7 +73,16 @@ export function StockOverviewPage() {
   const [params, setParams] = useSearchParams()
   const { data, failed } = usePortfolio()
   const [copied, setCopied] = useState(false)
+  const [highlight, setHighlight] = useState<CommodityClass | null>(null)
   const nav = readNav(params)
+
+  // Drilling in slides the new level in from the right, going back from the left, and a tab switch just fades.
+  const depth = nav.status ? 1 : (nav.site ? 1 : 0) + (nav.cls ? 1 : 0)
+  const levelKey = [nav.site, nav.cls, nav.status].join('|')
+  const [level, setLevel] = useState<{ key: string; depth: number; direction: 'forward' | 'back' | 'same' }>({ key: levelKey, depth, direction: 'same' })
+  if (level.key !== levelKey) {
+    setLevel({ key: levelKey, depth, direction: depth > level.depth ? 'forward' : depth < level.depth ? 'back' : 'same' })
+  }
 
   const go = useCallback(
     (next: Partial<Nav>) => {
@@ -123,7 +133,7 @@ export function StockOverviewPage() {
   }
 
   const body = !data ? (
-    <p className="mg-muted">{failed ? t.mgLoadFailed : t.loading}</p>
+    failed ? <p className="mg-muted">{t.mgLoadFailed}</p> : <Skeleton />
   ) : sites.length === 0 ? (
     <p className="mg-muted">{t.mgNoSites}</p>
   ) : nav.status ? (
@@ -131,15 +141,15 @@ export function StockOverviewPage() {
   ) : nav.site && nav.cls && site ? (
     <TankTable rows={tanksOf(site, nav.cls)} onTank={openTank} />
   ) : nav.site && site ? (
-    <SiteView site={site} onClass={(cls) => go({ site: site.id, cls })} />
+    <SiteView site={site} onClass={(cls) => go({ site: site.id, cls })} onHighlight={setHighlight} />
   ) : nav.cls ? (
     <SitesForClass sites={sites} cls={nav.cls} onSite={(id) => go({ site: id, cls: nav.cls, view: 'commodity' })} />
   ) : (
-    <Overview data={data} view={nav.view} nearFullPct={nearFullPct} go={go} />
+    <Overview data={data} view={nav.view} nearFullPct={nearFullPct} go={go} onHighlight={setHighlight} />
   )
 
   return (
-    <div className="page mg">
+    <div className="page mg" data-hl={highlight ?? undefined}>
       <header className="mg-head">
         <div>
           <h1 className="page-title">{t.stockOverview}</h1>
@@ -181,7 +191,9 @@ export function StockOverviewPage() {
         </p>
       ))}
 
-      {body}
+      <div key={levelKey} className={`mg-level mg-level--${level.direction}`}>
+        {body}
+      </div>
 
       {data ? <p className="mg-foot">{t.mgCapacityNote}</p> : null}
 
@@ -212,11 +224,13 @@ function Overview({
   view,
   nearFullPct,
   go,
+  onHighlight,
 }: {
   data: PortfolioPayload
   view: 'site' | 'commodity'
   nearFullPct: number
   go: (next: Partial<Nav>) => void
+  onHighlight: (cls: CommodityClass | null) => void
 }) {
   const { t, locale } = useLocale()
   const { portfolio, sites } = data
@@ -246,12 +260,13 @@ function Overview({
           label={t.mgKpiStock}
           value={formatTonnes(portfolio.quantityKg, locale)}
           unit="t"
+          count={{ value: portfolio.quantityKg, format: (n) => formatTonnes(n, locale) }}
           note={portfolio.changeKg != null ? <><Change kg={portfolio.changeKg} /> {t.mgVsYesterday}</> : undefined}
         />
-        <Kpi label={t.mgKpiCapacity} value={formatTonnes(portfolio.capacityTotalKg, locale)} unit="t" />
-        <Kpi label={t.mgKpiFill} value={formatPercent(portfolio.fillRatio, locale)} />
-        <Kpi label={t.mgKpiTanks} value={`${portfolio.tanksReporting} / ${portfolio.tanksTotal}`} />
-        <Kpi label={t.mgKpiSites} value={`${portfolio.sitesFresh} / ${portfolio.sitesTotal}`} />
+        <Kpi label={t.mgKpiCapacity} value={formatTonnes(portfolio.capacityTotalKg, locale)} unit="t" count={{ value: portfolio.capacityTotalKg, format: (n) => formatTonnes(n, locale) }} />
+        <Kpi label={t.mgKpiFill} value={formatPercent(portfolio.fillRatio, locale)} count={portfolio.fillRatio == null ? undefined : { value: portfolio.fillRatio, format: (n) => formatPercent(n, locale) }} />
+        <Kpi label={t.mgKpiTanks} value={`${portfolio.tanksReporting} / ${portfolio.tanksTotal}`} count={{ value: portfolio.tanksReporting, format: (n) => `${Math.round(n)} / ${portfolio.tanksTotal}` }} />
+        <Kpi label={t.mgKpiSites} value={`${portfolio.sitesFresh} / ${portfolio.sitesTotal}`} count={{ value: portfolio.sitesFresh, format: (n) => `${Math.round(n)} / ${portfolio.sitesTotal}` }} />
       </div>
 
       <Attention items={portfolio.attention} nearFullPct={nearFullPct} onOpen={(status) => go({ status })} />
@@ -265,6 +280,12 @@ function Overview({
         </button>
       </div>
 
+      <div key={view} className="mg-level mg-level--same">
+      <Legend
+        classes={CLASS_ORDER.filter((code) => sites.some((site) => site.classes.some((row) => row.code === code && row.quantityKg > 0)))}
+        onHighlight={onHighlight}
+        onPick={(cls) => go({ cls, view: 'commodity' })}
+      />
       {view === 'site' ? (
         <ul className="mg-list">
           <li className="mg-row mg-row--site mg-row--head" aria-hidden="true">
@@ -275,8 +296,8 @@ function Overview({
             <span className="num">{t.mgColChange}</span>
             <span>{t.mgColData}</span>
           </li>
-          {sites.map((site) => (
-            <li key={site.id}>
+          {sites.map((site, index) => (
+            <li key={site.id} style={stagger(index)}>
               <button type="button" className="mg-row mg-row--site" onClick={() => go({ site: site.id })}>
                 <span className="mg-name">
                   <strong>{site.name}</strong>
@@ -285,10 +306,10 @@ function Overview({
                 <span className="mg-stock">
                   <StockBar quantityKg={site.quantityKg} capacityTotalKg={site.capacityTotalKg} scaleMax={scaleMax} />
                   <small>
-                    {formatTonnes(site.quantityKg, locale)} / {formatTonnes(site.capacityTotalKg, locale)} t
+                    <Count value={site.quantityKg} format={(n) => formatTonnes(n, locale)} /> / {formatTonnes(site.capacityTotalKg, locale)} t
                   </small>
                 </span>
-                <span className="num mg-fill">{formatPercent(site.fillRatio, locale)}</span>
+                <span className="num mg-fill"><FillText ratio={site.fillRatio} /></span>
                 <MixStrip classes={site.classes} />
                 <span className="num">
                   <Change kg={site.changeKg} />
@@ -310,18 +331,19 @@ function Overview({
           </li>
           {CLASS_ORDER.map((code) => ({ code, totals: classAcrossSites(sites, code) }))
             .filter((row) => row.totals.tanks > 0)
-            .map(({ code, totals }) => (
-              <li key={code}>
-                <button type="button" className="mg-row mg-row--class" onClick={() => go({ cls: code, view: 'commodity' })}>
+            .map(({ code, totals }, index) => (
+              <li key={code} style={stagger(index)}>
+                <button type="button" className="mg-row mg-row--class" data-class={code} onClick={() => go({ cls: code, view: 'commodity' })}>
                   <ClassName code={code} />
                   <ClassStock totals={totals} scaleMax={classScaleMax} />
-                  <span className="num mg-fill">{formatPercent(totals.fillRatio, locale)}</span>
+                  <span className="num mg-fill"><FillText ratio={totals.fillRatio} /></span>
                   <span className="num">{totals.tanks}</span>
                 </button>
               </li>
             ))}
         </ul>
       )}
+      </div>
     </>
   )
 }
@@ -343,7 +365,7 @@ function ClassStock({ totals, scaleMax }: { totals: ClassTotals; scaleMax: numbe
     <span className="mg-stock">
       <StockBar quantityKg={totals.quantityKg} capacityTotalKg={totals.capacityTotalKg} scaleMax={scaleMax} />
       <small>
-        {formatTonnes(totals.quantityKg, locale)} / {formatTonnes(totals.capacityTotalKg, locale)} t
+        <Count value={totals.quantityKg} format={(n) => formatTonnes(n, locale)} /> / {formatTonnes(totals.capacityTotalKg, locale)} t
       </small>
     </span>
   )
@@ -365,8 +387,8 @@ function Attention({ items, nearFullPct, onOpen }: { items: AttentionItem[]; nea
         <p className="mg-muted">{t.mgNothingToFlag}</p>
       ) : (
         <ul>
-          {items.map((item) => (
-            <li key={item.kind}>
+          {items.map((item, index) => (
+            <li key={item.kind} style={stagger(index)}>
               <button type="button" className={`mg-flag mg-flag--${item.kind}`} onClick={() => onOpen(item.kind)}>
                 {item.kind === 'stale' ? null : <StatusChip status={item.kind} />}
                 <span>{text(item)}</span>
@@ -382,21 +404,22 @@ function Attention({ items, nearFullPct, onOpen }: { items: AttentionItem[]; nea
 
 /* ------------------------------------------------------------------ deeper levels */
 
-function SiteView({ site, onClass }: { site: PortfolioSite; onClass: (cls: CommodityClass) => void }) {
+function SiteView({ site, onClass, onHighlight }: { site: PortfolioSite; onClass: (cls: CommodityClass) => void; onHighlight: (cls: CommodityClass | null) => void }) {
   const { t, locale } = useLocale()
   const scaleMax = Math.max(1, ...site.classes.map((row) => row.capacityTotalKg))
   return (
     <>
       <div className="mg-kpis">
-        <Kpi label={t.mgKpiStock} value={formatTonnes(site.quantityKg, locale)} unit="t" note={site.changeKg != null ? <><Change kg={site.changeKg} /> {t.mgVsYesterday}</> : undefined} />
-        <Kpi label={t.mgKpiCapacity} value={formatTonnes(site.capacityTotalKg, locale)} unit="t" />
-        <Kpi label={t.mgKpiFill} value={formatPercent(site.fillRatio, locale)} />
-        <Kpi label={t.mgKpiTanks} value={`${site.tanksReporting} / ${site.tanksTotal}`} />
+        <Kpi label={t.mgKpiStock} value={formatTonnes(site.quantityKg, locale)} unit="t" count={{ value: site.quantityKg, format: (n) => formatTonnes(n, locale) }} note={site.changeKg != null ? <><Change kg={site.changeKg} /> {t.mgVsYesterday}</> : undefined} />
+        <Kpi label={t.mgKpiCapacity} value={formatTonnes(site.capacityTotalKg, locale)} unit="t" count={{ value: site.capacityTotalKg, format: (n) => formatTonnes(n, locale) }} />
+        <Kpi label={t.mgKpiFill} value={formatPercent(site.fillRatio, locale)} count={site.fillRatio == null ? undefined : { value: site.fillRatio, format: (n) => formatPercent(n, locale) }} />
+        <Kpi label={t.mgKpiTanks} value={`${site.tanksReporting} / ${site.tanksTotal}`} count={{ value: site.tanksReporting, format: (n) => `${Math.round(n)} / ${site.tanksTotal}` }} />
         <div className="mg-kpi">
           <span className="mg-kpi__label">{t.mgColData}</span>
           <DataBadge site={site} />
         </div>
       </div>
+      <Legend classes={site.classes.filter((row) => row.quantityKg > 0).map((row) => row.code)} onHighlight={onHighlight} onPick={onClass} />
       <ul className="mg-list">
         <li className="mg-row mg-row--class mg-row--head" aria-hidden="true">
           <span>{t.mgColClass}</span>
@@ -406,12 +429,12 @@ function SiteView({ site, onClass }: { site: PortfolioSite; onClass: (cls: Commo
         </li>
         {CLASS_ORDER.map((code) => site.classes.find((row) => row.code === code))
           .filter((row): row is ClassTotals => row != null)
-          .map((row) => (
-            <li key={row.code}>
-              <button type="button" className="mg-row mg-row--class" onClick={() => onClass(row.code)}>
+          .map((row, index) => (
+            <li key={row.code} style={stagger(index)}>
+              <button type="button" className="mg-row mg-row--class" data-class={row.code} onClick={() => onClass(row.code)}>
                 <ClassName code={row.code} />
                 <ClassStock totals={row} scaleMax={scaleMax} />
-                <span className="num mg-fill">{formatPercent(row.fillRatio, locale)}</span>
+                <span className="num mg-fill"><FillText ratio={row.fillRatio} /></span>
                 <span className="num">{row.tanks}</span>
               </button>
             </li>
@@ -423,7 +446,7 @@ function SiteView({ site, onClass }: { site: PortfolioSite; onClass: (cls: Commo
 
 /** The commodity-first path: one commodity, site by site. */
 function SitesForClass({ sites, cls, onSite }: { sites: PortfolioSite[]; cls: CommodityClass; onSite: (id: string) => void }) {
-  const { t, locale } = useLocale()
+  const { t } = useLocale()
   const rows = sites
     .map((site) => ({ site, totals: site.classes.find((row) => row.code === cls) }))
     .filter((row): row is { site: PortfolioSite; totals: ClassTotals } => row.totals != null)
@@ -436,8 +459,8 @@ function SitesForClass({ sites, cls, onSite }: { sites: PortfolioSite[]; cls: Co
         <span className="num">{t.mgColFill}</span>
         <span className="num">{t.mgColTanks}</span>
       </li>
-      {rows.map(({ site, totals }) => (
-        <li key={site.id}>
+      {rows.map(({ site, totals }, index) => (
+        <li key={site.id} style={stagger(index)}>
           <button type="button" className="mg-row mg-row--class" onClick={() => onSite(site.id)}>
             <span className="mg-name">
               <strong>{site.name}</strong>
@@ -446,7 +469,7 @@ function SitesForClass({ sites, cls, onSite }: { sites: PortfolioSite[]; cls: Co
               </small>
             </span>
             <ClassStock totals={totals} scaleMax={scaleMax} />
-            <span className="num mg-fill">{formatPercent(totals.fillRatio, locale)}</span>
+            <span className="num mg-fill"><FillText ratio={totals.fillRatio} /></span>
             <span className="num">{totals.tanks}</span>
           </button>
         </li>
@@ -472,8 +495,8 @@ function FlaggedView({
     return (
       <ul className="mg-list">
         {stale.length === 0 ? <li className="mg-muted">{t.mgNoTanks}</li> : null}
-        {stale.map((site) => (
-          <li key={site.id}>
+        {stale.map((site, index) => (
+          <li key={site.id} style={stagger(index)}>
             <button type="button" className="mg-row mg-row--flat" onClick={() => onSite(site.id)}>
               <span className="mg-name"><strong>{site.name}</strong></span>
               <DataBadge site={site} />
@@ -518,8 +541,8 @@ function TankTable({
           </tr>
         </thead>
         <tbody>
-          {rows.map(({ site, tank }) => (
-            <tr key={`${site.id}/${tank.tankId}`} className="mg-tr" tabIndex={0} onClick={() => onTank(site.id, tank.tankId)} onKeyDown={(event) => event.key === 'Enter' && onTank(site.id, tank.tankId)}>
+          {rows.map(({ site, tank }, index) => (
+            <tr key={`${site.id}/${tank.tankId}`} className="mg-tr" style={stagger(index)} tabIndex={0} onClick={() => onTank(site.id, tank.tankId)} onKeyDown={(event) => event.key === 'Enter' && onTank(site.id, tank.tankId)}>
               {showSite ? <td>{site.name}</td> : null}
               <td>
                 <strong>{tank.tankId}</strong>

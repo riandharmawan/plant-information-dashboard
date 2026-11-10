@@ -10,6 +10,7 @@ import {
   type TankStatus,
 } from '../../domain/management.ts'
 import { useLocale } from '../../i18n/LocaleContext.tsx'
+import { Count } from './motion.tsx'
 import type { Messages } from '../../i18n/messages.ts'
 
 export function fill(template: string, values: Record<string, string | number>): string {
@@ -158,15 +159,85 @@ export function Change({ kg }: { kg: number | null }) {
   )
 }
 
-export function Kpi({ label, value, unit, note }: { label: string; value: string; unit?: string; note?: ReactNode }) {
+export function FillText({ ratio }: { ratio: number | null }) {
+  const { locale } = useLocale()
+  return ratio == null ? <>—</> : <Count value={ratio} format={(n) => formatPercent(n, locale)} />
+}
+
+export function Kpi({
+  label,
+  value,
+  unit,
+  note,
+  count,
+}: {
+  label: string
+  value: string
+  unit?: string
+  note?: ReactNode
+  count?: { value: number; format: (value: number) => string }
+}) {
   return (
     <div className="mg-kpi">
       <span className="mg-kpi__label">{label}</span>
       <span className="mg-kpi__value">
-        {value}
+        {count ? <Count value={count.value} format={count.format} /> : value}
         {unit ? <small>{unit}</small> : null}
       </span>
       {note ? <span className="mg-kpi__note">{note}</span> : null}
+    </div>
+  )
+}
+
+/**
+ * The commodity classes as a legend. Hovering or focusing one dims the others everywhere on the page,
+ * and picking one opens that commodity across the sites, so the legend is also a way in.
+ */
+export function Legend({
+  classes,
+  onHighlight,
+  onPick,
+}: {
+  classes: readonly CommodityClass[]
+  onHighlight: (code: CommodityClass | null) => void
+  onPick: (code: CommodityClass) => void
+}) {
+  const label = useClassLabel()
+  if (classes.length === 0) return null
+  return (
+    <ul className="mg-legend mg-noprint" aria-label="Commodity">
+      {classes.map((code) => (
+        <li key={code}>
+          <button
+            type="button"
+            className="mg-legend__item"
+            data-class={code}
+            onMouseEnter={() => onHighlight(code)}
+            onMouseLeave={() => onHighlight(null)}
+            onFocus={() => onHighlight(code)}
+            onBlur={() => onHighlight(null)}
+            onClick={() => onPick(code)}
+          >
+            <ClassDot code={code} /> {label(code)}
+          </button>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+/** Grey blocks in the shape of the page while it loads, so the layout does not jump when data arrives. */
+export function Skeleton() {
+  return (
+    <div className="mg-skel" aria-busy="true" aria-live="polite">
+      <span className="mg-skel__line mg-skel__line--wide" />
+      <div className="mg-skel__kpis">
+        {[0, 1, 2, 3, 4].map((index) => (
+          <span key={index} className="mg-skel__block" />
+        ))}
+      </div>
+      <span className="mg-skel__panel" />
+      <span className="mg-skel__panel mg-skel__panel--tall" />
     </div>
   )
 }
