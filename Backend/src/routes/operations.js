@@ -268,6 +268,14 @@ router.get('/sites/:siteId/live/tanks', async (req, res, next) => {
             volumeLitre: sounding.volumeLitre,
             densityKgM3: sounding.densityKgM3,
           })
+        } else {
+          // The gauge has no reading, but the tank still counts toward the group's capacity. The density
+          // used is the last good one it reported, so the tank is listed as NO DATA instead of vanishing.
+          const capacityKg = stockFromGauge(0, gaugeProfiles.get(meta.id), {
+            capacityLitre: num(meta.max_capacity_litre),
+            densityKgM3: num(meta.ref_density_kg_m3),
+          }).capacityKg
+          stock = { ...NO_STOCK, capacityKg }
         }
       } else {
         const profile = catalog.profiles.get(tankId)
@@ -378,12 +386,10 @@ router.get('/sites/:siteId/tanks/:tankId/soundings', async (req, res, next) => {
         temperatureC: sounding.temperatureC,
         operationalStatus: sounding.operationalStatus,
         massKg: sounding.massKg,
-        capacityKg: sounding.massKg == null
-          ? null
-          : stockFromGauge(sounding.massKg, profile, {
-              capacityLitre: num(gauged.max_capacity_litre),
-              densityKgM3: sounding.densityKgM3,
-            }).capacityKg,
+        capacityKg: stockFromGauge(sounding.massKg ?? 0, profile, {
+          capacityLitre: num(gauged.max_capacity_litre),
+          densityKgM3: sounding.densityKgM3 ?? num(gauged.ref_density_kg_m3),
+        }).capacityKg,
         storageVerdict: 'spec-pending',
       })
     }

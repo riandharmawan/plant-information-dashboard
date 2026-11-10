@@ -2,6 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { litresOf, parseQuantity, parseTankInfoResponse, productToGroupCode } from './client.js'
 import { stockFromGauge } from '../domain/stock.js'
+import { withReferenceDensity } from './live.js'
 import { oilFamilyOf } from '../domain/present.js'
 
 // The shape the unit returns for DATATYPE=31, with made-up numbers.
@@ -98,4 +99,16 @@ test('Bontang products land in a sensible family, and Bekasi products keep their
     OLEIN: 'OLEIN', 'IV 64': 'OLEIN', RPO: 'RPO', RPL: 'RPL', SLUDGE: 'SLUDGE', RPS: 'RPS', PMF: 'PMF',
   }
   for (const [product, family] of Object.entries(expected)) assert.equal(oilFamilyOf(product), family, product)
+})
+
+test('a faulty gauge borrows its last good density, or the average of its group', () => {
+  const rows = withReferenceDensity([
+    { code: 'A', stock_group: 'CPO', ref_density_kg_m3: 890 },
+    { code: 'B', stock_group: 'CPO', ref_density_kg_m3: 900 },
+    { code: 'C', stock_group: 'CPO', ref_density_kg_m3: null },
+    { code: 'D', stock_group: null, ref_density_kg_m3: null },
+    { code: 'E', stock_group: 'FAME', ref_density_kg_m3: null },
+  ])
+  const d = Object.fromEntries(rows.map((r) => [r.code, r.ref_density_kg_m3]))
+  assert.deepEqual([d.A, d.B, d.C, d.D, d.E], [890, 900, 895, null, null])
 })
