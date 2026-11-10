@@ -205,6 +205,18 @@ export function historyForTank(rows: StorageRow[], tankId: string): StorageRow[]
     })
 }
 
+/**
+ * Every certificate for one tank and one product, newest first, across the
+ * whole file rather than the page's date-range filter. Used to find the
+ * "previous result" for a variance check: the comparison should not
+ * flicker on and off as someone changes the viewed date range, and a
+ * product change on the same tank (CPO swapped for PFAD) is not a quality
+ * drift, so only certificates for the same `oil` text are compared.
+ */
+export function qualityHistoryForTank(tankId: string, oil: string, file: QcFile = QC): StorageRow[] {
+  return historyForTank(file.storage.filter((row) => row.oil === oil), tankId)
+}
+
 export function overMax(value: number | null, max: number | null): boolean {
   return value != null && max != null && value > max
 }

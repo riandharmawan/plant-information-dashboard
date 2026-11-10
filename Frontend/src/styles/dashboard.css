@@ -972,6 +972,11 @@ button.qty-link.qty-link--alert {
   color: var(--color-brand-red);
 }
 
+.badge--variance {
+  background: color-mix(in srgb, var(--color-sea-mid) 16%, white);
+  color: var(--color-sea-deep);
+}
+
 .badge--pass {
   background: rgba(16, 185, 129, 0.14);
   color: #047857;
@@ -1569,6 +1574,22 @@ button.prod-tab {
   font-weight: var(--font-weight-semibold);
 }
 
+.prod-table td.num--variance,
+td.num.num--variance {
+  background: color-mix(in srgb, var(--color-sea-mid) 10%, white);
+}
+
+.num-variance-arrow {
+  margin-left: 3px;
+  font-size: 9px;
+  vertical-align: 1px;
+  color: var(--color-sea-mid);
+}
+
+.num-variance-arrow--down {
+  color: var(--color-sea-deep);
+}
+
 .prod-table tbody tr.qc-pick {
   cursor: pointer;
 }
@@ -1679,6 +1700,7 @@ button.prod-tab {
 .qc-legend__swatch--retest { background: var(--color-warning); border-radius: 50%; box-shadow: inset 0 0 0 1px #92600a; }
 .qc-legend__swatch--nospec { background: var(--color-border-medium); }
 .qc-legend__swatch--missing { background: transparent; }
+.qc-legend__swatch--variance { background: color-mix(in srgb, var(--color-sea-mid) 30%, white); box-shadow: inset 0 0 0 1px var(--color-sea-deep); }
 
 .qc-bullet {
   display: grid;

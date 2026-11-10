@@ -261,7 +261,7 @@ export function DirectionTrack({ inbound, outbound, unknown }: { inbound: number
   )
 }
 
-export type LegendItem = 'over' | 'watch' | 'retest' | 'nospec' | 'missing'
+export type LegendItem = 'over' | 'watch' | 'retest' | 'nospec' | 'missing' | 'variance'
 
 export function Legend({ items, labels: custom }: { items: LegendItem[]; labels?: Partial<Record<LegendItem, string>> }) {
   const { t } = useLocale()
@@ -272,6 +272,7 @@ export function Legend({ items, labels: custom }: { items: LegendItem[]; labels?
     retest: t.retestDue,
     nospec: t.noSpec,
     missing: t.notRecorded,
+    variance: t.varianceAlerts,
     ...custom,
   }
   return (

@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom'
 import { ChevronRight } from 'lucide-react'
 import { formatDay, tankLabel } from '../../domain/format.ts'
 import { ageAtSnapshot, retestDue, vesselVerdict, type StorageRow, type TruckRow, type VesselTicket } from '../../domain/qc.ts'
+import { formatVariancePct, type VarianceAlert } from '../../domain/qualityVariance.ts'
 import { useLocale } from '../../i18n/LocaleContext.tsx'
-import { useParam, VerdictBadge } from './qcChrome.tsx'
+import { useParam, VerdictBadge, type ParamCode } from './qcChrome.tsx'
 import { Identity, fill } from './qcVisual.tsx'
 
 export function QcDetailDialog({
@@ -129,6 +130,54 @@ export function StorageLatestDetail({ rows }: { rows: StorageRow[] }) {
         ))}
       </tbody>
     </ScrollTable>
+  )
+}
+
+export interface VarianceRow {
+  tankId: string
+  oil: string | null
+  label: string
+  code: ParamCode
+  alert: VarianceAlert
+}
+
+export function VarianceDetail({ rows }: { rows: VarianceRow[] }) {
+  const { t, locale } = useLocale()
+  const param = useParam()
+  if (rows.length === 0) return <p className="qc-attention__ok">{t.varianceNone}</p>
+  const ordered = [...rows].sort(
+    (left, right) => left.tankId.localeCompare(right.tankId) || left.label.localeCompare(right.label),
+  )
+  return (
+    <>
+      <p className="page-note">{t.varianceRuleNote}</p>
+      <ScrollTable>
+        <thead>
+          <tr>
+            <th>{t.tank}</th>
+            <th>{t.oilTypes}</th>
+            <th>{t.parameter}</th>
+            <th className="num">{t.previousResult}</th>
+            <th className="num">{t.current}</th>
+            <th className="num">{t.change}</th>
+            <th>{t.colDate}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {ordered.map((row, index) => (
+            <tr key={`${row.tankId}-${row.code}-${index}`} className="stock-dialog__row--alert">
+              <td>{tankLabel(row.tankId)}</td>
+              <td>{row.oil || '-'}</td>
+              <td>{row.label}</td>
+              <td className="num">{param(row.code, row.alert.previous)}</td>
+              <td className="num">{param(row.code, row.alert.current)}</td>
+              <td className="num">{formatVariancePct(row.alert.pctChange)}</td>
+              <td>{row.alert.currentDate ? formatDay(row.alert.currentDate, locale) : '-'}</td>
+            </tr>
+          ))}
+        </tbody>
+      </ScrollTable>
+    </>
   )
 }
 

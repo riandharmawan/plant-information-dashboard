@@ -3,6 +3,7 @@ import { Info } from 'lucide-react'
 import { useLocale } from '../../i18n/LocaleContext.tsx'
 import type { TankLive } from '../../domain/types.ts'
 import { formatDay, formatMeasure, parameter, tankLabel } from '../../domain/format.ts'
+import { findVariance, formatVariancePct, type LabVarianceAlert } from '../../domain/qualityVariance.ts'
 import { LevelCue } from './LevelCue.tsx'
 import { useMass } from './massUnit.ts'
 import type { HistoryMetric } from './quantitySeries.ts'
@@ -12,7 +13,17 @@ import { SHOW_LOADABLE } from './columns.ts'
 type SortDir = 'asc' | 'desc'
 type SortValue = string | number | null
 
-export function TankTable({ tanks, averageTemperature, onHistory }: { tanks: TankLive[]; averageTemperature: number | null; onHistory: (tankId: string, metric: HistoryMetric) => void }) {
+export function TankTable({
+  tanks,
+  averageTemperature,
+  varianceByTank,
+  onHistory,
+}: {
+  tanks: TankLive[]
+  averageTemperature: number | null
+  varianceByTank: Map<string, LabVarianceAlert[]>
+  onHistory: (tankId: string, metric: HistoryMetric) => void
+}) {
   const { t, locale } = useLocale()
   const mass = useMass()
   const [key, setKey] = useState<string | null>(null)
@@ -46,6 +57,8 @@ export function TankTable({ tanks, averageTemperature, onHistory }: { tanks: Tan
           <col className="tank-col tank-col--temp" />
           <col className="tank-col tank-col--lab" />
           <col className="tank-col tank-col--lab" />
+          <col className="tank-col tank-col--lab" />
+          <col className="tank-col tank-col--lab" />
         </colgroup>
         <thead>
           <tr>
@@ -60,6 +73,8 @@ export function TankTable({ tanks, averageTemperature, onHistory }: { tanks: Tan
             <SortHeader label={t.tempAxis} column="temp" sort={sort} align="right" hint={t.tempSpikeHint} />
             <SortHeader label="FFA" column="ffa" sort={sort} align="right" hint={t.ffaAgeHint} />
             <SortHeader label="M&I" column="moisture" sort={sort} align="right" hint={t.ffaAgeHint} />
+            <SortHeader label={t.colourRLov} column="colorR" sort={sort} align="right" hint={t.ffaAgeHint} />
+            <SortHeader label={t.colourYLov} column="colorY" sort={sort} align="right" hint={t.ffaAgeHint} />
           </tr>
         </thead>
         <tbody>
@@ -68,6 +83,9 @@ export function TankTable({ tanks, averageTemperature, onHistory }: { tanks: Tan
             const quarantined = tank.quality?.storageVerdict === 'quarantine'
             const ffa = parameter(tank.quality?.parameters, 'FFA')
             const moisture = parameter(tank.quality?.parameters, 'MI')
+            const colorR = parameter(tank.quality?.parameters, 'COLOR_R')
+            const colorY = parameter(tank.quality?.parameters, 'COLOR_Y')
+            const alerts = varianceByTank.get(tank.tankId)
             const stale = qualityStale(tank)
             const ageTitle = stale ? qualityAgeTitle(tank, t.qualityAge, locale) : undefined
             const rowClass = [
@@ -89,8 +107,10 @@ export function TankTable({ tanks, averageTemperature, onHistory }: { tanks: Tan
                   </button>
                 </td>
                 <HistoryCell value={tank.temperatureC == null ? t.unavailable : formatMeasure(tank.temperatureC, 1)} missing={tank.temperatureC == null} alert={isTempAnomaly(tank.temperatureC, averageTemperature)} onClick={() => onHistory(tank.tankId, 'temperature')} />
-                <HistoryCell value={ffa == null ? t.unavailable : formatMeasure(ffa)} missing={ffa == null} alert={ffa != null && stale} title={ffa != null ? ageTitle : undefined} onClick={() => onHistory(tank.tankId, 'ffa')} />
-                <HistoryCell value={moisture == null ? t.unavailable : formatMeasure(moisture)} missing={moisture == null} alert={moisture != null && stale} title={moisture != null ? ageTitle : undefined} onClick={() => onHistory(tank.tankId, 'moisture')} />
+                <HistoryCell value={ffa == null ? t.unavailable : formatMeasure(ffa)} missing={ffa == null} alert={ffa != null && stale} title={ffa != null ? ageTitle : undefined} variance={findVariance(alerts, 'FFA')} onClick={() => onHistory(tank.tankId, 'ffa')} />
+                <HistoryCell value={moisture == null ? t.unavailable : formatMeasure(moisture)} missing={moisture == null} alert={moisture != null && stale} title={moisture != null ? ageTitle : undefined} variance={findVariance(alerts, 'MI')} onClick={() => onHistory(tank.tankId, 'moisture')} />
+                <HistoryCell value={colorR == null ? t.unavailable : formatMeasure(colorR, 1)} missing={colorR == null} alert={colorR != null && stale} title={colorR != null ? ageTitle : undefined} variance={findVariance(alerts, 'COLOR_R')} onClick={() => onHistory(tank.tankId, 'colorR')} />
+                <HistoryCell value={colorY == null ? t.unavailable : formatMeasure(colorY, 1)} missing={colorY == null} alert={colorY != null && stale} title={colorY != null ? ageTitle : undefined} variance={findVariance(alerts, 'COLOR_Y')} onClick={() => onHistory(tank.tankId, 'colorY')} />
               </tr>
             )
           })}
@@ -126,6 +146,8 @@ function sortValue(tank: TankLive, key: string): SortValue {
   if (key === 'temp') return tank.temperatureC
   if (key === 'ffa') return parameter(tank.quality?.parameters, 'FFA')
   if (key === 'moisture') return parameter(tank.quality?.parameters, 'MI')
+  if (key === 'colorR') return parameter(tank.quality?.parameters, 'COLOR_R')
+  if (key === 'colorY') return parameter(tank.quality?.parameters, 'COLOR_Y')
   return null
 }
 
@@ -172,16 +194,42 @@ function levelClass(ratio: number | null): string {
   return 'qty-link'
 }
 
-function HistoryCell({ value, onClick, stale = false, alert = false, missing = false, title }: { value: string; onClick: () => void; stale?: boolean; alert?: boolean; missing?: boolean; title?: string }) {
+function HistoryCell({
+  value,
+  onClick,
+  stale = false,
+  alert = false,
+  missing = false,
+  title,
+  variance,
+}: {
+  value: string
+  onClick: () => void
+  stale?: boolean
+  alert?: boolean
+  missing?: boolean
+  title?: string
+  variance?: LabVarianceAlert
+}) {
   const className = [
     'qty-link',
     missing ? 'qty-link--missing' : '',
     stale ? 'qty-link--stale' : '',
     alert ? 'qty-link--alert' : '',
   ].filter(Boolean).join(' ')
+  const varianceTitle = variance
+    ? `${formatVariancePct(variance.pctChange)} vs ${variance.previous}${variance.previousDate ? ` (${variance.previousDate})` : ''}`
+    : undefined
   return (
-    <td className="num">
-      <button type="button" className={className} title={title} onClick={onClick}>{value}</button>
+    <td className={variance ? 'num num--variance' : 'num'}>
+      <button type="button" className={className} title={varianceTitle ?? title} onClick={onClick}>
+        {value}
+        {variance ? (
+          <span className={variance.pctChange >= 0 ? 'num-variance-arrow num-variance-arrow--up' : 'num-variance-arrow num-variance-arrow--down'} aria-hidden="true">
+            {variance.pctChange >= 0 ? '\u25b2' : '\u25bc'}
+          </span>
+        ) : null}
+      </button>
     </td>
   )
 }

@@ -16,6 +16,7 @@ import type { HistoryMetric } from './quantitySeries.ts'
 import { isCritical, isEmptyTank } from './tankAlerts.ts'
 import { MassUnitContext, useMassUnitState } from './massUnit.ts'
 import { KpiDetailDialog, type KpiKind } from './KpiDetailDialog.tsx'
+import { varianceFromLabHistory, type LabVarianceAlert } from '../../domain/qualityVariance.ts'
 import { sourceOfTanks, type DataSource } from '../../domain/dataSource.ts'
 import { SourceBadge } from '../dataSource/SourceBadge.tsx'
 
@@ -31,6 +32,7 @@ export function LiveOpsPage() {
   const [site, setSite] = useState<SiteContext | null>(null)
   const [meta, setMeta] = useState<SnapshotMeta | null>(null)
   const [tanks, setTanks] = useState<TankLive[]>([])
+  const [varianceByTank, setVarianceByTank] = useState<Map<string, LabVarianceAlert[]>>(new Map())
   const [logistics, setLogistics] = useState<LogisticsVehicle[]>([])
   const [commodity, setCommodity] = useState<string[] | null>(null)
   const [tankView, setTankView] = useState<TankView>('table')
@@ -71,6 +73,24 @@ export function LiveOpsPage() {
     }
   }, [repository, revision, day, lookbackStart, farmDay])
 
+  useEffect(() => {
+    if (tanks.length === 0) {
+      setVarianceByTank(new Map())
+      return
+    }
+    let active = true
+    Promise.all(
+      tanks.map((tank) =>
+        repository.getLabHistory(tank.tankId).then((history) => [tank.tankId, varianceFromLabHistory(history)] as const),
+      ),
+    ).then((entries) => {
+      if (active) setVarianceByTank(new Map(entries))
+    })
+    return () => {
+      active = false
+    }
+  }, [repository, tanks])
+
   const openHistory = (tankId: string, metric: HistoryMetric) => {
     const product = tanks.find((tank) => tank.tankId === tankId)?.productName ?? ''
     setHistory({ tankId, metric, commodity: product })
@@ -89,11 +109,13 @@ export function LiveOpsPage() {
   const emptyCount = visible.filter(isEmptyTank).length
   const activeCount = visible.length - emptyCount
   const critical = visible.filter((tank) => isCritical(tank, tempValue))
+  const varianceTanks = visible.filter((tank) => (varianceByTank.get(tank.tankId)?.length ?? 0) > 0)
   const kpiTitles: Record<KpiKind, string> = {
     utilization: t.storageUtilization,
     activeEmpty: t.activeVsEmpty,
     alerts: t.criticalAlerts,
     approval: judged.length > 0 ? `${t.approvalRate} · ${t.incomingCpo}` : t.approvalRate,
+    variance: t.varianceAlerts,
   }
 
   return (
@@ -152,6 +174,13 @@ export function LiveOpsPage() {
                 tone={judged.length > 0 ? 'yield' : undefined}
                 onOpen={() => setKpiDetail('approval')}
               />
+              <Kpi
+                label={kpiTitles.variance}
+                value={visible.length === 0 ? t.unavailable : String(varianceTanks.length)}
+                sub={varianceTanks.length > 0 ? varianceTanks.map((tank) => tankLabel(tank.tankId)).join(', ') : undefined}
+                tone={varianceTanks.length > 0 ? 'alert' : undefined}
+                onOpen={() => setKpiDetail('variance')}
+              />
             </section>
             <CommodityStock tanks={tanks} day={day} averageTemperature={tempValue} />
             <section className="prod-panel">
@@ -166,11 +195,11 @@ export function LiveOpsPage() {
                 </div>
               </div>
               {tankView === 'table'
-                ? <TankTable tanks={visible} averageTemperature={tempValue} onHistory={openHistory} />
+                ? <TankTable tanks={visible} averageTemperature={tempValue} varianceByTank={varianceByTank} onHistory={openHistory} />
                 : (
                   <div className="tank-grid tank-grid--vessels">
                     {visible.map((tank) => (
-                      <TankCard key={tank.tankId} tank={tank} averageTemperature={tempValue} onHistory={openHistory} />
+                      <TankCard key={tank.tankId} tank={tank} averageTemperature={tempValue} variance={varianceByTank.get(tank.tankId)} onHistory={openHistory} />
                     ))}
                   </div>
                 )}
@@ -195,6 +224,7 @@ export function LiveOpsPage() {
           judged={judged}
           day={day}
           windowStart={lookbackStart}
+          varianceByTank={varianceByTank}
           onClose={() => setKpiDetail(null)}
         />
       </div>

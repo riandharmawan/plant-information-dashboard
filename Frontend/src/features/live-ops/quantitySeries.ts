@@ -13,6 +13,8 @@ export type HistoryMetric =
   | 'temperature'
   | 'ffa'
   | 'moisture'
+  | 'colorR'
+  | 'colorY'
 
 export interface HistoryDay {
   day: string
@@ -21,7 +23,15 @@ export interface HistoryDay {
 }
 
 export function isLabMetric(metric: HistoryMetric): boolean {
-  return metric === 'ffa' || metric === 'moisture'
+  return metric === 'ffa' || metric === 'moisture' || metric === 'colorR' || metric === 'colorY'
+}
+
+/** Canonical lab parameter code behind each lab metric. */
+export function labCodeFor(metric: HistoryMetric): string {
+  if (metric === 'moisture') return 'MI'
+  if (metric === 'colorR') return 'COLOR_R'
+  if (metric === 'colorY') return 'COLOR_Y'
+  return 'FFA'
 }
 
 function nextDay(iso: string): string {

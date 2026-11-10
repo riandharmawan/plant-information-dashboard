@@ -1,13 +1,24 @@
 import { useLocale } from '../../i18n/LocaleContext.tsx'
 import type { TankLive } from '../../domain/types.ts'
 import { formatDay, formatMeasure, levelPercent, parameter, tankLabel } from '../../domain/format.ts'
+import { findVariance, type LabVarianceAlert } from '../../domain/qualityVariance.ts'
 import { useMass } from './massUnit.ts'
 import type { HistoryMetric } from './quantitySeries.ts'
 import { fillTone, isCritical, isEmptyTank, isTempAnomaly } from './tankAlerts.ts'
 import { TankVessel } from './TankVessel.tsx'
 import { SHOW_LOADABLE } from './columns.ts'
 
-export function TankCard({ tank, averageTemperature, onHistory }: { tank: TankLive; averageTemperature: number | null; onHistory: (tankId: string, metric: HistoryMetric) => void }) {
+export function TankCard({
+  tank,
+  averageTemperature,
+  variance,
+  onHistory,
+}: {
+  tank: TankLive
+  averageTemperature: number | null
+  variance?: LabVarianceAlert[]
+  onHistory: (tankId: string, metric: HistoryMetric) => void
+}) {
   const { t, locale } = useLocale()
   const mass = useMass()
   const empty = isEmptyTank(tank)
@@ -16,6 +27,13 @@ export function TankCard({ tank, averageTemperature, onHistory }: { tank: TankLi
   const critical = isCritical(tank, averageTemperature)
   const ffa = parameter(tank.quality?.parameters, 'FFA')
   const moisture = parameter(tank.quality?.parameters, 'MI')
+  const colorR = parameter(tank.quality?.parameters, 'COLOR_R')
+  const colorY = parameter(tank.quality?.parameters, 'COLOR_Y')
+  const ffaVariance = findVariance(variance, 'FFA')
+  const moistureVariance = findVariance(variance, 'MI')
+  const colorRVariance = findVariance(variance, 'COLOR_R')
+  const colorYVariance = findVariance(variance, 'COLOR_Y')
+  const varianceCount = variance?.length ?? 0
   const stale = tank.quality?.ageDays != null && tank.quality.ageDays > 7
   const ageTitle = stale && tank.quality?.analysisDate
     ? t.qualityAge.replace('{age}', String(tank.quality.ageDays)).replace('{day}', formatDay(tank.quality.analysisDate, locale))
@@ -59,6 +77,7 @@ export function TankCard({ tank, averageTemperature, onHistory }: { tank: TankLi
         {tank.recordedOn && <span className="badge badge--muted">{formatDay(tank.recordedOn, locale)}</span>}
         {tank.quality?.retestRequired && <span className="badge badge--warning">{t.retest}</span>}
         {quarantined && <span className="badge badge--danger">QUARANTINE</span>}
+        {varianceCount > 0 && <span className="badge badge--variance">{t.varianceAlert} {varianceCount}</span>}
       </footer>
       <p className="tank-card__lab">
         <button
@@ -68,6 +87,7 @@ export function TankCard({ tank, averageTemperature, onHistory }: { tank: TankLi
           onClick={() => onHistory(tank.tankId, 'ffa')}
         >
           FFA {ffa == null ? t.unavailable : `${formatMeasure(ffa)}%`}
+          <VarianceMark alert={ffaVariance} />
         </button>
         {' · '}
         <button
@@ -77,10 +97,44 @@ export function TankCard({ tank, averageTemperature, onHistory }: { tank: TankLi
           onClick={() => onHistory(tank.tankId, 'moisture')}
         >
           M&I {moisture == null ? t.unavailable : `${formatMeasure(moisture)}%`}
+          <VarianceMark alert={moistureVariance} />
         </button>
         {tank.quality?.analysisDate ? ` · ${formatDay(tank.quality.analysisDate, locale)}` : ''}
       </p>
+      <p className="tank-card__lab">
+        <button
+          type="button"
+          className={colorR == null ? 'qty-link' : stale ? 'qty-link qty-link--alert' : 'qty-link'}
+          title={colorR != null ? ageTitle : undefined}
+          onClick={() => onHistory(tank.tankId, 'colorR')}
+        >
+          {t.colourRLov} {colorR == null ? t.unavailable : formatMeasure(colorR, 1)}
+          <VarianceMark alert={colorRVariance} />
+        </button>
+        {' · '}
+        <button
+          type="button"
+          className={colorY == null ? 'qty-link' : stale ? 'qty-link qty-link--alert' : 'qty-link'}
+          title={colorY != null ? ageTitle : undefined}
+          onClick={() => onHistory(tank.tankId, 'colorY')}
+        >
+          {t.colourYLov} {colorY == null ? t.unavailable : formatMeasure(colorY, 1)}
+          <VarianceMark alert={colorYVariance} />
+        </button>
+      </p>
     </article>
+  )
+}
+
+function VarianceMark({ alert }: { alert?: LabVarianceAlert }) {
+  if (!alert) return null
+  return (
+    <span
+      className={alert.pctChange >= 0 ? 'num-variance-arrow num-variance-arrow--up' : 'num-variance-arrow num-variance-arrow--down'}
+      aria-hidden="true"
+    >
+      {alert.pctChange >= 0 ? '\u25b2' : '\u25bc'}
+    </span>
   )
 }
 

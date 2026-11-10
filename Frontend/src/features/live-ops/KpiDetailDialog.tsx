@@ -1,12 +1,13 @@
 import { useEffect, useRef } from 'react'
 import { formatDay, formatMeasure, tankLabel } from '../../domain/format.ts'
 import type { LogisticsVehicle, TankLive } from '../../domain/types.ts'
+import { formatVariancePct, type LabVarianceAlert } from '../../domain/qualityVariance.ts'
 import { useLocale } from '../../i18n/LocaleContext.tsx'
 import { LevelCue } from './LevelCue.tsx'
 import { useMass } from './massUnit.ts'
 import { isEmptyTank, isOverfilled, isTempAnomaly } from './tankAlerts.ts'
 
-export type KpiKind = 'utilization' | 'activeEmpty' | 'alerts' | 'approval'
+export type KpiKind = 'utilization' | 'activeEmpty' | 'alerts' | 'approval' | 'variance'
 
 export function KpiDetailDialog({
   kind,
@@ -16,6 +17,7 @@ export function KpiDetailDialog({
   judged,
   day,
   windowStart,
+  varianceByTank,
   onClose,
 }: {
   kind: KpiKind | null
@@ -25,6 +27,7 @@ export function KpiDetailDialog({
   judged: LogisticsVehicle[]
   day: string
   windowStart: string
+  varianceByTank: Map<string, LabVarianceAlert[]>
   onClose: () => void
 }) {
   const { t, locale } = useLocale()
@@ -51,6 +54,7 @@ export function KpiDetailDialog({
           {kind === 'activeEmpty' && <ActiveEmptyDetail tanks={tanks} />}
           {kind === 'alerts' && <AlertDetail tanks={tanks} averageTemperature={averageTemperature} />}
           {kind === 'approval' && <ApprovalDetail judged={judged} />}
+          {kind === 'variance' && <VarianceDetail tanks={tanks} varianceByTank={varianceByTank} />}
           <div className="stock-dialog__actions">
             <button type="button" className="btn btn--secondary" onClick={onClose}>{t.close}</button>
           </div>
@@ -290,6 +294,61 @@ function ApprovalDetail({ judged }: { judged: LogisticsVehicle[] }) {
         )}
     </>
   )
+}
+
+function VarianceDetail({ tanks, varianceByTank }: { tanks: TankLive[]; varianceByTank: Map<string, LabVarianceAlert[]> }) {
+  const { t, locale } = useLocale()
+  const param = formatLabValue
+  const rows = tanks.flatMap((tank) =>
+    (varianceByTank.get(tank.tankId) ?? []).map((alert) => ({ tank, alert })),
+  )
+  const ordered = [...rows].sort(
+    (left, right) => left.tank.tankId.localeCompare(right.tank.tankId) || left.alert.label.localeCompare(right.alert.label),
+  )
+
+  return (
+    <>
+      <p className="kpi-detail__rule">{t.varianceRuleNote}</p>
+      {ordered.length === 0 ? (
+        <p className="empty">{t.varianceNone}</p>
+      ) : (
+        <div className="stock-dialog__scroll">
+          <table className="stock-dialog__table">
+            <thead>
+              <tr>
+                <th>{t.tank}</th>
+                <th>{t.commodity}</th>
+                <th>{t.parameter}</th>
+                <th className="num">{t.previousResult}</th>
+                <th className="num">{t.current}</th>
+                <th className="num">{t.change}</th>
+                <th>{t.colDate}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {ordered.map(({ tank, alert }, index) => (
+                <tr key={`${tank.tankId}-${alert.code}-${index}`} className="stock-dialog__row--alert">
+                  <td>{tankLabel(tank.tankId)}</td>
+                  <td>{tank.productName || t.unavailable}</td>
+                  <td>{alert.label}</td>
+                  <td className="num">{param(alert.code, alert.previous)}</td>
+                  <td className="num">{param(alert.code, alert.current)}</td>
+                  <td className="num">{formatVariancePct(alert.pctChange)}</td>
+                  <td>{alert.currentDate ? formatDay(alert.currentDate, locale) : '-'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </>
+  )
+}
+
+/** Formats a lab value to the same precision used elsewhere for that code, without pulling in the QC page's ParamCode map. */
+function formatLabValue(code: string, value: number): string {
+  const digits = code === 'COLOR_R' || code === 'COLOR_Y' ? 1 : 2
+  return formatMeasure(value, digits)
 }
 
 function Stat({ label, value }: { label: string; value: string }) {

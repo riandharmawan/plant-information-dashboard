@@ -6,7 +6,7 @@ import { profileOf } from '../../domain/tankStock.ts'
 import type { LabHistoryPoint, SoundingPoint } from '../../domain/types.ts'
 import { useLocale } from '../../i18n/LocaleContext.tsx'
 import { useMass, type MassFormat } from './massUnit.ts'
-import { historySeries, isLabMetric, labHistorySeries, type HistoryDay, type HistoryMetric } from './quantitySeries.ts'
+import { historySeries, isLabMetric, labCodeFor, labHistorySeries, type HistoryDay, type HistoryMetric } from './quantitySeries.ts'
 
 export function QuantityHistoryDialog({
   tankId,
@@ -57,7 +57,7 @@ export function QuantityHistoryDialog({
   const series = !tankId
     ? []
     : isLabMetric(metric)
-      ? labHistorySeries(labs?.tankId === tankId ? labs.points : [], start, end, metric === 'ffa' ? 'FFA' : 'MI')
+      ? labHistorySeries(labs?.tankId === tankId ? labs.points : [], start, end, labCodeFor(metric))
       : historySeries(tankId, soundings?.tankId === tankId ? soundings.points : [], start, end, metric)
   const hasValue = series.some((point) => point.value != null)
   const stats = seriesStats(series)
@@ -118,7 +118,10 @@ function dialogHeading(tankId: string, commodity: string, metricLabel: string): 
   return `${tank} - ${commodity} - ${metricLabel}`
 }
 
-function metricTitle(metric: HistoryMetric, t: { levelAxis: string; quantity: string; emptySpace: string; loadable: string; tankLevelPct: string; tempAxis: string }): string {
+function metricTitle(
+  metric: HistoryMetric,
+  t: { levelAxis: string; quantity: string; emptySpace: string; loadable: string; tankLevelPct: string; tempAxis: string; colourRLov: string; colourYLov: string },
+): string {
   if (metric === 'level') return t.levelAxis
   if (metric === 'quantity') return t.quantity
   if (metric === 'emptySpace') return t.emptySpace
@@ -126,7 +129,9 @@ function metricTitle(metric: HistoryMetric, t: { levelAxis: string; quantity: st
   if (metric === 'levelTank') return t.tankLevelPct
   if (metric === 'temperature') return t.tempAxis
   if (metric === 'ffa') return 'FFA'
-  return 'M&I'
+  if (metric === 'moisture') return 'M&I'
+  if (metric === 'colorR') return t.colourRLov
+  return t.colourYLov
 }
 
 function QuantityChart({ series, metric, title }: { series: HistoryDay[]; metric: HistoryMetric; title: string }) {
@@ -228,6 +233,7 @@ function formatAxis(metric: HistoryMetric, value: number, mass: MassFormat): str
   if (metric === 'levelTank') return `${Math.round(value)}%`
   if (metric === 'temperature') return formatMeasure(value, 0)
   if (metric === 'level') return formatMeasure(value, 1)
+  if (metric === 'colorR' || metric === 'colorY') return formatMeasure(value, 1)
   return formatMeasure(value, 2)
 }
 
@@ -236,5 +242,6 @@ function formatTip(metric: HistoryMetric, value: number, mass: MassFormat): stri
   if (metric === 'level') return `${formatMeasure(value, 3)} m`
   if (metric === 'levelTank') return `${value.toFixed(1)}%`
   if (metric === 'temperature') return `${formatMeasure(value, 1)} °C`
+  if (metric === 'colorR' || metric === 'colorY') return formatMeasure(value, 1)
   return `${formatMeasure(value)}%`
 }

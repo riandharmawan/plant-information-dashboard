@@ -8,16 +8,18 @@ import {
   historyForTank,
   latestByTank,
   productRange,
+  qualityHistoryForTank,
   retestDue,
   storageInRange,
   tankFill,
   type NumericStorageField,
   type StorageRow,
 } from '../../domain/qc.ts'
+import { formatVariancePct, varianceFrom, type VarianceAlert } from '../../domain/qualityVariance.ts'
 import { useQcFile } from '../../data/QcContext.tsx'
 import { useLocale } from '../../i18n/LocaleContext.tsx'
 import { Num, QcChrome, useParam, type ParamCode } from './qcChrome.tsx'
-import { QcDetailDialog, QcPanelOpen, StorageLatestDetail } from './qcDialogs.tsx'
+import { QcDetailDialog, QcPanelOpen, StorageLatestDetail, VarianceDetail, type VarianceRow } from './qcDialogs.tsx'
 import { QcKpi } from './qcKpi.tsx'
 import { SortHeader, sortRows, useColumnSort, useQcRange, type SortDir } from './qcNav.tsx'
 import { AgeDot, Bullet, Identity, Legend, ProductBoard, fill, type LegendItem } from './qcVisual.tsx'
@@ -25,7 +27,7 @@ import { AgeDot, Bullet, Identity, Legend, ProductBoard, fill, type LegendItem }
 type Slot = { tankId: string; row: StorageRow | null }
 type View = 'table' | 'cards'
 type Group = 'sample' | 'core' | 'oxidation' | 'composition' | 'notes'
-type StorageDialog = null | 'tanks' | 'retest' | 'oils'
+type StorageDialog = null | 'tanks' | 'retest' | 'oils' | 'variance'
 
 type Column = {
   column: string
@@ -59,6 +61,32 @@ export function StoragePage() {
     const value = column.field ? slot.row[column.field] : column.text?.(slot.row)
     return value != null && value !== ''
   }))
+  const varianceColumns = useMemo(() => columns.filter((column) => column.field && column.code && column.column !== 'temp'), [columns])
+  const varianceByTank = useMemo(() => {
+    const map = new Map<string, Partial<Record<string, VarianceAlert>>>()
+    for (const slot of withResult) {
+      const row = slot.row
+      const history = qualityHistoryForTank(row.tankId, row.oil)
+      const entry: Partial<Record<string, VarianceAlert>> = {}
+      for (const column of varianceColumns) {
+        const field = column.field as NumericStorageField
+        const points = history.map((item) => ({ date: item.snapshotOn, value: item[field] }))
+        const alert = varianceFrom(column.code as ParamCode, points)
+        if (alert) entry[column.column] = alert
+      }
+      if (Object.keys(entry).length > 0) map.set(row.tankId, entry)
+    }
+    return map
+  }, [withResult, varianceColumns])
+  const varianceRows: VarianceRow[] = [...varianceByTank.entries()].flatMap(([tankId, entry]) => {
+    const row = latest.get(tankId)
+    return Object.entries(entry).flatMap(([columnName, alert]) => {
+      const column = varianceColumns.find((item) => item.column === columnName)
+      if (!alert || !column) return []
+      return [{ tankId, oil: row?.oil ?? null, label: column.label, code: column.code as ParamCode, alert }]
+    })
+  })
+  const varianceTankCount = varianceByTank.size
   const rows = sortRows(roster, sort.key, sort.dir, slotValue)
   const history = openTank ? historyForTank(inSpan, openTank) : []
   const openLatest = openTank ? latest.get(openTank) ?? null : null
@@ -84,6 +112,7 @@ export function StoragePage() {
   }, [openTank])
 
   const legend: LegendItem[] = ['nospec', 'missing']
+  if (varianceTankCount > 0) legend.unshift('variance')
   if (retests > 0) legend.unshift('retest')
 
   return (
@@ -98,6 +127,7 @@ export function StoragePage() {
       <section className="prod-kpis" aria-label={t.qcStorage}>
         <QcKpi label={t.tanksLogged} value={String(withResult.length)} onOpen={() => setDialog('tanks')} />
         <QcKpi label={t.retestDue} value={String(retests)} tone={retests > 0 ? 'alert' : undefined} onOpen={() => setDialog('retest')} />
+        <QcKpi label={t.varianceAlerts} value={String(varianceTankCount)} tone={varianceTankCount > 0 ? 'alert' : undefined} onOpen={() => setDialog('variance')} />
         <QcKpi label={t.oilTypes} value={String(families)} onOpen={() => setDialog('oils')} />
       </section>
       <ProductBoard rows={withResult.map((slot) => slot.row)} slots={STORAGE_TANK_IDS.length} onOpen={setOpenTank} />
@@ -146,7 +176,7 @@ export function StoragePage() {
                           product={slot.row?.oil ?? null}
                         />
                       </td>
-                      <ResultCells row={slot.row} columns={columns} />
+                      <ResultCells row={slot.row} columns={columns} variance={slot.row ? varianceByTank.get(slot.row.tankId) : undefined} />
                     </tr>
                   )
                 })}
@@ -162,6 +192,7 @@ export function StoragePage() {
                 row={slot.row}
                 range={productRange(inSpan, slot.row.oil, 'ffa')}
                 rangeCaption={rangeCaption}
+                variance={varianceByTank.get(slot.tankId)}
                 onOpen={() => setOpenTank(slot.tankId)}
               />
             ))}
@@ -170,13 +201,15 @@ export function StoragePage() {
       </QcPanelOpen>
       <QcDetailDialog
         open={dialog != null}
-        title={dialog === 'retest' ? t.retestDue : dialog === 'oils' ? t.oilTypes : t.tanksLogged}
+        title={dialog === 'retest' ? t.retestDue : dialog === 'oils' ? t.oilTypes : dialog === 'variance' ? t.varianceAlerts : t.tanksLogged}
         start={start}
         end={end}
         onClose={() => setDialog(null)}
       >
         {dialog === 'retest' ? (
           <StorageLatestDetail rows={withResult.filter((slot) => retestDue(slot.row)).map((slot) => slot.row)} />
+        ) : dialog === 'variance' ? (
+          <VarianceDetail rows={varianceRows} />
         ) : (
           <StorageLatestDetail rows={withResult.map((slot) => slot.row)} />
         )}
@@ -309,7 +342,15 @@ function IdentityHeader({ sort }: { sort: { key: string | null; dir: SortDir; to
   )
 }
 
-function ResultCells({ row, columns }: { row: StorageRow | null; columns: Column[] }) {
+function ResultCells({
+  row,
+  columns,
+  variance,
+}: {
+  row: StorageRow | null
+  columns: Column[]
+  variance?: Partial<Record<string, VarianceAlert>>
+}) {
   const { t } = useLocale()
   return (
     <>
@@ -335,6 +376,7 @@ function ResultCells({ row, columns }: { row: StorageRow | null; columns: Column
             className={className || undefined}
             value={row && column.field ? row[column.field] : null}
             code={column.code ?? 'ffa'}
+            variance={variance?.[column.column] ?? null}
           />
         )
       })}
@@ -346,18 +388,21 @@ function StorageCard({
   row,
   range,
   rangeCaption,
+  variance,
   onOpen,
 }: {
   row: StorageRow
   range: ReturnType<typeof productRange>
   rangeCaption: (product: string, count: number) => string
+  variance?: Partial<Record<string, VarianceAlert>>
   onOpen: () => void
 }) {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   const param = useParam()
   const ratio = tankFill(row)
   const retest = retestDue(row)
   const percent = ratio == null ? null : Math.round(ratio * 100)
+  const varianceCount = variance ? Object.keys(variance).length : 0
   return (
     <article className={retest ? 'tank-card qc-card--retest' : 'tank-card'}>
       <header className="tank-card__head">
@@ -368,6 +413,11 @@ function StorageCard({
         <span>
           <AgeDot age={ageAtSnapshot(row.analysisDate, row.snapshotOn)} />
           {retest ? <span className="badge badge--warning qc-badge">{t.retest}</span> : null}
+          {varianceCount > 0 ? (
+            <span className="badge badge--variance qc-badge" title={varianceTitle(variance ?? {}, locale)}>
+              {t.varianceAlert} {varianceCount}
+            </span>
+          ) : null}
         </span>
       </header>
       <div className="qc-card__fill">
@@ -382,13 +432,32 @@ function StorageCard({
         context={{ kind: 'range', range, caption: rangeCaption(row.oil || '-', range?.count ?? 0) }}
       />
       <dl className="tank-card__metrics">
-        <div><dt>{t.moisturePct}</dt><dd>{param('moisture', row.moisture)}</dd></div>
-        <div><dt>{t.colourRLov}</dt><dd>{param('colorR', row.colorR)}</dd></div>
-        <div><dt>{t.colourYLov}</dt><dd>{param('colorY', row.colorY)}</dd></div>
+        <div><dt>{t.moisturePct}</dt><dd>{param('moisture', row.moisture)}<VarianceMark alert={variance?.moisture} /></dd></div>
+        <div><dt>{t.colourRLov}</dt><dd>{param('colorR', row.colorR)}<VarianceMark alert={variance?.colorR} /></dd></div>
+        <div><dt>{t.colourYLov}</dt><dd>{param('colorY', row.colorY)}<VarianceMark alert={variance?.colorY} /></dd></div>
         <div><dt>{t.tempC}</dt><dd>{param('temp', row.temperatureC)}</dd></div>
       </dl>
     </article>
   )
+}
+
+/** Small direction arrow shown next to a card metric that moved 15%+ from its last result. */
+function VarianceMark({ alert }: { alert?: VarianceAlert }) {
+  if (!alert) return null
+  return (
+    <span
+      className={alert.pctChange >= 0 ? 'num-variance-arrow num-variance-arrow--up' : 'num-variance-arrow num-variance-arrow--down'}
+      aria-hidden="true"
+    >
+      {alert.pctChange >= 0 ? '\u25b2' : '\u25bc'}
+    </span>
+  )
+}
+
+function varianceTitle(variance: Partial<Record<string, VarianceAlert>>, locale: 'en' | 'id'): string {
+  return Object.entries(variance)
+    .map(([column, alert]) => `${column} ${formatVariancePct((alert as VarianceAlert).pctChange)} (${(alert as VarianceAlert).currentDate ? formatDay((alert as VarianceAlert).currentDate as string, locale) : ''})`)
+    .join(', ')
 }
 
 function FfaHistory({

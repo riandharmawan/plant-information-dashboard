@@ -3,6 +3,8 @@ import { qcDates } from '../../domain/qc.ts'
 import { useQcFile } from '../../data/QcContext.tsx'
 import { useLocale } from '../../i18n/LocaleContext.tsx'
 import type { InboundVerdict } from '../../domain/types.ts'
+import { formatDay } from '../../domain/format.ts'
+import { formatVariancePct, type VarianceAlert } from '../../domain/qualityVariance.ts'
 import { DateRangeFilter } from '../daily-production/DateRangeFilter.tsx'
 import { QcTabs } from './qcNav.tsx'
 
@@ -89,23 +91,42 @@ export function Num({
   code,
   breach = false,
   watch = false,
+  variance = null,
   className,
 }: {
   value: number | null
   code: ParamCode
   breach?: boolean
   watch?: boolean
+  /** Set when this result moved 15%+ from the tank's last recorded result. Shown alongside, not instead of, breach/watch. */
+  variance?: VarianceAlert | null
   className?: string
 }) {
   const param = useParam()
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   const names = ['num']
   if (className) names.push(className)
   if (value == null) names.push('num--empty')
   else if (breach) names.push('num--neg')
   else if (watch) names.push('num--watch')
+  if (variance) names.push('num--variance')
   const title = value == null ? t.notRecorded : breach ? t.overMax : watch ? t.watch : undefined
-  return <td className={names.join(' ')} title={title}>{param(code, value)}</td>
+  const varianceTitle = variance
+    ? t.varianceTooltip
+      .replace('{pct}', formatVariancePct(variance.pctChange))
+      .replace('{previous}', param(code, variance.previous))
+      .replace('{day}', variance.previousDate ? formatDay(variance.previousDate, locale) : t.unavailable)
+    : undefined
+  return (
+    <td className={names.join(' ')} title={varianceTitle ?? title}>
+      {param(code, value)}
+      {variance ? (
+        <span className={variance.pctChange >= 0 ? 'num-variance-arrow num-variance-arrow--up' : 'num-variance-arrow num-variance-arrow--down'} aria-hidden="true">
+          {variance.pctChange >= 0 ? '\u25b2' : '\u25bc'}
+        </span>
+      ) : null}
+    </td>
+  )
 }
 
 export function VerdictBadge({ verdict }: { verdict: InboundVerdict }) {
