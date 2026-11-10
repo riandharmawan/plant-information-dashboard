@@ -1,9 +1,12 @@
 import { Router } from 'express'
-import { requireAuth, requirePermission } from '../access.js'
+import { requireAuth, requirePermission, requireSiteAccess } from '../access.js'
 import { query } from '../db.js'
 import { finishedOilFromDays, historyFromDays, hourlyFromDays, ledgerFromDays, snapshotFromDays } from '../refineryQuality.js'
 
 const router = Router({ mergeParams: true })
+
+// Every quality control route needs a session, the page right, and a site the user holds.
+router.use(requireAuth, requirePermission('qc', 'view'), requireSiteAccess)
 
 function num(value) {
   if (value == null || value === '') return null

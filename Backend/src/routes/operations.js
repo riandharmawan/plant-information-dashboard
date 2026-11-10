@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { query } from '../db.js'
+import { requireAny, requireAuth, requireSiteAccess } from '../access.js'
 import { loadCatalog } from '../catalog.js'
 import { massToKg, stockFromGauge, stockFromProfile } from '../domain/stock.js'
 import { assessStorage, oilFamilyOf, presentLogistics, presentTank } from '../domain/present.js'
@@ -116,13 +117,23 @@ function certificateAsOf(rows, day) {
     .at(-1) ?? null
 }
 
-router.get('/sites', async (_req, res, next) => {
+// Every route under /sites needs a session. The site in the URL must be one the user holds, and the
+// data routes also need a right on a page that shows operational data.
+router.use('/sites', requireAuth)
+router.use('/sites/:siteId', requireSiteAccess)
+router.use(
+  ['/sites/:siteId/snapshot', '/sites/:siteId/live', '/sites/:siteId/tanks', '/sites/:siteId/analytics'],
+  requireAny([['live-ops', 'view'], ['ops-analytics', 'view']]),
+)
+
+router.get('/sites', async (req, res, next) => {
   try {
     const result = await query(
       `SELECT s.id, s.name, s.timezone, c.name AS "companyName"
        FROM sites s JOIN companies c ON c.id = s.company_id
-       WHERE s.is_activated
+       WHERE s.is_activated AND s.id = ANY($1::text[])
        ORDER BY s.name`,
+      [req.sessionUser.sites.map((site) => site.id)],
     )
     res.json(result.rows)
   } catch (error) {

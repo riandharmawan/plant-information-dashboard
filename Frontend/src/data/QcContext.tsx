@@ -24,7 +24,7 @@ export function QcLayout({ children }: { children?: ReactNode }) {
     const base = apiBase()
     let cancelled = false
     const load = async (path: string) => {
-      const response = await fetch(`${base}${path}`)
+      const response = await fetch(`${base}${path}`, { credentials: 'include' })
       if (!response.ok) throw new Error(`API ${response.status} for ${path}`)
       return response.json()
     }

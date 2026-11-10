@@ -135,6 +135,15 @@ export function requirePermission(page, action) {
   }
 }
 
+/** The site in the URL must be one the signed-in user holds. Use after requireAuth. */
+export function requireSiteAccess(req, res, next) {
+  const siteId = req.params.siteId
+  if (!req.sessionUser?.sites?.some((site) => site.id === siteId)) {
+    return res.status(403).json({ error: 'forbidden' })
+  }
+  next()
+}
+
 export function requireAny(checks) {
   return (req, res, next) => {
     const allowed = checks.some(([page, action]) => req.sessionUser?.permissions?.[page]?.[action])
