@@ -8,6 +8,8 @@ export interface SessionSite {
   siteCode?: string | null
   companyName?: string
   companyCode?: string | null
+  /** The modules switched on for this site: live-ops, qc, utility, daily-production. */
+  modules?: string[]
 }
 
 export interface PageRight {
@@ -30,6 +32,8 @@ interface AuthState {
   loading: boolean
   login: (username: string, password: string) => Promise<void>
   logout: () => Promise<void>
+  /** Read the session again, for example after the site modules changed. */
+  refresh: () => Promise<void>
   changePassword: (currentPassword: string, newPassword: string) => Promise<void>
   can: (page: string, action: 'view' | 'edit' | 'delete') => boolean
 }
@@ -57,6 +61,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
+  const refresh = useCallback(async () => {
+    const next = await api<SessionUser>('/api/v1/auth/me')
+    setUser(next)
+  }, [])
+
   const login = useCallback(async (username: string, password: string) => {
     const next = await api<SessionUser>('/api/v1/auth/login', {
       method: 'POST',
@@ -82,8 +91,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [user])
 
   const value = useMemo(
-    () => ({ user, loading, login, logout, changePassword, can }),
-    [user, loading, login, logout, changePassword, can],
+    () => ({ user, loading, login, logout, refresh, changePassword, can }),
+    [user, loading, login, logout, refresh, changePassword, can],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

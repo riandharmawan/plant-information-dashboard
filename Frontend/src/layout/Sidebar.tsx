@@ -1,5 +1,6 @@
 import { ArrowLeftRight, FlaskConical, Ship, TestTube, Truck, Building2, ChevronLeft, ChevronRight, ClipboardList, Droplet, Droplets, Factory, Filter, Flame, Gauge, Layers, LayoutGrid, MapPin, Mountain, Package, Radio, Scale, Shield, Tractor, Warehouse, Waves } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
+import { useActiveSite } from '../data/ActiveSiteContext.tsx'
 import { useAuth } from '../data/AuthContext.tsx'
 import { useLocale } from '../i18n/LocaleContext.tsx'
 
@@ -14,6 +15,7 @@ export function Sidebar({
 }) {
   const { t } = useLocale()
   const { can, user } = useAuth()
+  const { hasModule } = useActiveSite()
   const hasSites = (user?.sites.length ?? 0) > 0
   const className = [
     'sidebar',
@@ -43,7 +45,7 @@ export function Sidebar({
           </div>
         </div>
         <nav className="sidebar-nav">
-          {hasSites && can('live-ops', 'view') ? (
+          {hasSites && hasModule('live-ops') && can('live-ops', 'view') ? (
             <>
           <p className="sidebar-nav__section">{t.tankFarm}</p>
           <NavLink to="/" end title={t.liveOps} className={({ isActive }) => (isActive ? 'active' : undefined)}>
@@ -52,7 +54,7 @@ export function Sidebar({
           </NavLink>
             </>
           ) : null}
-          {hasSites && can('qc', 'view') ? (
+          {hasSites && hasModule('qc') && can('qc', 'view') ? (
             <>
           <p className="sidebar-nav__section">{t.qualityControl}</p>
           <NavLink to="/qc" end title={t.qcTitle} className={({ isActive }) => (isActive ? 'active' : undefined)}>
@@ -83,7 +85,7 @@ export function Sidebar({
           </div>
             </>
           ) : null}
-          {hasSites && can('utility', 'view') ? (
+          {hasSites && hasModule('utility') && can('utility', 'view') ? (
             <>
           <p className="sidebar-nav__section">{t.utility}</p>
           <NavLink to="/utility" end title={t.utilityOverview} className={({ isActive }) => (isActive ? 'active' : undefined)}>
@@ -114,7 +116,7 @@ export function Sidebar({
           </div>
             </>
           ) : null}
-          {hasSites && can('daily-production', 'view') ? (
+          {hasSites && hasModule('daily-production') && can('daily-production', 'view') ? (
             <>
           <p className="sidebar-nav__section">{t.productionGroup}</p>
           <NavLink to="/daily-production" end title={t.dailyProduction} className={({ isActive }) => (isActive ? 'active' : undefined)}>
@@ -182,7 +184,7 @@ export function Sidebar({
           </NavLink>
             </>
           ) : null}
-          {can('admin-users', 'view') || can('admin-roles', 'view') || can('admin-datahub', 'view') ? (
+          {can('admin-users', 'view') || can('admin-roles', 'view') || can('admin-datahub', 'view') || can('master-sites', 'view') ? (
             <>
           <p className="sidebar-nav__section">{t.administration}</p>
           <NavLink to="/admin" end title={t.adminMenuTitle} className={({ isActive }) => (isActive ? 'active' : undefined)}>

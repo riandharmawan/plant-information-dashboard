@@ -27,6 +27,13 @@ export function AdminMenuPage() {
             <span className="master-open">{t.openPage}</span>
           </Link>
         ) : null}
+        {can('master-sites', 'view') ? (
+          <Link className="master-link-card" to="/admin/site-modules">
+            <h3>{t.siteModules}</h3>
+            <p>{t.siteModulesBlurb}</p>
+            <span className="master-open">{t.openPage}</span>
+          </Link>
+        ) : null}
         {can('admin-datahub', 'view') ? (
           <Link className="master-link-card" to="/admin/datahub">
             <h3>DataHub</h3>

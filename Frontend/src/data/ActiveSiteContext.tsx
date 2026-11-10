@@ -29,6 +29,8 @@ interface ActiveSiteState {
   /** Every site the signed-in user may open. */
   sites: SessionSite[]
   setSiteId: (id: string) => void
+  /** Whether the active site has this module switched on. */
+  hasModule: (key: string) => boolean
 }
 
 const ActiveSiteContext = createContext<ActiveSiteState | null>(null)
@@ -66,10 +68,10 @@ export function ActiveSiteProvider({ children }: { children: ReactNode }) {
     [sites],
   )
 
-  const value = useMemo<ActiveSiteState>(
-    () => ({ siteId, site: sites.find((s) => s.id === siteId) ?? null, sites, setSiteId }),
-    [siteId, sites, setSiteId],
-  )
+  const value = useMemo<ActiveSiteState>(() => {
+    const site = sites.find((s) => s.id === siteId) ?? null
+    return { siteId, site, sites, setSiteId, hasModule: (key: string) => site?.modules?.includes(key) === true }
+  }, [siteId, sites, setSiteId])
 
   return <ActiveSiteContext.Provider value={value}>{children}</ActiveSiteContext.Provider>
 }

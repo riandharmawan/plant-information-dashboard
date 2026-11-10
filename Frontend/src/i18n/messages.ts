@@ -432,6 +432,12 @@ export interface Messages {
   inUse: string
   liveLabel: string
   lastReading: string
+  siteModules: string
+  siteModulesBlurb: string
+  siteModulesIntro: string
+  siteModulesSaved: string
+  moduleNotEnabled: string
+  moduleNotEnabledBody: string
   switchSite: string
   searchRoles: string
   rolesShown: string
@@ -1105,6 +1111,12 @@ export const MESSAGES: Record<Locale, Messages> = {
     inUse: 'In use',
     liveLabel: 'Live',
     lastReading: 'Last reading',
+    siteModules: 'Site modules',
+    siteModulesBlurb: 'Choose which modules each site uses, such as the Tank & Stock Dashboard, quality control or utility.',
+    siteModulesIntro: 'Tick the modules a site has data for. A module that is off disappears from the menu of that site, and its screens and data are closed.',
+    siteModulesSaved: 'Saved',
+    moduleNotEnabled: 'Not available for this site',
+    moduleNotEnabledBody: 'This module is not switched on for the site you are viewing. Pick another site, or ask an administrator to turn it on.',
     switchSite: 'Switch site',
     searchRoles: 'Search roles',
     rolesShown: '{n} of {total} roles',
@@ -1776,6 +1788,12 @@ export const MESSAGES: Record<Locale, Messages> = {
     inUse: 'Digunakan',
     liveLabel: 'Langsung',
     lastReading: 'Pembacaan terakhir',
+    siteModules: 'Modul site',
+    siteModulesBlurb: 'Pilih modul yang dipakai setiap site, seperti Dasbor Tangki & Stok, kendali mutu, atau utilitas.',
+    siteModulesIntro: 'Centang modul yang datanya dimiliki site. Modul yang dimatikan hilang dari menu site tersebut, dan layar serta datanya ditutup.',
+    siteModulesSaved: 'Tersimpan',
+    moduleNotEnabled: 'Tidak tersedia untuk site ini',
+    moduleNotEnabledBody: 'Modul ini tidak diaktifkan untuk site yang sedang Anda lihat. Pilih site lain, atau minta administrator mengaktifkannya.',
     switchSite: 'Ganti site',
     searchRoles: 'Cari peran',
     rolesShown: '{n} dari {total} peran',

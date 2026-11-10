@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { query } from '../db.js'
-import { requireAny, requireAuth, requireSiteAccess } from '../access.js'
+import { requireAny, requireAuth, requireSiteAccess, requireSiteModule } from '../access.js'
 import { loadCatalog } from '../catalog.js'
 import { massToKg, stockFromGauge, stockFromProfile } from '../domain/stock.js'
 import { assessStorage, oilFamilyOf, presentLogistics, presentTank } from '../domain/present.js'
@@ -131,6 +131,7 @@ router.use('/sites/:siteId', requireSiteAccess)
 router.use(
   ['/sites/:siteId/snapshot', '/sites/:siteId/live', '/sites/:siteId/tanks', '/sites/:siteId/analytics'],
   requireAny([['live-ops', 'view'], ['ops-analytics', 'view']]),
+  requireSiteModule('live-ops'),
 )
 
 router.get('/sites', async (req, res, next) => {

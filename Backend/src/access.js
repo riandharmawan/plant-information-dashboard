@@ -23,6 +23,9 @@ export const PAGE_KEYS = [
   'admin-datahub',
 ]
 
+/** The modules a site can switch on. Master data and Administration are not site modules. */
+export const SITE_MODULES = ['live-ops', 'qc', 'utility', 'daily-production']
+
 const COOKIE = 'pid_session'
 
 function secret() {
@@ -59,6 +62,15 @@ export async function loadSession(userId) {
      ORDER BY c.name, s.name`,
     [row.id],
   )
+  const modules = await query(
+    `SELECT site_id, module_key FROM site_modules WHERE site_id = ANY($1::text[])`,
+    [sites.rows.map((site) => site.id)],
+  )
+  const modulesBySite = new Map()
+  for (const row of modules.rows) {
+    if (!modulesBySite.has(row.site_id)) modulesBySite.set(row.site_id, [])
+    modulesBySite.get(row.site_id).push(row.module_key)
+  }
   const adminRole = await query(
     `SELECT 1 FROM user_roles ur JOIN roles r ON r.id = ur.role_id
      WHERE ur.user_id = $1 AND r.name = 'Administrator' AND r.is_system_role = TRUE LIMIT 1`,
@@ -91,6 +103,7 @@ export async function loadSession(userId) {
       siteCode: site.site_code,
       companyName: site.company_name,
       companyCode: site.company_code,
+      modules: SITE_MODULES.filter((key) => modulesBySite.get(site.id)?.includes(key)),
     })),
     permissions,
     // The system Administrator may grant any activated site. Other users grant only their own.
@@ -142,6 +155,15 @@ export function requireSiteAccess(req, res, next) {
     return res.status(403).json({ error: 'forbidden' })
   }
   next()
+}
+
+/** The site in the URL must have this module switched on. Use after requireAuth and requireSiteAccess. */
+export function requireSiteModule(moduleKey) {
+  return (req, res, next) => {
+    const site = req.sessionUser?.sites?.find((s) => s.id === req.params.siteId)
+    if (!site?.modules?.includes(moduleKey)) return res.status(403).json({ error: 'module_not_enabled' })
+    next()
+  }
 }
 
 export function requireAny(checks) {

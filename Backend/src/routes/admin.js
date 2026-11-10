@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { pool, query } from '../db.js'
-import { PAGE_KEYS, hashPassword, requireAny, requireAuth, requirePermission } from '../access.js'
+import { PAGE_KEYS, SITE_MODULES, hashPassword, requireAny, requireAuth, requirePermission } from '../access.js'
 
 const router = Router()
 
@@ -437,6 +437,54 @@ router.delete('/users/:id', requirePermission('admin-users', 'delete'), async (r
     res.status(204).end()
   } catch (error) {
     await client.query('ROLLBACK')
+    next(error)
+  } finally {
+    client.release()
+  }
+})
+
+// Which modules each site uses. Reading and changing it is part of managing sites.
+router.get('/site-modules', requirePermission('master-sites', 'view'), async (req, res, next) => {
+  try {
+    const sites = await grantableSites(req)
+    const rows = await query('SELECT site_id, module_key FROM site_modules WHERE site_id = ANY($1::text[])', [sites.map((s) => s.id)])
+    const by = new Map()
+    for (const r of rows.rows) by.set(r.site_id, [...(by.get(r.site_id) ?? []), r.module_key])
+    res.json({
+      modules: SITE_MODULES,
+      sites: sites.map((site) => ({
+        id: site.id,
+        name: site.name,
+        companyName: site.company_name,
+        siteCode: site.site_code,
+        modules: SITE_MODULES.filter((key) => by.get(site.id)?.includes(key)),
+      })),
+    })
+  } catch (error) {
+    next(error)
+  }
+})
+
+router.put('/site-modules/:siteId', requirePermission('master-sites', 'edit'), async (req, res, next) => {
+  const client = await pool.connect()
+  try {
+    const siteId = String(req.params.siteId)
+    const sites = await grantableSites(req)
+    if (!sites.some((site) => site.id === siteId)) return res.status(404).json({ error: 'site_not_found' })
+    const asked = req.body?.modules
+    if (!Array.isArray(asked) || asked.some((key) => !SITE_MODULES.includes(key))) {
+      return res.status(400).json({ error: 'invalid_modules' })
+    }
+    const modules = SITE_MODULES.filter((key) => asked.includes(key))
+    await client.query('BEGIN')
+    await client.query('DELETE FROM site_modules WHERE site_id = $1', [siteId])
+    for (const key of modules) {
+      await client.query('INSERT INTO site_modules (site_id, module_key, updated_by) VALUES ($1, $2, $3)', [siteId, key, req.sessionUser.id])
+    }
+    await client.query('COMMIT')
+    res.json({ id: siteId, modules })
+  } catch (error) {
+    await client.query('ROLLBACK').catch(() => {})
     next(error)
   } finally {
     client.release()

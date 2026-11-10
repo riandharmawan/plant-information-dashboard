@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { requireAuth, requirePermission } from '../access.js'
+import { requireAuth, requirePermission, requireSiteModule } from '../access.js'
 import { loadProductionDays } from '../productionReport.js'
 
 const router = Router()
@@ -13,7 +13,7 @@ function allowedSite(req, res) {
   return true
 }
 
-router.get('/sites/:siteId/production', requireAuth, requirePermission('daily-production', 'view'), async (req, res, next) => {
+router.get('/sites/:siteId/production', requireAuth, requirePermission('daily-production', 'view'), requireSiteModule('daily-production'), async (req, res, next) => {
   try {
     if (!allowedSite(req, res)) return
     const days = await loadProductionDays(req.params.siteId)

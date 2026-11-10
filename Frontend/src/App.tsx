@@ -13,6 +13,7 @@ import { AdminMenuPage } from './features/admin/AdminMenuPage.tsx'
 import { RolesPage } from './features/admin/RolesPage.tsx'
 import { UsersPage } from './features/admin/UsersPage.tsx'
 import { DataHubPage } from './features/admin/DataHubPage.tsx'
+import { SiteModulesPage } from './features/admin/SiteModulesPage.tsx'
 import { PageGate, RequireAuth, SiteRequired } from './features/auth/guards.tsx'
 import { LoginPage } from './features/login/LoginPage.tsx'
 import { SsoErrorPage } from './features/login/SsoErrorPage.tsx'
@@ -64,13 +65,13 @@ export default function App() {
                   <Route element={<RequireAuth />}>
                     <Route element={<AppShell />}>
                       <Route path="/" element={<SiteRequired />}>
-                        <Route element={<PageGate page="live-ops" />}>
+                        <Route element={<PageGate page="live-ops" module="live-ops" landing />}>
                           <Route index element={<LiveOpsPage />} />
                         </Route>
-                        <Route element={<PageGate page="ops-analytics" />}>
+                        <Route element={<PageGate page="ops-analytics" module="live-ops" />}>
                           <Route path="ops-analytics" element={<OpsAnalyticsPage />} />
                         </Route>
-                        <Route element={<PageGate page="daily-production" />}>
+                        <Route element={<PageGate page="daily-production" module="daily-production" />}>
                           <Route element={<ProductionLayout />}>
                             <Route path="daily-production" element={<DailyProductionPage />} />
                             <Route path="daily-production/refinery-500" element={<Refinery500Page />} />
@@ -81,7 +82,7 @@ export default function App() {
                             <Route path="daily-production/supporting-materials" element={<SupportingMaterialsPage />} />
                           </Route>
                         </Route>
-                        <Route element={<PageGate page="qc" />}>
+                        <Route element={<PageGate page="qc" module="qc" />}>
                           <Route path="qc/refinery" element={<RefineryQualityPage />} />
                           <Route path="qc" element={<QcLayout />}>
                             <Route index element={<QcOverviewPage />} />
@@ -91,7 +92,7 @@ export default function App() {
                             <Route path="movements" element={<MovementPage />} />
                           </Route>
                         </Route>
-                        <Route element={<PageGate page="utility" />}>
+                        <Route element={<PageGate page="utility" module="utility" />}>
                           <Route path="utility" element={<UtilityLayout />}>
                             <Route index element={<UtilityOverviewPage />} />
                             <Route path="boiler" element={<BoilerPage />} />
@@ -126,6 +127,9 @@ export default function App() {
                       </Route>
                       <Route element={<PageGate page="admin-datahub" />}>
                         <Route path="admin/datahub" element={<DataHubPage />} />
+                      </Route>
+                      <Route element={<PageGate page="master-sites" />}>
+                        <Route path="admin/site-modules" element={<SiteModulesPage />} />
                       </Route>
                       <Route element={<PageGate page="admin-roles" />}>
                         <Route path="admin/roles" element={<RolesPage />} />

@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { requireAuth, requirePermission } from '../access.js'
+import { requireAuth, requirePermission, requireSiteModule } from '../access.js'
 import { query } from '../db.js'
 
 const router = Router({ mergeParams: true })
@@ -163,7 +163,7 @@ function coalDays(rows) {
   return [...days.values()]
 }
 
-router.get('/', requireAuth, requirePermission('utility', 'view'), async (req, res, next) => {
+router.get('/', requireAuth, requirePermission('utility', 'view'), requireSiteModule('utility'), async (req, res, next) => {
   try {
     if (!allowedSite(req, res)) return
     const siteId = req.params.siteId
@@ -306,7 +306,7 @@ router.get('/', requireAuth, requirePermission('utility', 'view'), async (req, r
   }
 })
 
-router.get('/day', requireAuth, requirePermission('utility', 'view'), async (req, res, next) => {
+router.get('/day', requireAuth, requirePermission('utility', 'view'), requireSiteModule('utility'), async (req, res, next) => {
   try {
     if (!allowedSite(req, res)) return
     const form = String(req.query.form || '')

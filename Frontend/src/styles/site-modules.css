@@ -1,0 +1,67 @@
+/* Site modules: which modules each site uses */
+
+.sm-panel {
+  overflow-x: auto;
+}
+
+.sm-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-primary);
+}
+
+.sm-table th,
+.sm-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--color-border, rgba(17, 76, 90, 0.12));
+  text-align: left;
+  vertical-align: middle;
+}
+
+.sm-table thead th {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-muted, #5b6b70);
+}
+
+.sm-col {
+  text-align: center !important;
+  white-space: nowrap;
+}
+
+.sm-col input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-sea-deep, #114c5a);
+  cursor: pointer;
+}
+
+.sm-col input:disabled {
+  cursor: not-allowed;
+}
+
+.sm-site {
+  display: block;
+  font-weight: var(--font-weight-semibold);
+}
+
+.sm-company {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: normal;
+  color: var(--color-text-muted, #5b6b70);
+}
+
+.sm-status {
+  width: 90px;
+  color: #0b6b4b;
+  font-size: var(--font-size-sm);
+}
+
+.sm-error {
+  margin: 0 0 var(--spacing-3, 12px);
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: #fde8e8;
+  color: #8a1c1c;
+}
