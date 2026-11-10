@@ -3,8 +3,8 @@ import { ChevronRight } from 'lucide-react'
 import { useCalibration } from '../../data/CalibrationContext.tsx'
 import { useRepository } from '../../data/OperationsContext.tsx'
 import { useLocale } from '../../i18n/LocaleContext.tsx'
-import type { LogisticsVehicle, SiteContext, SnapshotMeta, TankLive } from '../../domain/types.ts'
-import { formatDay, inDateRange, tankLabel } from '../../domain/format.ts'
+import type { SiteContext, SnapshotMeta, TankLive } from '../../domain/types.ts'
+import { formatDay, tankLabel } from '../../domain/format.ts'
 import { DateRangeFilter } from '../daily-production/DateRangeFilter.tsx'
 import { addDays, usePeriodRange } from '../usePeriodRange.ts'
 import { CommodityFilter } from './CommodityFilter.tsx'
@@ -33,7 +33,6 @@ export function LiveOpsPage() {
   const [meta, setMeta] = useState<SnapshotMeta | null>(null)
   const [tanks, setTanks] = useState<TankLive[]>([])
   const [varianceByTank, setVarianceByTank] = useState<Map<string, LabVarianceAlert[]>>(new Map())
-  const [logistics, setLogistics] = useState<LogisticsVehicle[]>([])
   const [commodity, setCommodity] = useState<string[] | null>(null)
   const [tankView, setTankView] = useState<TankView>('table')
   const [history, setHistory] = useState<{ tankId: string; metric: HistoryMetric; commodity: string } | null>(null)
@@ -45,15 +44,10 @@ export function LiveOpsPage() {
 
   useEffect(() => {
     let active = true
-    Promise.all([
-      repository.getSite(),
-      repository.getSnapshotMeta(),
-      repository.getLiveLogistics(),
-    ]).then(([nextSite, nextMeta, nextLogistics]) => {
+    Promise.all([repository.getSite(), repository.getSnapshotMeta()]).then(([nextSite, nextMeta]) => {
       if (!active) return
       setSite(nextSite)
       setMeta(nextMeta)
-      setLogistics(nextLogistics)
     })
     return () => {
       active = false
@@ -97,10 +91,7 @@ export function LiveOpsPage() {
   }
   const families = [...new Set(tanks.map((tank) => tank.oilFamily))].sort()
   const visible = commodity == null ? tanks : tanks.filter((tank) => commodity.includes(tank.oilFamily))
-  const gateVehicles = logistics.filter((item) => !day || inDateRange(item.sampledOn, lookbackStart, day))
-  const judged = gateVehicles.filter((item) => item.oilFamily === 'CPO' && item.verdict !== 'spec-pending')
   const tempValue = mean(visible.filter((tank) => tank.soundingLevelM != null).map((tank) => tank.temperatureC))
-  const approval = judged.length === 0 ? t.unavailable : `${((judged.filter((item) => item.verdict === 'pass').length / judged.length) * 100).toFixed(1)}%`
 
   const stored = visible.filter((tank) => tank.capacityKg != null && tank.capacityKg > 0)
   const capacityTotal = stored.reduce((sum, tank) => sum + (tank.capacityKg ?? 0), 0)
@@ -114,7 +105,6 @@ export function LiveOpsPage() {
     utilization: t.storageUtilization,
     activeEmpty: t.activeVsEmpty,
     alerts: t.criticalAlerts,
-    approval: judged.length > 0 ? `${t.approvalRate} · ${t.incomingCpo}` : t.approvalRate,
     variance: t.varianceAlerts,
   }
 
@@ -169,12 +159,6 @@ export function LiveOpsPage() {
                 onOpen={() => setKpiDetail('alerts')}
               />
               <Kpi
-                label={kpiTitles.approval}
-                value={approval}
-                tone={judged.length > 0 ? 'yield' : undefined}
-                onOpen={() => setKpiDetail('approval')}
-              />
-              <Kpi
                 label={kpiTitles.variance}
                 value={visible.length === 0 ? t.unavailable : String(varianceTanks.length)}
                 sub={varianceTanks.length > 0 ? varianceTanks.map((tank) => tankLabel(tank.tankId)).join(', ') : undefined}
@@ -221,9 +205,7 @@ export function LiveOpsPage() {
           title={kpiDetail ? kpiTitles[kpiDetail] : ''}
           tanks={visible}
           averageTemperature={tempValue}
-          judged={judged}
           day={day}
-          windowStart={lookbackStart}
           varianceByTank={varianceByTank}
           onClose={() => setKpiDetail(null)}
         />

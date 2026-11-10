@@ -1,22 +1,20 @@
 import { useEffect, useRef } from 'react'
 import { formatDay, formatMeasure, tankLabel } from '../../domain/format.ts'
-import type { LogisticsVehicle, TankLive } from '../../domain/types.ts'
+import type { TankLive } from '../../domain/types.ts'
 import { formatVariancePct, type LabVarianceAlert } from '../../domain/qualityVariance.ts'
 import { useLocale } from '../../i18n/LocaleContext.tsx'
 import { LevelCue } from './LevelCue.tsx'
 import { useMass } from './massUnit.ts'
 import { isEmptyTank, isOverfilled, isTempAnomaly } from './tankAlerts.ts'
 
-export type KpiKind = 'utilization' | 'activeEmpty' | 'alerts' | 'approval' | 'variance'
+export type KpiKind = 'utilization' | 'activeEmpty' | 'alerts' | 'variance'
 
 export function KpiDetailDialog({
   kind,
   title,
   tanks,
   averageTemperature,
-  judged,
   day,
-  windowStart,
   varianceByTank,
   onClose,
 }: {
@@ -24,9 +22,7 @@ export function KpiDetailDialog({
   title: string
   tanks: TankLive[]
   averageTemperature: number | null
-  judged: LogisticsVehicle[]
   day: string
-  windowStart: string
   varianceByTank: Map<string, LabVarianceAlert[]>
   onClose: () => void
 }) {
@@ -46,14 +42,11 @@ export function KpiDetailDialog({
         <>
           <h2>{title}</h2>
           <p className="stock-dialog__updated">
-            {kind === 'approval'
-              ? t.gateSamplesWindow.replace('{start}', formatDay(windowStart, locale)).replace('{end}', formatDay(day, locale))
-              : formatDay(day, locale)}
+            {formatDay(day, locale)}
           </p>
           {kind === 'utilization' && <UtilizationDetail tanks={tanks} />}
           {kind === 'activeEmpty' && <ActiveEmptyDetail tanks={tanks} />}
           {kind === 'alerts' && <AlertDetail tanks={tanks} averageTemperature={averageTemperature} />}
-          {kind === 'approval' && <ApprovalDetail judged={judged} />}
           {kind === 'variance' && <VarianceDetail tanks={tanks} varianceByTank={varianceByTank} />}
           <div className="stock-dialog__actions">
             <button type="button" className="btn btn--secondary" onClick={onClose}>{t.close}</button>
@@ -231,61 +224,6 @@ function AlertDetail({ tanks, averageTemperature }: { tanks: TankLive[]; average
                         )}
                       </span>
                     </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-    </>
-  )
-}
-
-function ApprovalDetail({ judged }: { judged: LogisticsVehicle[] }) {
-  const { t, locale } = useLocale()
-  const rows = [...judged].sort((left, right) => (right.sampledOn ?? '').localeCompare(left.sampledOn ?? ''))
-  const passed = rows.filter((item) => item.verdict === 'pass').length
-
-  return (
-    <>
-      <dl className="qty-stats">
-        <Stat label={t.pass} value={String(passed)} />
-        <Stat label={t.rejected} value={String(rows.length - passed)} />
-        <Stat label={t.approvalRate} value={rows.length === 0 ? t.unavailable : `${((passed / rows.length) * 100).toFixed(1)}%`} />
-      </dl>
-      {rows.length === 0
-        ? <p className="empty">{t.noRows}</p>
-        : (
-          <div className="stock-dialog__scroll">
-            <table className="stock-dialog__table">
-              <thead>
-                <tr>
-                  <th>{t.sampleDay}</th>
-                  <th>{t.vehicle}</th>
-                  <th>{t.commodity}</th>
-                  <th className="num">FFA</th>
-                  <th className="num">M&I</th>
-                  <th>{t.status}</th>
-                  <th>{t.remark}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map((item) => (
-                  <tr key={item.id} className={item.verdict === 'rejected' ? 'stock-dialog__row--alert' : undefined}>
-                    <td>{formatDay(item.sampledOn, locale)}</td>
-                    <td>
-                      {item.name}
-                      <span className="kpi-detail__mode">{item.mode === 'vessel' ? t.modeVessel : t.modeTruck}</span>
-                    </td>
-                    <td>{item.commodity || t.unavailable}</td>
-                    <td className="num">{item.ffa == null ? t.unavailable : formatMeasure(item.ffa, 2)}</td>
-                    <td className="num">{item.moisture == null ? t.unavailable : formatMeasure(item.moisture, 2)}</td>
-                    <td>
-                      <span className={item.verdict === 'pass' ? 'badge badge--pass' : 'badge badge--danger'}>
-                        {item.verdict === 'pass' ? t.pass : t.rejected}
-                      </span>
-                    </td>
-                    <td className="kpi-detail__remark">{item.remark || t.unavailable}</td>
                   </tr>
                 ))}
               </tbody>
