@@ -28,3 +28,6 @@ pid_staging.dump
 *.dump
 .env.staging.smoke
 Backend/.env.staging.smoke
+
+# Gauge data exported for loading into staging
+Backend/backups/gauge-data-*.json

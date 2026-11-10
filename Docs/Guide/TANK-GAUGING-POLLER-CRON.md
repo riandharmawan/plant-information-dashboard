@@ -38,13 +38,13 @@ Open **Master, Tank gauging**, pick the site, and use **Add gauge system**.
 | --- | --- | --- |
 | Bontang (SITE-0009) | `http://172.16.250.15`, `http://172.16.250.16`, `http://172.16.11.77` | none |
 | Bontang, OLEO unit | `http://172.16.250.17` | user and password. Add it when the unit is back online. |
-| Tanjung Pura (SITE-0017) | `http://atg-pura.kpndomain.com` | user and password. See the note below. |
+| Tanjung Pura (SITE-0017) | `http://172.16.11.28` (or `http://atg-pura.kpndomain.com`, the same gateway) | none |
 
 Enter passwords on the screen only. They are stored encrypted and never shown again.
 
 Use **Test connection** on each row. It reads the tank list and shows how many units and tanks it found. Then use **Poll now** once to see the tanks and readings appear.
 
-> **Tanjung Pura is not finished.** It is one controller (TC-01) holding four units (TS-01 to TS-04) that each number their tanks from 1. The poller reads the tank list, but reading live values for several units from one host is not set up yet, so a poll reports it instead of guessing. It needs one request copied from the TankVision page to finish.
+> **Tanjung Pura** is one gateway (TC-01) holding four units (TS-01 to TS-04) that each number their tanks from 1. The poller reads each unit in turn by name (`DATATYPE=39` with `REMOTE=<unit>`), so one source covers all 60 tanks. Use `http://172.16.11.28`, which needs no sign-in. The gauge gives no capacity, so load it from the stock report with `node scripts/load-tank-capacities.js scripts/tank-capacities/tanjung-pura.json` (see [STAGING-ROLLOUT-BONTANG-TJ-PURA.md](STAGING-ROLLOUT-BONTANG-TJ-PURA.md)).
 
 ## Schedule it
 
