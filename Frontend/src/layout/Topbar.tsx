@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Bell, Check, ChevronDown, Menu } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { ApiError } from '../data/api.ts'
 import { useActiveSite } from '../data/ActiveSiteContext.tsx'
 import { useAuth } from '../data/AuthContext.tsx'
@@ -13,6 +13,7 @@ export function Topbar({ onToggleMenu }: { onToggleMenu: () => void }) {
   const { t, locale, setLocale } = useLocale()
   const { user, logout, changePassword } = useAuth()
   const navigate = useNavigate()
+  const { pathname } = useLocation()
   const repository = useRepository()
   const { siteId, site: active } = useActiveSite()
   const [loaded, setLoaded] = useState<{ id: string; context: SiteContext } | null>(null)
@@ -55,7 +56,14 @@ export function Topbar({ onToggleMenu }: { onToggleMenu: () => void }) {
         </div>
       </div>
       <div className="topbar__actions">
-        <SiteSwitcher site={site} />
+        {pathname.startsWith('/management') ? (
+          // The Stock Overview spans every site, so there is no single active site to switch.
+          <div className="port-switcher">
+            <span className="port-switcher__name">{t.mgAllSites}</span>
+          </div>
+        ) : (
+          <SiteSwitcher site={site} />
+        )}
         <div className="notif">
           <button
             type="button"

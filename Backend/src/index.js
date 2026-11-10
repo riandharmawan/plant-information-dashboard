@@ -3,6 +3,7 @@ import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import operations from './routes/operations.js'
+import portfolio from './routes/portfolio.js'
 import production from './routes/production.js'
 import qc from './routes/qc.js'
 import utility from './routes/utility.js'
@@ -34,6 +35,7 @@ app.use('/api/v1/master', master)
 app.use('/api/v1/tank-gauging', tankGauging)
 app.use('/api/v1/admin/datahub', datahub)
 app.use('/api/v1/admin', admin)
+app.use('/api/v1', portfolio)
 app.use('/api/v1', operations)
 app.use('/api/v1', production)
 app.use('/api/v1/sites/:siteId/qc', qc)

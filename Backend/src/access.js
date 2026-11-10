@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken'
 import { query } from './db.js'
 
 export const PAGE_KEYS = [
+  'management-stock',
   'live-ops',
   'ops-analytics',
   'qc',

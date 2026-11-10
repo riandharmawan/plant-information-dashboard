@@ -548,6 +548,72 @@ export interface Messages {
   noRolesYet: string
   pages: string
   operationsGroup: string
+  managementGroup: string
+  stockOverview: string
+  mgSubtitle: string
+  mgAsOf: string
+  mgPrint: string
+  mgCopyLink: string
+  mgLinkCopied: string
+  mgAllSites: string
+  mgHeadlineFill: string
+  mgHeadlineFullest: string
+  mgHeadlineStale: string
+  mgHeadlineNone: string
+  mgKpiStock: string
+  mgKpiCapacity: string
+  mgKpiFill: string
+  mgKpiTanks: string
+  mgKpiSites: string
+  mgVsYesterday: string
+  mgNeedsAttention: string
+  mgNothingToFlag: string
+  mgAttNearFull: string
+  mgAttOver: string
+  mgAttEmpty: string
+  mgAttNoData: string
+  mgAttStale: string
+  mgBySite: string
+  mgByCommodity: string
+  mgColSite: string
+  mgColStockCap: string
+  mgColFill: string
+  mgColMix: string
+  mgColChange: string
+  mgColData: string
+  mgColClass: string
+  mgColTank: string
+  mgColProduct: string
+  mgColQty: string
+  mgColCap: string
+  mgColTemp: string
+  mgColStatus: string
+  mgColTanks: string
+  mgStOk: string
+  mgStNearFull: string
+  mgStOver: string
+  mgStEmpty: string
+  mgStNoData: string
+  mgRounds: string
+  mgOldData: string
+  mgTanksReporting: string
+  mgClassCrude: string
+  mgClassRefined: string
+  mgClassByproduct: string
+  mgClassBiodiesel: string
+  mgClassGlycerin: string
+  mgClassChemical: string
+  mgClassOther: string
+  mgHistory: string
+  mgHistoryNone: string
+  mgSiteFailed: string
+  mgLoadFailed: string
+  mgNoSites: string
+  mgCapacityNote: string
+  mgNearFullFrom: string
+  mgBackTo: string
+  mgClose: string
+  mgNoTanks: string
   masterGroup: string
   refineryFractionation: string
   utility: string
@@ -1227,6 +1293,72 @@ export const MESSAGES: Record<Locale, Messages> = {
     noRolesYet: 'No roles yet.',
     pages: 'Page',
     operationsGroup: 'Operations',
+    managementGroup: 'Management',
+    stockOverview: 'Stock Overview',
+    mgSubtitle: 'Tank stock across the sites you hold',
+    mgAsOf: 'As of',
+    mgPrint: 'Print',
+    mgCopyLink: 'Copy link',
+    mgLinkCopied: 'Link copied',
+    mgAllSites: 'All sites',
+    mgHeadlineFill: 'Stock is {fill} of capacity across {sites} sites.',
+    mgHeadlineFullest: '{site} is fullest at {fill}.',
+    mgHeadlineStale: 'Data is older than expected at {count} of {total} sites.',
+    mgHeadlineNone: 'No site has tank data yet.',
+    mgKpiStock: 'Stock',
+    mgKpiCapacity: 'Capacity',
+    mgKpiFill: 'Fill level',
+    mgKpiTanks: 'Tanks reporting',
+    mgKpiSites: 'Sites with fresh data',
+    mgVsYesterday: 'vs yesterday',
+    mgNeedsAttention: 'Needs attention',
+    mgNothingToFlag: 'Nothing needs attention.',
+    mgAttNearFull: '{count} tanks at {pct}% full or more',
+    mgAttOver: '{count} tanks over capacity, check the data',
+    mgAttEmpty: '{count} empty tanks',
+    mgAttNoData: '{count} tanks with no data',
+    mgAttStale: '{count} sites with old data',
+    mgBySite: 'By site',
+    mgByCommodity: 'By commodity',
+    mgColSite: 'Site',
+    mgColStockCap: 'Stock vs capacity',
+    mgColFill: 'Fill',
+    mgColMix: 'Mix',
+    mgColChange: 'Change',
+    mgColData: 'Data',
+    mgColClass: 'Commodity',
+    mgColTank: 'Tank',
+    mgColProduct: 'Product',
+    mgColQty: 'Stock (t)',
+    mgColCap: 'Capacity (t)',
+    mgColTemp: 'Temp (°C)',
+    mgColStatus: 'Status',
+    mgColTanks: 'Tanks',
+    mgStOk: 'Normal',
+    mgStNearFull: 'Near full',
+    mgStOver: 'Over capacity',
+    mgStEmpty: 'Empty',
+    mgStNoData: 'No data',
+    mgRounds: 'Rounds',
+    mgOldData: 'Old data',
+    mgTanksReporting: '{a} of {b} tanks',
+    mgClassCrude: 'Crude oils',
+    mgClassRefined: 'Refined oils',
+    mgClassByproduct: 'By-products (PFAD, POME)',
+    mgClassBiodiesel: 'Biodiesel (FAME)',
+    mgClassGlycerin: 'Glycerin & fatty matter',
+    mgClassChemical: 'Chemicals',
+    mgClassOther: 'Other',
+    mgHistory: 'History',
+    mgHistoryNone: 'No history for this tank yet.',
+    mgSiteFailed: '{site} could not be loaded.',
+    mgLoadFailed: 'The overview could not be loaded.',
+    mgNoSites: 'No site with the Tank farm module is available to you.',
+    mgCapacityNote: 'Capacity is each tank’s nameplate capacity. Fill level counts only tanks that have both a reading and a capacity.',
+    mgNearFullFrom: 'Near full from {pct}%',
+    mgBackTo: 'Back to {where}',
+    mgClose: 'Close',
+    mgNoTanks: 'No tanks to show.',
     masterGroup: 'Master data',
     refineryFractionation: 'Refinery and fractionation',
     utility: 'Utility',
@@ -1904,6 +2036,72 @@ export const MESSAGES: Record<Locale, Messages> = {
     noRolesYet: 'Belum ada peran.',
     pages: 'Halaman',
     operationsGroup: 'Operasi',
+    managementGroup: 'Manajemen',
+    stockOverview: 'Ringkasan Stok',
+    mgSubtitle: 'Stok tangki di semua site yang Anda pegang',
+    mgAsOf: 'Per',
+    mgPrint: 'Cetak',
+    mgCopyLink: 'Salin tautan',
+    mgLinkCopied: 'Tautan disalin',
+    mgAllSites: 'Semua site',
+    mgHeadlineFill: 'Stok {fill} dari kapasitas di {sites} site.',
+    mgHeadlineFullest: '{site} paling penuh, {fill}.',
+    mgHeadlineStale: 'Data lebih lama dari seharusnya di {count} dari {total} site.',
+    mgHeadlineNone: 'Belum ada site dengan data tangki.',
+    mgKpiStock: 'Stok',
+    mgKpiCapacity: 'Kapasitas',
+    mgKpiFill: 'Tingkat isi',
+    mgKpiTanks: 'Tangki melapor',
+    mgKpiSites: 'Site dengan data terbaru',
+    mgVsYesterday: 'vs kemarin',
+    mgNeedsAttention: 'Perlu perhatian',
+    mgNothingToFlag: 'Tidak ada yang perlu perhatian.',
+    mgAttNearFull: '{count} tangki terisi {pct}% atau lebih',
+    mgAttOver: '{count} tangki melebihi kapasitas, periksa data',
+    mgAttEmpty: '{count} tangki kosong',
+    mgAttNoData: '{count} tangki tanpa data',
+    mgAttStale: '{count} site dengan data lama',
+    mgBySite: 'Per site',
+    mgByCommodity: 'Per komoditas',
+    mgColSite: 'Site',
+    mgColStockCap: 'Stok vs kapasitas',
+    mgColFill: 'Isi',
+    mgColMix: 'Komposisi',
+    mgColChange: 'Perubahan',
+    mgColData: 'Data',
+    mgColClass: 'Komoditas',
+    mgColTank: 'Tangki',
+    mgColProduct: 'Produk',
+    mgColQty: 'Stok (t)',
+    mgColCap: 'Kapasitas (t)',
+    mgColTemp: 'Suhu (°C)',
+    mgColStatus: 'Status',
+    mgColTanks: 'Tangki',
+    mgStOk: 'Normal',
+    mgStNearFull: 'Hampir penuh',
+    mgStOver: 'Melebihi kapasitas',
+    mgStEmpty: 'Kosong',
+    mgStNoData: 'Tanpa data',
+    mgRounds: 'Putaran',
+    mgOldData: 'Data lama',
+    mgTanksReporting: '{a} dari {b} tangki',
+    mgClassCrude: 'Minyak mentah',
+    mgClassRefined: 'Minyak olahan',
+    mgClassByproduct: 'Produk samping (PFAD, POME)',
+    mgClassBiodiesel: 'Biodiesel (FAME)',
+    mgClassGlycerin: 'Gliserin & fatty matter',
+    mgClassChemical: 'Bahan kimia',
+    mgClassOther: 'Lainnya',
+    mgHistory: 'Riwayat',
+    mgHistoryNone: 'Belum ada riwayat untuk tangki ini.',
+    mgSiteFailed: '{site} tidak dapat dimuat.',
+    mgLoadFailed: 'Ringkasan tidak dapat dimuat.',
+    mgNoSites: 'Tidak ada site dengan modul Tank farm yang tersedia untuk Anda.',
+    mgCapacityNote: 'Kapasitas adalah kapasitas nominal tangki. Tingkat isi hanya menghitung tangki yang punya pembacaan dan kapasitas.',
+    mgNearFullFrom: 'Hampir penuh mulai {pct}%',
+    mgBackTo: 'Kembali ke {where}',
+    mgClose: 'Tutup',
+    mgNoTanks: 'Tidak ada tangki.',
     masterGroup: 'Data master',
     refineryFractionation: 'Refinery dan fraksinasi',
     utility: 'Utilitas',

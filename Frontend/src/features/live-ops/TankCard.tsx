@@ -5,6 +5,7 @@ import { useMass } from './massUnit.ts'
 import type { HistoryMetric } from './quantitySeries.ts'
 import { fillTone, isCritical, isEmptyTank, isTempAnomaly } from './tankAlerts.ts'
 import { TankVessel } from './TankVessel.tsx'
+import { SHOW_LOADABLE } from './columns.ts'
 
 export function TankCard({ tank, averageTemperature, onHistory }: { tank: TankLive; averageTemperature: number | null; onHistory: (tankId: string, metric: HistoryMetric) => void }) {
   const { t, locale } = useLocale()
@@ -48,7 +49,7 @@ export function TankCard({ tank, averageTemperature, onHistory }: { tank: TankLi
           <Metric label={t.levelAxis} value={tank.soundingLevelM == null ? t.unavailable : `${formatMeasure(tank.soundingLevelM, 3)} m`} onClick={() => onHistory(tank.tankId, 'level')} />
           <Metric label={t.quantity} value={massAmount(tank.quantityKg)} onClick={() => onHistory(tank.tankId, 'quantity')} />
           <Metric label={t.emptySpace} value={massAmount(tank.emptySpaceKg)} onClick={() => onHistory(tank.tankId, 'emptySpace')} />
-          <Metric label={t.loadable} value={massAmount(tank.loadableKg)} onClick={() => onHistory(tank.tankId, 'loadable')} />
+          {SHOW_LOADABLE && <Metric label={t.loadable} value={massAmount(tank.loadableKg)} onClick={() => onHistory(tank.tankId, 'loadable')} />}
           <Metric label={t.tankLevelPct} value={tank.fillRatio == null ? t.unavailable : `${(tank.fillRatio * 100).toFixed(1)}%`} alert={tank.fillRatio != null && tank.fillRatio > 0.8} onClick={() => onHistory(tank.tankId, 'levelTank')} />
           <Metric label={t.tempAxis} value={tank.temperatureC == null ? t.unavailable : `${formatMeasure(tank.temperatureC, 1)} °C`} alert={hot} onClick={() => onHistory(tank.tankId, 'temperature')} />
         </dl>

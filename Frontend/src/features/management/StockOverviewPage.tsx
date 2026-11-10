@@ -1,0 +1,552 @@
+import { ChevronRight, Link2, Printer } from 'lucide-react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
+import { api } from '../../data/api.ts'
+import {
+  CLASS_ORDER,
+  classAcrossSites,
+  compareTankIds,
+  formatPercent,
+  formatTonnes,
+  type AttentionItem,
+  type ClassTotals,
+  type CommodityClass,
+  type PortfolioPayload,
+  type PortfolioSite,
+  type PortfolioTank,
+  type TankStatus,
+} from '../../domain/management.ts'
+import { useLocale } from '../../i18n/LocaleContext.tsx'
+import { TankDialog } from './TankDialog.tsx'
+import { Change, ClassDot, DataBadge, Kpi, MixStrip, StatusChip, StockBar, fill, useClassLabel } from './parts.tsx'
+
+const REFRESH_MS = 60000
+const FLAG_KINDS: TankStatus[] = ['near-full', 'over', 'empty', 'no-data']
+
+/** Where the user is in the drill-down. It lives in the URL, so Back works and a link can be shared. */
+interface Nav {
+  site: string | null
+  cls: CommodityClass | null
+  status: string | null
+  view: 'site' | 'commodity'
+  tank: string | null
+}
+
+function readNav(params: URLSearchParams): Nav {
+  const cls = params.get('cls')
+  return {
+    site: params.get('site'),
+    cls: cls && (CLASS_ORDER as readonly string[]).includes(cls) ? (cls as CommodityClass) : null,
+    status: params.get('status'),
+    view: params.get('view') === 'commodity' ? 'commodity' : 'site',
+    tank: params.get('tank'),
+  }
+}
+
+function usePortfolio() {
+  const [data, setData] = useState<PortfolioPayload | null>(null)
+  const [failed, setFailed] = useState(false)
+  useEffect(() => {
+    let alive = true
+    const load = () =>
+      api<PortfolioPayload>('/api/v1/portfolio/stock')
+        .then((payload) => {
+          if (!alive) return
+          setData(payload)
+          setFailed(false)
+        })
+        .catch(() => alive && setFailed(true))
+    void load()
+    const timer = window.setInterval(() => void load(), REFRESH_MS)
+    return () => {
+      alive = false
+      window.clearInterval(timer)
+    }
+  }, [])
+  return { data, failed }
+}
+
+export function StockOverviewPage() {
+  const { t, locale } = useLocale()
+  const label = useClassLabel()
+  const [params, setParams] = useSearchParams()
+  const { data, failed } = usePortfolio()
+  const [copied, setCopied] = useState(false)
+  const nav = readNav(params)
+
+  const go = useCallback(
+    (next: Partial<Nav>) => {
+      const merged = { site: null, cls: null, status: null, view: 'site' as const, tank: null, ...next }
+      const query = new URLSearchParams()
+      if (merged.site) query.set('site', merged.site)
+      if (merged.cls) query.set('cls', merged.cls)
+      if (merged.status) query.set('status', merged.status)
+      if (merged.view === 'commodity') query.set('view', 'commodity')
+      if (merged.tank) query.set('tank', merged.tank)
+      setParams(query)
+    },
+    [setParams],
+  )
+
+  const sites = useMemo(() => data?.sites ?? [], [data])
+  const site = nav.site ? sites.find((item) => item.id === nav.site) ?? null : null
+  const nearFullPct = Math.round((data?.portfolio.nearFull ?? 0.9) * 100)
+
+  const dialog = useMemo(() => {
+    if (!nav.tank) return null
+    const [siteId, tankId] = nav.tank.split('/')
+    const owner = sites.find((item) => item.id === siteId)
+    const tank = owner?.tanks.find((item) => item.tankId === tankId)
+    return owner && tank ? { site: owner, tank } : null
+  }, [nav.tank, sites])
+
+  const copyLink = () => {
+    void navigator.clipboard?.writeText(window.location.href).then(() => {
+      setCopied(true)
+      window.setTimeout(() => setCopied(false), 2000)
+    })
+  }
+
+  const openTank = (siteId: string, tankId: string) => go({ ...nav, tank: `${siteId}/${tankId}` })
+  const closeTank = () => go({ ...nav, tank: null })
+
+  // The breadcrumb follows the path taken: through a site, or through a commodity.
+  const crumbs: Array<{ text: string; to: Partial<Nav> | null }> = [{ text: t.mgAllSites, to: nav.site || nav.cls || nav.status ? {} : null }]
+  if (nav.status) {
+    crumbs.push({ text: statusTitle(t, nav.status), to: null })
+  } else if (nav.view === 'commodity' && nav.cls) {
+    crumbs.push({ text: label(nav.cls), to: site ? { cls: nav.cls, view: 'commodity' } : null })
+    if (site) crumbs.push({ text: site.name, to: null })
+  } else {
+    if (site) crumbs.push({ text: site.name, to: nav.cls ? { site: site.id } : null })
+    if (nav.cls) crumbs.push({ text: label(nav.cls), to: null })
+  }
+
+  const body = !data ? (
+    <p className="mg-muted">{failed ? t.mgLoadFailed : t.loading}</p>
+  ) : sites.length === 0 ? (
+    <p className="mg-muted">{t.mgNoSites}</p>
+  ) : nav.status ? (
+    <FlaggedView sites={sites} status={nav.status} onTank={openTank} onSite={(id) => go({ site: id })} />
+  ) : nav.site && nav.cls && site ? (
+    <TankTable rows={tanksOf(site, nav.cls)} onTank={openTank} />
+  ) : nav.site && site ? (
+    <SiteView site={site} onClass={(cls) => go({ site: site.id, cls })} />
+  ) : nav.cls ? (
+    <SitesForClass sites={sites} cls={nav.cls} onSite={(id) => go({ site: id, cls: nav.cls, view: 'commodity' })} />
+  ) : (
+    <Overview data={data} view={nav.view} nearFullPct={nearFullPct} go={go} />
+  )
+
+  return (
+    <div className="page mg">
+      <header className="mg-head">
+        <div>
+          <h1 className="page-title">{t.stockOverview}</h1>
+          <p className="page-note">
+            {t.mgSubtitle}
+            {data ? ` · ${t.mgAsOf} ${new Date(data.generatedAt).toLocaleString(locale)}` : ''}
+          </p>
+        </div>
+        <div className="mg-head__actions mg-noprint">
+          <button type="button" className="mg-btn" onClick={copyLink}>
+            <Link2 size={14} aria-hidden="true" /> {copied ? t.mgLinkCopied : t.mgCopyLink}
+          </button>
+          <button type="button" className="mg-btn" onClick={() => window.print()}>
+            <Printer size={14} aria-hidden="true" /> {t.mgPrint}
+          </button>
+        </div>
+      </header>
+
+      {crumbs.length > 1 ? (
+        <nav className="mg-crumbs mg-noprint" aria-label="Breadcrumb">
+          {crumbs.map((crumb, index) => (
+            <span key={`${crumb.text}-${index}`} className="mg-crumbs__item">
+              {index > 0 ? <ChevronRight size={14} aria-hidden="true" /> : null}
+              {crumb.to ? (
+                <button type="button" className="mg-link" onClick={() => go(crumb.to as Partial<Nav>)}>
+                  {crumb.text}
+                </button>
+              ) : (
+                <strong aria-current="page">{crumb.text}</strong>
+              )}
+            </span>
+          ))}
+        </nav>
+      ) : null}
+
+      {data?.failed.map((item) => (
+        <p key={item.id} className="mg-alert" role="status">
+          {fill(t.mgSiteFailed, { site: item.name })}
+        </p>
+      ))}
+
+      {body}
+
+      {data ? <p className="mg-foot">{t.mgCapacityNote}</p> : null}
+
+      {dialog ? <TankDialog site={dialog.site} tank={dialog.tank} onClose={closeTank} /> : null}
+    </div>
+  )
+}
+
+function statusTitle(t: ReturnType<typeof useLocale>['t'], status: string): string {
+  if (status === 'near-full') return t.mgStNearFull
+  if (status === 'over') return t.mgStOver
+  if (status === 'empty') return t.mgStEmpty
+  if (status === 'no-data') return t.mgStNoData
+  return t.mgOldData
+}
+
+function tanksOf(site: PortfolioSite, cls: CommodityClass): Array<{ site: PortfolioSite; tank: PortfolioTank }> {
+  return site.tanks
+    .filter((tank) => tank.commodityClass === cls)
+    .sort((a, b) => compareTankIds(a.tankId, b.tankId))
+    .map((tank) => ({ site, tank }))
+}
+
+/* ------------------------------------------------------------------ level 0 */
+
+function Overview({
+  data,
+  view,
+  nearFullPct,
+  go,
+}: {
+  data: PortfolioPayload
+  view: 'site' | 'commodity'
+  nearFullPct: number
+  go: (next: Partial<Nav>) => void
+}) {
+  const { t, locale } = useLocale()
+  const { portfolio, sites } = data
+  const scaleMax = Math.max(1, ...sites.map((site) => site.capacityTotalKg))
+  const classScaleMax = Math.max(1, ...CLASS_ORDER.map((code) => classAcrossSites(sites, code).capacityTotalKg))
+
+  const fullest = sites.filter((site) => site.fillRatio != null && site.capacityKg > 0).sort((a, b) => (b.fillRatio ?? 0) - (a.fillRatio ?? 0))[0]
+  const headline = [
+    portfolio.fillRatio == null
+      ? t.mgHeadlineNone
+      : fill(t.mgHeadlineFill, {
+          fill: formatPercent(portfolio.fillRatio, locale),
+          sites: portfolio.sitesTotal,
+        }),
+    fullest && sites.length > 1 ? fill(t.mgHeadlineFullest, { site: fullest.name, fill: formatPercent(fullest.fillRatio, locale) }) : '',
+    portfolio.sitesFresh < portfolio.sitesTotal ? fill(t.mgHeadlineStale, { count: portfolio.sitesTotal - portfolio.sitesFresh, total: portfolio.sitesTotal }) : '',
+  ]
+    .filter(Boolean)
+    .join(' ')
+
+  return (
+    <>
+      <p className="mg-headline">{headline}</p>
+
+      <div className="mg-kpis">
+        <Kpi
+          label={t.mgKpiStock}
+          value={formatTonnes(portfolio.quantityKg, locale)}
+          unit="t"
+          note={portfolio.changeKg != null ? <><Change kg={portfolio.changeKg} /> {t.mgVsYesterday}</> : undefined}
+        />
+        <Kpi label={t.mgKpiCapacity} value={formatTonnes(portfolio.capacityTotalKg, locale)} unit="t" />
+        <Kpi label={t.mgKpiFill} value={formatPercent(portfolio.fillRatio, locale)} />
+        <Kpi label={t.mgKpiTanks} value={`${portfolio.tanksReporting} / ${portfolio.tanksTotal}`} />
+        <Kpi label={t.mgKpiSites} value={`${portfolio.sitesFresh} / ${portfolio.sitesTotal}`} />
+      </div>
+
+      <Attention items={portfolio.attention} nearFullPct={nearFullPct} onOpen={(status) => go({ status })} />
+
+      <div className="mg-tabs mg-noprint" role="tablist">
+        <button type="button" role="tab" aria-selected={view === 'site'} className={view === 'site' ? 'is-active' : undefined} onClick={() => go({ view: 'site' })}>
+          {t.mgBySite}
+        </button>
+        <button type="button" role="tab" aria-selected={view === 'commodity'} className={view === 'commodity' ? 'is-active' : undefined} onClick={() => go({ view: 'commodity' })}>
+          {t.mgByCommodity}
+        </button>
+      </div>
+
+      {view === 'site' ? (
+        <ul className="mg-list">
+          <li className="mg-row mg-row--site mg-row--head" aria-hidden="true">
+            <span>{t.mgColSite}</span>
+            <span>{t.mgColStockCap}</span>
+            <span className="num">{t.mgColFill}</span>
+            <span>{t.mgColMix}</span>
+            <span className="num">{t.mgColChange}</span>
+            <span>{t.mgColData}</span>
+          </li>
+          {sites.map((site) => (
+            <li key={site.id}>
+              <button type="button" className="mg-row mg-row--site" onClick={() => go({ site: site.id })}>
+                <span className="mg-name">
+                  <strong>{site.name}</strong>
+                  <small>{fill(t.mgTanksReporting, { a: site.tanksReporting, b: site.tanksTotal })}</small>
+                </span>
+                <span className="mg-stock">
+                  <StockBar quantityKg={site.quantityKg} capacityTotalKg={site.capacityTotalKg} scaleMax={scaleMax} />
+                  <small>
+                    {formatTonnes(site.quantityKg, locale)} / {formatTonnes(site.capacityTotalKg, locale)} t
+                  </small>
+                </span>
+                <span className="num mg-fill">{formatPercent(site.fillRatio, locale)}</span>
+                <MixStrip classes={site.classes} />
+                <span className="num">
+                  <Change kg={site.changeKg} />
+                </span>
+                <span>
+                  <DataBadge site={site} />
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <ul className="mg-list">
+          <li className="mg-row mg-row--class mg-row--head" aria-hidden="true">
+            <span>{t.mgColClass}</span>
+            <span>{t.mgColStockCap}</span>
+            <span className="num">{t.mgColFill}</span>
+            <span className="num">{t.mgColTanks}</span>
+          </li>
+          {CLASS_ORDER.map((code) => ({ code, totals: classAcrossSites(sites, code) }))
+            .filter((row) => row.totals.tanks > 0)
+            .map(({ code, totals }) => (
+              <li key={code}>
+                <button type="button" className="mg-row mg-row--class" onClick={() => go({ cls: code, view: 'commodity' })}>
+                  <ClassName code={code} />
+                  <ClassStock totals={totals} scaleMax={classScaleMax} />
+                  <span className="num mg-fill">{formatPercent(totals.fillRatio, locale)}</span>
+                  <span className="num">{totals.tanks}</span>
+                </button>
+              </li>
+            ))}
+        </ul>
+      )}
+    </>
+  )
+}
+
+function ClassName({ code }: { code: CommodityClass }) {
+  const label = useClassLabel()
+  return (
+    <span className="mg-name">
+      <strong>
+        <ClassDot code={code} /> {label(code)}
+      </strong>
+    </span>
+  )
+}
+
+function ClassStock({ totals, scaleMax }: { totals: ClassTotals; scaleMax: number }) {
+  const { locale } = useLocale()
+  return (
+    <span className="mg-stock">
+      <StockBar quantityKg={totals.quantityKg} capacityTotalKg={totals.capacityTotalKg} scaleMax={scaleMax} />
+      <small>
+        {formatTonnes(totals.quantityKg, locale)} / {formatTonnes(totals.capacityTotalKg, locale)} t
+      </small>
+    </span>
+  )
+}
+
+function Attention({ items, nearFullPct, onOpen }: { items: AttentionItem[]; nearFullPct: number; onOpen: (status: string) => void }) {
+  const { t } = useLocale()
+  const text = (item: AttentionItem): string => {
+    if (item.kind === 'near-full') return fill(t.mgAttNearFull, { count: item.count, pct: nearFullPct })
+    if (item.kind === 'over') return fill(t.mgAttOver, { count: item.count })
+    if (item.kind === 'empty') return fill(t.mgAttEmpty, { count: item.count })
+    if (item.kind === 'no-data') return fill(t.mgAttNoData, { count: item.count })
+    return fill(t.mgAttStale, { count: item.count })
+  }
+  return (
+    <section className="mg-attention" aria-label={t.mgNeedsAttention}>
+      <h2>{t.mgNeedsAttention}</h2>
+      {items.length === 0 ? (
+        <p className="mg-muted">{t.mgNothingToFlag}</p>
+      ) : (
+        <ul>
+          {items.map((item) => (
+            <li key={item.kind}>
+              <button type="button" className={`mg-flag mg-flag--${item.kind}`} onClick={() => onOpen(item.kind)}>
+                {item.kind === 'stale' ? null : <StatusChip status={item.kind} />}
+                <span>{text(item)}</span>
+                <ChevronRight size={14} aria-hidden="true" />
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+  )
+}
+
+/* ------------------------------------------------------------------ deeper levels */
+
+function SiteView({ site, onClass }: { site: PortfolioSite; onClass: (cls: CommodityClass) => void }) {
+  const { t, locale } = useLocale()
+  const scaleMax = Math.max(1, ...site.classes.map((row) => row.capacityTotalKg))
+  return (
+    <>
+      <div className="mg-kpis">
+        <Kpi label={t.mgKpiStock} value={formatTonnes(site.quantityKg, locale)} unit="t" note={site.changeKg != null ? <><Change kg={site.changeKg} /> {t.mgVsYesterday}</> : undefined} />
+        <Kpi label={t.mgKpiCapacity} value={formatTonnes(site.capacityTotalKg, locale)} unit="t" />
+        <Kpi label={t.mgKpiFill} value={formatPercent(site.fillRatio, locale)} />
+        <Kpi label={t.mgKpiTanks} value={`${site.tanksReporting} / ${site.tanksTotal}`} />
+        <div className="mg-kpi">
+          <span className="mg-kpi__label">{t.mgColData}</span>
+          <DataBadge site={site} />
+        </div>
+      </div>
+      <ul className="mg-list">
+        <li className="mg-row mg-row--class mg-row--head" aria-hidden="true">
+          <span>{t.mgColClass}</span>
+          <span>{t.mgColStockCap}</span>
+          <span className="num">{t.mgColFill}</span>
+          <span className="num">{t.mgColTanks}</span>
+        </li>
+        {CLASS_ORDER.map((code) => site.classes.find((row) => row.code === code))
+          .filter((row): row is ClassTotals => row != null)
+          .map((row) => (
+            <li key={row.code}>
+              <button type="button" className="mg-row mg-row--class" onClick={() => onClass(row.code)}>
+                <ClassName code={row.code} />
+                <ClassStock totals={row} scaleMax={scaleMax} />
+                <span className="num mg-fill">{formatPercent(row.fillRatio, locale)}</span>
+                <span className="num">{row.tanks}</span>
+              </button>
+            </li>
+          ))}
+      </ul>
+    </>
+  )
+}
+
+/** The commodity-first path: one commodity, site by site. */
+function SitesForClass({ sites, cls, onSite }: { sites: PortfolioSite[]; cls: CommodityClass; onSite: (id: string) => void }) {
+  const { t, locale } = useLocale()
+  const rows = sites
+    .map((site) => ({ site, totals: site.classes.find((row) => row.code === cls) }))
+    .filter((row): row is { site: PortfolioSite; totals: ClassTotals } => row.totals != null)
+  const scaleMax = Math.max(1, ...rows.map((row) => row.totals.capacityTotalKg))
+  return (
+    <ul className="mg-list">
+      <li className="mg-row mg-row--class mg-row--head" aria-hidden="true">
+        <span>{t.mgColSite}</span>
+        <span>{t.mgColStockCap}</span>
+        <span className="num">{t.mgColFill}</span>
+        <span className="num">{t.mgColTanks}</span>
+      </li>
+      {rows.map(({ site, totals }) => (
+        <li key={site.id}>
+          <button type="button" className="mg-row mg-row--class" onClick={() => onSite(site.id)}>
+            <span className="mg-name">
+              <strong>{site.name}</strong>
+              <small>
+                <DataBadge site={site} />
+              </small>
+            </span>
+            <ClassStock totals={totals} scaleMax={scaleMax} />
+            <span className="num mg-fill">{formatPercent(totals.fillRatio, locale)}</span>
+            <span className="num">{totals.tanks}</span>
+          </button>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+function FlaggedView({
+  sites,
+  status,
+  onTank,
+  onSite,
+}: {
+  sites: PortfolioSite[]
+  status: string
+  onTank: (siteId: string, tankId: string) => void
+  onSite: (siteId: string) => void
+}) {
+  const { t } = useLocale()
+  if (status === 'stale') {
+    const stale = sites.filter((site) => site.stale)
+    return (
+      <ul className="mg-list">
+        {stale.length === 0 ? <li className="mg-muted">{t.mgNoTanks}</li> : null}
+        {stale.map((site) => (
+          <li key={site.id}>
+            <button type="button" className="mg-row mg-row--flat" onClick={() => onSite(site.id)}>
+              <span className="mg-name"><strong>{site.name}</strong></span>
+              <DataBadge site={site} />
+            </button>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+  const wanted = FLAG_KINDS.includes(status as TankStatus) ? (status as TankStatus) : 'near-full'
+  const rows = sites
+    .flatMap((site) => site.tanks.filter((tank) => tank.status === wanted).map((tank) => ({ site, tank })))
+    .sort((a, b) => (b.tank.fillRatio ?? 0) - (a.tank.fillRatio ?? 0) || compareTankIds(a.tank.tankId, b.tank.tankId))
+  return <TankTable rows={rows} showSite onTank={onTank} />
+}
+
+function TankTable({
+  rows,
+  showSite,
+  onTank,
+}: {
+  rows: Array<{ site: PortfolioSite; tank: PortfolioTank }>
+  showSite?: boolean
+  onTank: (siteId: string, tankId: string) => void
+}) {
+  const { t, locale } = useLocale()
+  const label = useClassLabel()
+  if (rows.length === 0) return <p className="mg-muted">{t.mgNoTanks}</p>
+  return (
+    <div className="mg-table-wrap">
+      <table className="mg-table">
+        <thead>
+          <tr>
+            {showSite ? <th>{t.mgColSite}</th> : null}
+            <th>{t.mgColTank}</th>
+            <th>{t.mgColProduct}</th>
+            <th>{t.mgColFill}</th>
+            <th className="num">{t.mgColQty}</th>
+            <th className="num">{t.mgColCap}</th>
+            <th className="num">{t.mgColTemp}</th>
+            <th>{t.mgColStatus}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map(({ site, tank }) => (
+            <tr key={`${site.id}/${tank.tankId}`} className="mg-tr" tabIndex={0} onClick={() => onTank(site.id, tank.tankId)} onKeyDown={(event) => event.key === 'Enter' && onTank(site.id, tank.tankId)}>
+              {showSite ? <td>{site.name}</td> : null}
+              <td>
+                <strong>{tank.tankId}</strong>
+              </td>
+              <td>
+                <ClassDot code={tank.commodityClass} /> {tank.productName || label(tank.commodityClass)}
+              </td>
+              <td className="mg-td-fill">
+                {tank.capacityKg != null && tank.quantityKg != null ? (
+                  <span className="mg-fillcell">
+                    <StockBar quantityKg={tank.quantityKg} capacityTotalKg={tank.capacityKg} scaleMax={tank.capacityKg} tick={0.9} />
+                    <b>{formatPercent(tank.fillRatio, locale)}</b>
+                  </span>
+                ) : (
+                  <span className="mg-muted">—</span>
+                )}
+              </td>
+              <td className="num">{formatTonnes(tank.quantityKg, locale)}</td>
+              <td className="num">{formatTonnes(tank.capacityKg, locale)}</td>
+              <td className="num">{tank.temperatureC == null ? '—' : tank.temperatureC.toFixed(1)}</td>
+              <td>
+                <StatusChip status={tank.status} />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}

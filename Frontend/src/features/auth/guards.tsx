@@ -50,6 +50,8 @@ export function PageGate({ page, module, landing }: { page: string; module?: str
   const { can } = useAuth()
   const { hasModule } = useActiveSite()
   const { t } = useLocale()
+  // A user who only holds the management right lands on it instead of on a page they cannot open.
+  if (!can(page, 'view') && landing && can('management-stock', 'view')) return <Navigate to="/management" replace />
   if (!can(page, 'view')) {
     return (
       <div className="page">

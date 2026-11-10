@@ -7,6 +7,7 @@ import { LevelCue } from './LevelCue.tsx'
 import { useMass } from './massUnit.ts'
 import type { HistoryMetric } from './quantitySeries.ts'
 import { isEmptyTank, isTempAnomaly } from './tankAlerts.ts'
+import { SHOW_LOADABLE } from './columns.ts'
 
 type SortDir = 'asc' | 'desc'
 type SortValue = string | number | null
@@ -54,7 +55,7 @@ export function TankTable({ tanks, averageTemperature, onHistory }: { tanks: Tan
             <SortHeader label={t.levelAxis} column="level" sort={sort} align="right" />
             <SortHeader label={`${t.quantity} (${mass.symbol})`} column="quantity" sort={sort} align="right" />
             <SortHeader label={`${t.emptySpace} (${mass.symbol})`} column="empty" sort={sort} align="right" />
-            <SortHeader label={`${t.loadable} (${mass.symbol})`} column="loadable" sort={sort} align="right" />
+            {SHOW_LOADABLE && <SortHeader label={`${t.loadable} (${mass.symbol})`} column="loadable" sort={sort} align="right" />}
             <SortHeader label={t.tankLevelPct} column="levelPct" sort={sort} align="right" hint={t.levelFillHint} />
             <SortHeader label={t.tempAxis} column="temp" sort={sort} align="right" hint={t.tempSpikeHint} />
             <SortHeader label="FFA" column="ffa" sort={sort} align="right" hint={t.ffaAgeHint} />
@@ -81,7 +82,7 @@ export function TankTable({ tanks, averageTemperature, onHistory }: { tanks: Tan
                 <HistoryCell value={tank.soundingLevelM == null ? t.unavailable : formatMeasure(tank.soundingLevelM, 3)} missing={tank.soundingLevelM == null} onClick={() => onHistory(tank.tankId, 'level')} />
                 <HistoryCell value={tank.quantityKg == null ? t.unavailable : mass.amount(tank.quantityKg)} missing={tank.quantityKg == null} onClick={() => onHistory(tank.tankId, 'quantity')} />
                 <HistoryCell value={tank.emptySpaceKg == null ? t.unavailable : mass.amount(tank.emptySpaceKg)} missing={tank.emptySpaceKg == null} onClick={() => onHistory(tank.tankId, 'emptySpace')} />
-                <HistoryCell value={tank.loadableKg == null ? t.unavailable : mass.amount(tank.loadableKg)} missing={tank.loadableKg == null} alert={tank.loadableKg != null && tank.loadableKg < 0} onClick={() => onHistory(tank.tankId, 'loadable')} />
+                {SHOW_LOADABLE && <HistoryCell value={tank.loadableKg == null ? t.unavailable : mass.amount(tank.loadableKg)} missing={tank.loadableKg == null} alert={tank.loadableKg != null && tank.loadableKg < 0} onClick={() => onHistory(tank.tankId, 'loadable')} />}
                 <td className="num">
                   <button type="button" className={levelClass(tank.fillRatio)} onClick={() => onHistory(tank.tankId, 'levelTank')}>
                     <LevelCue ratio={tank.fillRatio} blank={t.unavailable} />

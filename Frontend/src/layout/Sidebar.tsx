@@ -1,4 +1,4 @@
-import { ArrowLeftRight, FlaskConical, Ship, TestTube, Truck, Building2, ChevronLeft, ChevronRight, ClipboardList, Droplet, Droplets, Factory, Filter, Flame, Gauge, Layers, LayoutGrid, MapPin, Mountain, Package, Radio, Scale, Shield, Tractor, Warehouse, Waves } from 'lucide-react'
+import { ChartColumn, ArrowLeftRight, FlaskConical, Ship, TestTube, Truck, Building2, ChevronLeft, ChevronRight, ClipboardList, Droplet, Droplets, Factory, Filter, Flame, Gauge, Layers, LayoutGrid, MapPin, Mountain, Package, Radio, Scale, Shield, Tractor, Warehouse, Waves } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 import { useActiveSite } from '../data/ActiveSiteContext.tsx'
 import { useAuth } from '../data/AuthContext.tsx'
@@ -45,6 +45,15 @@ export function Sidebar({
           </div>
         </div>
         <nav className="sidebar-nav">
+          {hasSites && can('management-stock', 'view') ? (
+            <>
+          <p className="sidebar-nav__section">{t.managementGroup}</p>
+          <NavLink to="/management" title={t.stockOverview} className={({ isActive }) => (isActive ? 'active' : undefined)}>
+            <ChartColumn className="sidebar-nav__icon" size={16} aria-hidden="true" />
+            <span className="sidebar-nav__label">{t.stockOverview}</span>
+          </NavLink>
+            </>
+          ) : null}
           {hasSites && hasModule('live-ops') && can('live-ops', 'view') ? (
             <>
           <p className="sidebar-nav__section">{t.tankFarm}</p>

@@ -35,13 +35,18 @@ interface RoleDetail {
 
 type Field = 'view' | 'edit' | 'delete'
 
+/** Pages that only show data. Edit and Delete mean nothing on them, so they stay off. */
+const VIEW_ONLY = new Set(['management-stock'])
+
 const GROUPS: Array<{ title: keyof Messages; keys: string[] }> = [
+  { title: 'managementGroup', keys: ['management-stock'] },
   { title: 'operationsGroup', keys: ['live-ops', 'ops-analytics', 'qc', 'daily-production', 'refinery-fractionation', 'utility', 'coverage'] },
   { title: 'masterGroup', keys: ['master-companies', 'master-sites', 'master-commodities', 'master-calibration', 'master-tanks', 'master-logsheets', 'master-quality-rules'] },
   { title: 'administration', keys: ['admin-users', 'admin-roles', 'admin-datahub'] },
 ]
 
 const LABELS: Record<string, keyof Messages> = {
+  'management-stock': 'stockOverview',
   'live-ops': 'liveOps',
   'ops-analytics': 'opsAnalytics',
   qc: 'qualityControl',
@@ -71,6 +76,7 @@ function fill(template: string, values: Record<string, string | number>): string
 
 /** Apply one change and keep the rights consistent: edit and delete need view, and no view clears both. */
 function withChange(right: Right, field: Field, checked: boolean): Right {
+  if (VIEW_ONLY.has(right.resourceKey) && field !== 'view') return right
   const next = { ...right, [field]: checked }
   if ((field === 'edit' || field === 'delete') && checked) next.view = true
   if (field === 'view' && !checked) {
@@ -343,8 +349,8 @@ function RoleDialog({
     setPermissions((current) => current.map((right) => ({
       ...right,
       view: kind !== 'none',
-      edit: kind === 'full',
-      delete: kind === 'full',
+      edit: kind === 'full' && !VIEW_ONLY.has(right.resourceKey),
+      delete: kind === 'full' && !VIEW_ONLY.has(right.resourceKey),
     })))
   }
 
@@ -445,6 +451,7 @@ function RoleDialog({
                                     <input
                                       type="checkbox"
                                       checked={on === rights.length}
+                                      disabled={field.key !== 'view' && rights.every((right) => VIEW_ONLY.has(right.resourceKey))}
                                       ref={(element) => {
                                         if (element) element.indeterminate = on > 0 && on < rights.length
                                       }}
@@ -469,6 +476,7 @@ function RoleDialog({
                                     <input
                                       type="checkbox"
                                       checked={right[field.key]}
+                                      disabled={field.key !== 'view' && VIEW_ONLY.has(right.resourceKey)}
                                       aria-label={`${field.label} ${label}`}
                                       onChange={(event) => update([right.resourceKey], field.key, event.target.checked)}
                                     />

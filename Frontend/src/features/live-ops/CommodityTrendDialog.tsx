@@ -12,6 +12,7 @@ import { LevelCue } from './LevelCue.tsx'
 import { useMass } from './massUnit.ts'
 import { commodityDayReading, commodityQuantitySeries, type HistoryDay } from './quantitySeries.ts'
 import { isOverfilled, isTempAnomaly } from './tankAlerts.ts'
+import { SHOW_LOADABLE } from './columns.ts'
 
 const DEFAULT_DAYS = 30
 
@@ -149,7 +150,7 @@ export function CommodityTrendDialog({
                       <th className="num">{t.levelAxis}</th>
                       <th className="num">{t.quantity} ({mass.symbol})</th>
                       <th className="num">{t.emptySpace} ({mass.symbol})</th>
-                      <th className="num">{t.loadable} ({mass.symbol})</th>
+                      {SHOW_LOADABLE && <th className="num">{t.loadable} ({mass.symbol})</th>}
                       <th className="num">{t.tankLevelPct}</th>
                       <th className="num">{t.tempAxis}</th>
                       <th className="num">FFA</th>
@@ -170,7 +171,7 @@ export function CommodityTrendDialog({
                           <td className="num">{reading?.soundingLevelM == null ? t.unavailable : formatMeasure(reading.soundingLevelM, 3)}</td>
                           <td className="num">{reading?.quantityKg == null ? t.unavailable : mass.amount(reading.quantityKg)}</td>
                           <td className="num">{reading?.emptySpaceKg == null ? t.unavailable : mass.amount(reading.emptySpaceKg)}</td>
-                          <td className="num">{reading?.loadableKg == null ? t.unavailable : mass.amount(reading.loadableKg)}</td>
+                          {SHOW_LOADABLE && <td className="num">{reading?.loadableKg == null ? t.unavailable : mass.amount(reading.loadableKg)}</td>}
                           <td className="num"><LevelCue ratio={reading?.levelRatio ?? null} blank={t.unavailable} /></td>
                           <td className={hot ? 'num stock-dialog__alert' : 'num'}>
                             {reading?.temperatureC == null ? t.unavailable : `${formatMeasure(reading.temperatureC, 1)} °C`}
@@ -190,8 +191,8 @@ export function CommodityTrendDialog({
                       <td />
                       <td className="num">{quantityTotal == null ? t.unavailable : mass.amount(quantityTotal)}</td>
                       <td className="num">{emptyTotal == null ? t.unavailable : mass.amount(emptyTotal)}</td>
-                      <td className="num">{loadableTotal == null ? t.unavailable : mass.amount(loadableTotal)}</td>
-                      <td colSpan={5} />
+                      {SHOW_LOADABLE && <td className="num">{loadableTotal == null ? t.unavailable : mass.amount(loadableTotal)}</td>}
+                      <td colSpan={SHOW_LOADABLE ? 5 : 4} />
                     </tr>
                   </tfoot>
                 </table>

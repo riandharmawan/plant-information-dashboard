@@ -39,6 +39,7 @@ import { LoaderPage } from './features/utility/LoaderPage.tsx'
 import { UtilityOverviewPage } from './features/utility/UtilityOverviewPage.tsx'
 import { UtilityLayout } from './features/utility/utilityShell.tsx'
 import { WaterPage } from './features/utility/WaterPage.tsx'
+import { StockOverviewPage } from './features/management/StockOverviewPage.tsx'
 import {
   Fractionation400Page,
   Fractionation500Page,
@@ -65,6 +66,9 @@ export default function App() {
                   <Route element={<RequireAuth />}>
                     <Route element={<AppShell />}>
                       <Route path="/" element={<SiteRequired />}>
+                        <Route element={<PageGate page="management-stock" />}>
+                          <Route path="management" element={<StockOverviewPage />} />
+                        </Route>
                         <Route element={<PageGate page="live-ops" module="live-ops" landing />}>
                           <Route index element={<LiveOpsPage />} />
                         </Route>
