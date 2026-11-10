@@ -7,6 +7,7 @@ import {
   type TankStatus,
 } from '../../domain/management.ts'
 import { useLocale } from '../../i18n/LocaleContext.tsx'
+import { HoverTarget } from './HoverCard.tsx'
 import { Count } from './motion.tsx'
 import type { Messages } from '../../i18n/messages.ts'
 
@@ -143,22 +144,32 @@ export function Kpi({
   unit,
   note,
   count,
+  card,
 }: {
   label: string
   value: string
   unit?: string
   note?: ReactNode
   count?: { value: number; format: (value: number) => string }
+  /** The detail behind the figure, opened on hover or keyboard focus. */
+  card?: (hide: () => void) => ReactNode
 }) {
-  return (
-    <div className="mg-kpi">
+  const body = (
+    <>
       <span className="mg-kpi__label">{label}</span>
       <span className="mg-kpi__value">
         {count ? <Count value={count.value} format={count.format} /> : value}
         {unit ? <small>{unit}</small> : null}
       </span>
       {note ? <span className="mg-kpi__note">{note}</span> : null}
-    </div>
+    </>
+  )
+  return card ? (
+    <HoverTarget className="mg-kpi mg-kpi--card" cardKey={`kpi-${label}`} label={label} card={card}>
+      {body}
+    </HoverTarget>
+  ) : (
+    <div className="mg-kpi">{body}</div>
   )
 }
 

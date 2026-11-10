@@ -622,6 +622,20 @@ export interface Messages {
   dsLogsheet: string
   dsAtgHint: string
   dsLogsheetHint: string
+  mgCardFreeSpace: string
+  mgCardNotCounted: string
+  mgCardSpread: string
+  mgCardFullest: string
+  mgCardOpenSite: string
+  mgCardOpenCommodity: string
+  mgCardStockTitle: string
+  mgCardCapTitle: string
+  mgCardFillTitle: string
+  mgCardTanksTitle: string
+  mgCardSitesTitle: string
+  mgCardCounted: string
+  mgCardNoReading: string
+  mgCardOldRule: string
   masterGroup: string
   refineryFractionation: string
   utility: string
@@ -1375,6 +1389,20 @@ export const MESSAGES: Record<Locale, Messages> = {
     dsLogsheet: 'Logsheet',
     dsAtgHint: 'Read automatically from the tank gauging system.',
     dsLogsheetHint: 'Entered by operators on the daily logsheets.',
+    mgCardFreeSpace: 'Free space',
+    mgCardNotCounted: 'No reading from {tanks} tanks, so {cap} t of capacity is not in the fill level.',
+    mgCardSpread: 'Tank fill spread',
+    mgCardFullest: 'Closest to full',
+    mgCardOpenSite: 'Open {site}',
+    mgCardOpenCommodity: 'Open {cls} across sites',
+    mgCardStockTitle: 'Stock by site',
+    mgCardCapTitle: 'Capacity by site',
+    mgCardFillTitle: 'Fill level by site',
+    mgCardTanksTitle: 'Tank status',
+    mgCardSitesTitle: 'Data freshness by site',
+    mgCardCounted: 'In fill level',
+    mgCardNoReading: 'No reading',
+    mgCardOldRule: 'Live data older than 1 hour, or rounds older than 2 days, count as old.',
     masterGroup: 'Master data',
     refineryFractionation: 'Refinery and fractionation',
     utility: 'Utility',
@@ -2126,6 +2154,20 @@ export const MESSAGES: Record<Locale, Messages> = {
     dsLogsheet: 'Logsheet',
     dsAtgHint: 'Dibaca otomatis dari sistem tank gauging.',
     dsLogsheetHint: 'Diisi operator pada logsheet harian.',
+    mgCardFreeSpace: 'Ruang kosong',
+    mgCardNotCounted: 'Tidak ada pembacaan dari {tanks} tangki, sehingga kapasitas {cap} t tidak masuk tingkat isi.',
+    mgCardSpread: 'Sebaran isi tangki',
+    mgCardFullest: 'Paling mendekati penuh',
+    mgCardOpenSite: 'Buka {site}',
+    mgCardOpenCommodity: 'Buka {cls} di semua site',
+    mgCardStockTitle: 'Stok per site',
+    mgCardCapTitle: 'Kapasitas per site',
+    mgCardFillTitle: 'Tingkat isi per site',
+    mgCardTanksTitle: 'Status tangki',
+    mgCardSitesTitle: 'Kesegaran data per site',
+    mgCardCounted: 'Masuk tingkat isi',
+    mgCardNoReading: 'Tanpa pembacaan',
+    mgCardOldRule: 'Data langsung lebih dari 1 jam, atau putaran lebih dari 2 hari, dianggap lama.',
     masterGroup: 'Data master',
     refineryFractionation: 'Refinery dan fraksinasi',
     utility: 'Utilitas',

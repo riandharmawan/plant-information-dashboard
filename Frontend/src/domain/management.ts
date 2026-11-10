@@ -130,3 +130,31 @@ export function classAcrossSites(sites: PortfolioSite[], code: CommodityClass): 
 export function compareTankIds(left: string, right: string): number {
   return left.localeCompare(right, undefined, { numeric: true })
 }
+
+/* ------------------------------------------------------------------ what the hover cards report */
+
+export const FILL_BIN_LABELS = ['<25%', '25–50%', '50–75%', '75–90%', '≥90%'] as const
+
+/** How many tanks sit in each band of fill, so a site's average is seen next to its spread. */
+export function fillSpread(tanks: PortfolioTank[], nearFull: number): number[] {
+  const bins = [0, 0, 0, 0, 0]
+  for (const tank of tanks) {
+    if (tank.fillRatio == null) continue
+    const ratio = tank.fillRatio
+    bins[ratio < 0.25 ? 0 : ratio < 0.5 ? 1 : ratio < 0.75 ? 2 : ratio < nearFull ? 3 : 4] += 1
+  }
+  return bins
+}
+
+/** The tanks closest to full, which is where the risk is. */
+export function closestToFull(tanks: PortfolioTank[], count: number): PortfolioTank[] {
+  return tanks
+    .filter((tank) => tank.fillRatio != null)
+    .sort((a, b) => (b.fillRatio ?? 0) - (a.fillRatio ?? 0) || compareTankIds(a.tankId, b.tankId))
+    .slice(0, count)
+}
+
+/** Capacity that is not in the fill level because the tank has no reading. */
+export function uncountedCapacity(site: Pick<PortfolioSite, 'capacityTotalKg' | 'capacityKg' | 'counts'>): { capacityKg: number; tanks: number } {
+  return { capacityKg: Math.max(0, site.capacityTotalKg - site.capacityKg), tanks: site.counts['no-data'] }
+}

@@ -1,5 +1,5 @@
 import { ChevronRight, Link2, Printer } from 'lucide-react'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { api } from '../../data/api.ts'
 import {
@@ -19,6 +19,8 @@ import {
 import { useLocale } from '../../i18n/LocaleContext.tsx'
 import { TankDialog } from './TankDialog.tsx'
 import { SourceBadge } from '../dataSource/SourceBadge.tsx'
+import { ClassAtSiteCard, CommodityCard, KpiCard, SiteStockCard } from './Cards.tsx'
+import { CardActionsContext, HoverTarget } from './HoverCard.tsx'
 import { MixStrip } from './MixTip.tsx'
 import { Count, stagger } from './motion.tsx'
 import { Change, ClassDot, DataBadge, FillText, Kpi, Legend, Skeleton, StatusChip, StockBar, fill, useClassLabel } from './parts.tsx'
@@ -120,6 +122,13 @@ export function StockOverviewPage() {
   }
 
   const openTank = (siteId: string, tankId: string) => go({ ...nav, tank: `${siteId}/${tankId}` })
+  const cardActions = {
+    openSite: (siteId: string) => go({ site: siteId }),
+    openClass: (siteId: string, cls: CommodityClass) => go({ site: siteId, cls }),
+    openCommodity: (cls: CommodityClass) => go({ cls, view: 'commodity' }),
+    openTank: (siteId: string, tankId: string) => go({ tank: `${siteId}/${tankId}` }),
+    openStatus: (status: string) => go({ status }),
+  }
   const closeTank = () => go({ ...nav, tank: null })
 
   // The breadcrumb follows the path taken: through a site, or through a commodity.
@@ -143,7 +152,7 @@ export function StockOverviewPage() {
   ) : nav.site && nav.cls && site ? (
     <TankTable rows={tanksOf(site, nav.cls)} onTank={openTank} />
   ) : nav.site && site ? (
-    <SiteView site={site} onClass={(cls) => go({ site: site.id, cls })} onHighlight={setHighlight} />
+    <SiteView site={site} nearFull={data?.portfolio.nearFull ?? 0.9} onClass={(cls) => go({ site: site.id, cls })} onHighlight={setHighlight} />
   ) : nav.cls ? (
     <SitesForClass sites={sites} cls={nav.cls} onSite={(id) => go({ site: id, cls: nav.cls, view: 'commodity' })} />
   ) : (
@@ -151,6 +160,7 @@ export function StockOverviewPage() {
   )
 
   return (
+    <CardActionsContext value={cardActions}>
     <div className="page mg" data-hl={highlight ?? undefined}>
       <header className="mg-head">
         <div>
@@ -201,6 +211,7 @@ export function StockOverviewPage() {
 
       {dialog ? <TankDialog site={dialog.site} tank={dialog.tank} onClose={closeTank} /> : null}
     </div>
+    </CardActionsContext>
   )
 }
 
@@ -264,11 +275,12 @@ function Overview({
           unit="t"
           count={{ value: portfolio.quantityKg, format: (n) => formatTonnes(n, locale) }}
           note={portfolio.changeKg != null ? <><Change kg={portfolio.changeKg} /> {t.mgVsYesterday}</> : undefined}
+          card={(hide) => <KpiCard kind="stock" portfolio={portfolio} sites={sites} hide={hide} />}
         />
-        <Kpi label={t.mgKpiCapacity} value={formatTonnes(portfolio.capacityTotalKg, locale)} unit="t" count={{ value: portfolio.capacityTotalKg, format: (n) => formatTonnes(n, locale) }} />
-        <Kpi label={t.mgKpiFill} value={formatPercent(portfolio.fillRatio, locale)} count={portfolio.fillRatio == null ? undefined : { value: portfolio.fillRatio, format: (n) => formatPercent(n, locale) }} />
-        <Kpi label={t.mgKpiTanks} value={`${portfolio.tanksReporting} / ${portfolio.tanksTotal}`} count={{ value: portfolio.tanksReporting, format: (n) => `${Math.round(n)} / ${portfolio.tanksTotal}` }} />
-        <Kpi label={t.mgKpiSites} value={`${portfolio.sitesFresh} / ${portfolio.sitesTotal}`} count={{ value: portfolio.sitesFresh, format: (n) => `${Math.round(n)} / ${portfolio.sitesTotal}` }} />
+        <Kpi label={t.mgKpiCapacity} value={formatTonnes(portfolio.capacityTotalKg, locale)} unit="t" count={{ value: portfolio.capacityTotalKg, format: (n) => formatTonnes(n, locale) }} card={(hide) => <KpiCard kind="capacity" portfolio={portfolio} sites={sites} hide={hide} />} />
+        <Kpi label={t.mgKpiFill} value={formatPercent(portfolio.fillRatio, locale)} count={portfolio.fillRatio == null ? undefined : { value: portfolio.fillRatio, format: (n) => formatPercent(n, locale) }} card={(hide) => <KpiCard kind="fill" portfolio={portfolio} sites={sites} hide={hide} />} />
+        <Kpi label={t.mgKpiTanks} value={`${portfolio.tanksReporting} / ${portfolio.tanksTotal}`} count={{ value: portfolio.tanksReporting, format: (n) => `${Math.round(n)} / ${portfolio.tanksTotal}` }} card={(hide) => <KpiCard kind="tanks" portfolio={portfolio} sites={sites} hide={hide} />} />
+        <Kpi label={t.mgKpiSites} value={`${portfolio.sitesFresh} / ${portfolio.sitesTotal}`} count={{ value: portfolio.sitesFresh, format: (n) => `${Math.round(n)} / ${portfolio.sitesTotal}` }} card={(hide) => <KpiCard kind="sites" portfolio={portfolio} sites={sites} hide={hide} />} />
       </div>
 
       <Attention items={portfolio.attention} nearFullPct={nearFullPct} onOpen={(status) => go({ status })} />
@@ -305,17 +317,23 @@ function Overview({
                   <strong>{site.name}</strong>
                   <small>{fill(t.mgTanksReporting, { a: site.tanksReporting, b: site.tanksTotal })}</small>
                 </span>
-                <span className="mg-stock">
+                <HoverTarget
+                  as="span"
+                  className="mg-stock"
+                  focusable={false}
+                  cardKey={`site-${site.id}`}
+                  label={`${site.name} ${t.mgColStockCap}`}
+                  card={(hide) => <SiteStockCard site={site} nearFull={portfolio.nearFull} hide={hide} />}
+                >
                   <StockBar quantityKg={site.quantityKg} capacityTotalKg={site.capacityTotalKg} scaleMax={scaleMax} />
                   <small>
                     <Count value={site.quantityKg} format={(n) => formatTonnes(n, locale)} /> / {formatTonnes(site.capacityTotalKg, locale)} t
                   </small>
-                </span>
+                </HoverTarget>
                 <span className="num mg-fill"><FillText ratio={site.fillRatio} /></span>
                 <MixStrip
                   site={site}
                   onOpenClass={(siteId, cls) => go({ site: siteId, cls })}
-                  onOpenTank={(siteId, tankId) => go({ tank: `${siteId}/${tankId}` })}
                 />
                 <span className="num">
                   <Change kg={site.changeKg} />
@@ -342,7 +360,7 @@ function Overview({
               <li key={code} style={stagger(index)}>
                 <button type="button" className="mg-row mg-row--class" data-class={code} onClick={() => go({ cls: code, view: 'commodity' })}>
                   <ClassName code={code} />
-                  <ClassStock totals={totals} scaleMax={classScaleMax} />
+                  <ClassStock totals={totals} scaleMax={classScaleMax} cardKey={`class-${code}`} card={(hide) => <CommodityCard code={code} sites={sites} hide={hide} />} />
                   <span className="num mg-fill"><FillText ratio={totals.fillRatio} /></span>
                   <span className="num">{totals.tanks}</span>
                 </button>
@@ -366,15 +384,16 @@ function ClassName({ code }: { code: CommodityClass }) {
   )
 }
 
-function ClassStock({ totals, scaleMax }: { totals: ClassTotals; scaleMax: number }) {
+function ClassStock({ totals, scaleMax, cardKey, card }: { totals: ClassTotals; scaleMax: number; cardKey: string; card: (hide: () => void) => ReactNode }) {
   const { locale } = useLocale()
+  const label = useClassLabel()
   return (
-    <span className="mg-stock">
+    <HoverTarget as="span" className="mg-stock" focusable={false} cardKey={cardKey} label={label(totals.code)} card={card}>
       <StockBar quantityKg={totals.quantityKg} capacityTotalKg={totals.capacityTotalKg} scaleMax={scaleMax} />
       <small>
         <Count value={totals.quantityKg} format={(n) => formatTonnes(n, locale)} /> / {formatTonnes(totals.capacityTotalKg, locale)} t
       </small>
-    </span>
+    </HoverTarget>
   )
 }
 
@@ -411,16 +430,17 @@ function Attention({ items, nearFullPct, onOpen }: { items: AttentionItem[]; nea
 
 /* ------------------------------------------------------------------ deeper levels */
 
-function SiteView({ site, onClass, onHighlight }: { site: PortfolioSite; onClass: (cls: CommodityClass) => void; onHighlight: (cls: CommodityClass | null) => void }) {
+function SiteView({ site, nearFull, onClass, onHighlight }: { site: PortfolioSite; nearFull: number; onClass: (cls: CommodityClass) => void; onHighlight: (cls: CommodityClass | null) => void }) {
   const { t, locale } = useLocale()
+  const siteCard = (hide: () => void) => <SiteStockCard site={site} nearFull={nearFull} hide={hide} />
   const scaleMax = Math.max(1, ...site.classes.map((row) => row.capacityTotalKg))
   return (
     <>
       <div className="mg-kpis">
-        <Kpi label={t.mgKpiStock} value={formatTonnes(site.quantityKg, locale)} unit="t" count={{ value: site.quantityKg, format: (n) => formatTonnes(n, locale) }} note={site.changeKg != null ? <><Change kg={site.changeKg} /> {t.mgVsYesterday}</> : undefined} />
-        <Kpi label={t.mgKpiCapacity} value={formatTonnes(site.capacityTotalKg, locale)} unit="t" count={{ value: site.capacityTotalKg, format: (n) => formatTonnes(n, locale) }} />
-        <Kpi label={t.mgKpiFill} value={formatPercent(site.fillRatio, locale)} count={site.fillRatio == null ? undefined : { value: site.fillRatio, format: (n) => formatPercent(n, locale) }} />
-        <Kpi label={t.mgKpiTanks} value={`${site.tanksReporting} / ${site.tanksTotal}`} count={{ value: site.tanksReporting, format: (n) => `${Math.round(n)} / ${site.tanksTotal}` }} />
+        <Kpi label={t.mgKpiStock} value={formatTonnes(site.quantityKg, locale)} unit="t" count={{ value: site.quantityKg, format: (n) => formatTonnes(n, locale) }} note={site.changeKg != null ? <><Change kg={site.changeKg} /> {t.mgVsYesterday}</> : undefined} card={siteCard} />
+        <Kpi label={t.mgKpiCapacity} value={formatTonnes(site.capacityTotalKg, locale)} unit="t" count={{ value: site.capacityTotalKg, format: (n) => formatTonnes(n, locale) }} card={siteCard} />
+        <Kpi label={t.mgKpiFill} value={formatPercent(site.fillRatio, locale)} count={site.fillRatio == null ? undefined : { value: site.fillRatio, format: (n) => formatPercent(n, locale) }} card={siteCard} />
+        <Kpi label={t.mgKpiTanks} value={`${site.tanksReporting} / ${site.tanksTotal}`} count={{ value: site.tanksReporting, format: (n) => `${Math.round(n)} / ${site.tanksTotal}` }} card={siteCard} />
         <div className="mg-kpi">
           <span className="mg-kpi__label">{t.mgColData}</span>
           <span className="mg-datacell">
@@ -443,7 +463,7 @@ function SiteView({ site, onClass, onHighlight }: { site: PortfolioSite; onClass
             <li key={row.code} style={stagger(index)}>
               <button type="button" className="mg-row mg-row--class" data-class={row.code} onClick={() => onClass(row.code)}>
                 <ClassName code={row.code} />
-                <ClassStock totals={row} scaleMax={scaleMax} />
+                <ClassStock totals={row} scaleMax={scaleMax} cardKey={`site-class-${row.code}`} card={(hide) => <ClassAtSiteCard site={site} code={row.code} hide={hide} />} />
                 <span className="num mg-fill"><FillText ratio={row.fillRatio} /></span>
                 <span className="num">{row.tanks}</span>
               </button>
@@ -479,7 +499,7 @@ function SitesForClass({ sites, cls, onSite }: { sites: PortfolioSite[]; cls: Co
                 <DataBadge site={site} />
               </small>
             </span>
-            <ClassStock totals={totals} scaleMax={scaleMax} />
+            <ClassStock totals={totals} scaleMax={scaleMax} cardKey={`class-site-${site.id}`} card={(hide) => <ClassAtSiteCard site={site} code={cls} hide={hide} />} />
             <span className="num mg-fill"><FillText ratio={totals.fillRatio} /></span>
             <span className="num">{totals.tanks}</span>
           </button>
