@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { ProductionLayout } from './data/ProductionContext.tsx'
 import { QcLayout } from './data/QcContext.tsx'
+import { ActiveSiteProvider } from './data/ActiveSiteContext.tsx'
 import { AuthProvider } from './data/AuthContext.tsx'
 import { CalibrationProvider } from './data/CalibrationContext.tsx'
 import { createRepository } from './data/createRepository.ts'
@@ -53,6 +54,7 @@ export default function App() {
     <LocaleProvider>
       <AuthProvider>
         <OperationsProvider repository={repository}>
+         <ActiveSiteProvider>
           <CalibrationProvider>
             <MasterProvider>
               <BrowserRouter>
@@ -134,6 +136,7 @@ export default function App() {
               </BrowserRouter>
             </MasterProvider>
           </CalibrationProvider>
+         </ActiveSiteProvider>
         </OperationsProvider>
       </AuthProvider>
     </LocaleProvider>

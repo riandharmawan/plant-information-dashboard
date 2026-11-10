@@ -28,6 +28,10 @@ export class HttpOperationsRepository implements OperationsRepository {
     return response.json() as Promise<T>
   }
 
+  setSiteId(siteId: string): void {
+    this.resolvedSiteId = siteId
+  }
+
   private async siteId(): Promise<string> {
     if (this.resolvedSiteId) return this.resolvedSiteId
     const sites = await this.get<Array<{ id: string }>>('/sites')

@@ -50,11 +50,13 @@ export async function loadSession(userId) {
   if (!row || row.is_active === false) return null
 
   const sites = await query(
-    `SELECT s.id, s.name, s.timezone
+    `SELECT s.id, s.name, s.timezone, s.hub_code AS site_code,
+            c.name AS company_name, COALESCE(c.hub_code, c.code) AS company_code
      FROM user_sites us
      JOIN sites s ON s.id = us.site_id
+     JOIN companies c ON c.id = s.company_id
      WHERE us.user_id = $1 AND s.is_activated
-     ORDER BY s.name`,
+     ORDER BY c.name, s.name`,
     [row.id],
   )
   const adminRole = await query(
@@ -82,7 +84,14 @@ export async function loadSession(userId) {
     username: row.username,
     displayName: row.display_name,
     email: row.email,
-    sites: sites.rows.map((site) => ({ id: site.id, name: site.name, timezone: site.timezone })),
+    sites: sites.rows.map((site) => ({
+      id: site.id,
+      name: site.name,
+      timezone: site.timezone,
+      siteCode: site.site_code,
+      companyName: site.company_name,
+      companyCode: site.company_code,
+    })),
     permissions,
     // The system Administrator may grant any activated site. Other users grant only their own.
     isAdministrator: adminRole.rows.length > 0,

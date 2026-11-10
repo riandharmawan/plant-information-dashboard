@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 import { NavLink, Outlet, useSearchParams } from 'react-router-dom'
 import { api } from '../../data/api.ts'
-import { useAuth } from '../../data/AuthContext.tsx'
+import { useActiveSite } from '../../data/ActiveSiteContext.tsx'
 import { formatDay } from '../../domain/format.ts'
 import type { UtilityDay, UtilitySummary } from '../../domain/utility.ts'
 import { useLocale } from '../../i18n/LocaleContext.tsx'
@@ -32,9 +32,8 @@ export function useUtility(): UtilityState {
 /** Loads the range summary once for every Utility tab. Utility rows live only in Postgres. */
 export function UtilityLayout() {
   const { t } = useLocale()
-  const { user } = useAuth()
   const [params] = useSearchParams()
-  const siteId = user?.sites[0]?.id ?? 'bekasi'
+  const { siteId } = useActiveSite()
   const from = params.get('from')
   const to = params.get('to')
   const query = from && to && ISO_DATE.test(from) && ISO_DATE.test(to) ? `?from=${from}&to=${to}` : ''
@@ -137,7 +136,7 @@ export function UtilityChrome({
   children: ReactNode
 }) {
   const { t, locale } = useLocale()
-  const { user } = useAuth()
+  const { site: activeSite } = useActiveSite()
   const { summary } = useUtility()
   const { start, end, setRange } = useUtilityRange()
   return (
@@ -146,7 +145,7 @@ export function UtilityChrome({
         <h1 className="page-title">{title}</h1>
         <span className="site-pill">
           <span className="site-pill__dot" aria-hidden="true" />
-          {user?.sites[0]?.name ?? 'Priscolin Bekasi'}
+          {activeSite?.name ?? 'Priscolin Bekasi'}
         </span>
         {day !== undefined ? <span className="page-meta">{day ? `${t.latestDay} ${formatDay(day, locale)}` : '-'}</span> : null}
         <DateRangeFilter start={start} end={end} onChange={setRange} dataDates={summary.dates} />

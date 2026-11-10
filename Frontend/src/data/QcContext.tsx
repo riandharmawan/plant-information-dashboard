@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 import { Outlet } from 'react-router-dom'
 import { QC, type QcFile } from '../domain/qc.ts'
+import { useActiveSite } from './ActiveSiteContext.tsx'
 
 const QcFileContext = createContext<QcFile>(QC)
 
@@ -16,6 +17,7 @@ export function QcLayout({ children }: { children?: ReactNode }) {
   const useApi = import.meta.env.VITE_DATA_SOURCE === 'api'
   const [file, setFile] = useState<QcFile | null>(useApi ? null : QC)
   const [error, setError] = useState<string | null>(null)
+  const { siteId } = useActiveSite()
 
   useEffect(() => {
     if (!useApi) return
@@ -27,10 +29,10 @@ export function QcLayout({ children }: { children?: ReactNode }) {
       return response.json()
     }
     Promise.all([
-      load('/sites/bekasi/qc/storage'),
-      load('/sites/bekasi/qc/vessels'),
-      load('/sites/bekasi/qc/trucks'),
-      load('/sites/bekasi/qc/movements'),
+      load(`/sites/${siteId}/qc/storage`),
+      load(`/sites/${siteId}/qc/vessels`),
+      load(`/sites/${siteId}/qc/trucks`),
+      load(`/sites/${siteId}/qc/movements`),
     ])
       .then(([storage, vessels, trucks, movements]) => {
         if (!cancelled) setFile({ storage, vessels, trucks, movements })
@@ -41,7 +43,7 @@ export function QcLayout({ children }: { children?: ReactNode }) {
     return () => {
       cancelled = true
     }
-  }, [useApi])
+  }, [useApi, siteId])
 
   if (error) return <p className="page-note">{error}</p>
   if (!file) return <p className="page-note">Loading quality control…</p>

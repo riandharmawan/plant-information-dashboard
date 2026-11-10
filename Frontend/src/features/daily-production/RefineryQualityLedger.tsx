@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { api } from '../../data/api.ts'
-import { useAuth } from '../../data/AuthContext.tsx'
+import { useActiveSite } from '../../data/ActiveSiteContext.tsx'
 import { ledgerFor, type LedgerRow } from '../../domain/refineryQuality.ts'
 import { useLocale } from '../../i18n/LocaleContext.tsx'
 import { useProductionRange } from './productionNav.tsx'
@@ -33,11 +33,10 @@ function blankRow(date: string): LedgerRow {
 
 export function RefineryQualityLedger() {
   const { t, locale } = useLocale()
-  const { user } = useAuth()
   const { start, end } = useProductionRange()
   const dates = datesBetween(start, end)
   const [remote, setRemote] = useState<LedgerRow[] | null>(null)
-  const siteId = user?.sites[0]?.id ?? 'bekasi'
+  const { siteId } = useActiveSite()
   useEffect(() => {
     if (!useApi) return
     let cancelled = false

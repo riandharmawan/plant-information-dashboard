@@ -11,7 +11,7 @@ import {
   type ReadingRow,
   type RefinerySnapshot,
 } from '../../domain/refineryQuality.ts'
-import { useAuth } from '../../data/AuthContext.tsx'
+import { useActiveSite } from '../../data/ActiveSiteContext.tsx'
 import { useLocale } from '../../i18n/LocaleContext.tsx'
 import { DateRangeFilter } from '../daily-production/DateRangeFilter.tsx'
 import { CommodityFilter } from '../live-ops/CommodityFilter.tsx'
@@ -60,7 +60,6 @@ function sortRows(rows: ReadingRow[], key: string | null, dir: SortDir): Reading
 
 export function RefineryQualityPage() {
   const { t, locale } = useLocale()
-  const { user } = useAuth()
   const dates = refineryDates()
   const [params, setParams] = useSearchParams()
   const from = params.get('from')
@@ -73,7 +72,7 @@ export function RefineryQualityPage() {
     next.set('to', nextStart <= nextEnd ? nextEnd : nextStart)
     setParams(next, { replace: true })
   }
-  const siteId = user?.sites[0]?.id ?? 'bekasi'
+  const { siteId, site: activeSite } = useActiveSite()
   const localSnapshot = useMemo(() => snapshotFor(start, end), [start, end])
   const [remoteSnapshot, setRemoteSnapshot] = useState<RefinerySnapshot | null>(null)
   const [remoteHistory, setRemoteHistory] = useState<{ oil: string | null; oils: string[]; points: HistoryPoint[] } | null>(null)
@@ -116,7 +115,7 @@ export function RefineryQualityPage() {
     return oils.includes(row.feedOil ?? '') || oils.includes(row.finishedOil ?? '')
   })
   const rows = sortRows(visible, sort.key, sort.dir)
-  const site = user?.sites[0]?.name ?? 'Priscolin Bekasi'
+  const site = activeSite?.name ?? 'Priscolin Bekasi'
   const param = useParam()
   const flows = dayFlows(snapshot.readings, param, t)
 

@@ -27,6 +27,8 @@ import type {
  * Screens keep using these methods when the backend arrives.
  */
 export interface OperationsRepository {
+  /** Point the repository at another site. Screens then read that site. */
+  setSiteId?(siteId: string): void
   getSnapshotMeta(): Promise<SnapshotMeta>
   getSite(): Promise<SiteContext>
   getLiveTanks(on?: string | null, range?: { start: string; end: string }): Promise<TankLive[]>

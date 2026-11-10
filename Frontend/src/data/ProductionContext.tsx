@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { Outlet } from 'react-router-dom'
 import { api } from './api.ts'
-import { useAuth } from './AuthContext.tsx'
+import { useActiveSite } from './ActiveSiteContext.tsx'
 import { useLocale } from '../i18n/LocaleContext.tsx'
 import { dayHasData, PRODUCTION_DAYS, type ProductionDay } from '../domain/dailyProduction.ts'
 
@@ -22,8 +22,7 @@ export function useProductionReport(): ProductionReport {
 
 export function ProductionLayout({ children }: { children?: ReactNode }) {
   const { t, locale } = useLocale()
-  const { user } = useAuth()
-  const siteId = user?.sites[0]?.id ?? 'bekasi'
+  const { siteId } = useActiveSite()
   const [days, setDays] = useState<ProductionDay[] | null>(useApi ? null : PRODUCTION_DAYS)
   const [error, setError] = useState<string | null>(null)
 

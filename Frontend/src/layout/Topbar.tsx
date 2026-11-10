@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react'
-import { Bell, Menu } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { Bell, Check, ChevronDown, Menu } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { ApiError } from '../data/api.ts'
+import { useActiveSite } from '../data/ActiveSiteContext.tsx'
 import { useAuth } from '../data/AuthContext.tsx'
 import { useRepository } from '../data/OperationsContext.tsx'
 import { errorText } from '../features/admin/errors.ts'
@@ -13,18 +14,33 @@ export function Topbar({ onToggleMenu }: { onToggleMenu: () => void }) {
   const { user, logout, changePassword } = useAuth()
   const navigate = useNavigate()
   const repository = useRepository()
-  const [site, setSite] = useState<SiteContext | null>(null)
+  const { siteId, site: active } = useActiveSite()
+  const [loaded, setLoaded] = useState<{ id: string; context: SiteContext } | null>(null)
   const [noticesOpen, setNoticesOpen] = useState(false)
 
   useEffect(() => {
-    let active = true
+    let current = true
     repository.getSite().then((next) => {
-      if (active) setSite(next)
+      if (current) setLoaded({ id: siteId, context: next })
     })
     return () => {
-      active = false
+      current = false
     }
-  }, [repository])
+  }, [repository, siteId])
+
+  // Until the site's details arrive, show what the session already knows, so a switch never shows the old site.
+  const site: SiteContext | null =
+    loaded?.id === siteId
+      ? loaded.context
+      : active
+        ? {
+            companyName: active.companyName ?? '',
+            companyCode: active.companyCode,
+            siteName: active.name,
+            siteCode: active.siteCode,
+            timezone: active.timezone,
+          }
+        : null
 
   return (
     <header className="topbar">
@@ -39,7 +55,7 @@ export function Topbar({ onToggleMenu }: { onToggleMenu: () => void }) {
         </div>
       </div>
       <div className="topbar__actions">
-        <ScopeChip site={site} />
+        <SiteSwitcher site={site} />
         <div className="notif">
           <button
             type="button"
@@ -86,14 +102,105 @@ export function Topbar({ onToggleMenu }: { onToggleMenu: () => void }) {
 }
 
 /** Company and site identity: names on top, DataHub codes below. The timezone is in the tooltip. */
-function ScopeChip({ site }: { site: SiteContext | null }) {
+function scopeText(site: SiteContext | null) {
   const names = [site?.companyName, site?.siteName].filter(Boolean)
   const codes = [site?.companyCode, site?.siteCode].filter(Boolean)
-  const title = [...names, ...codes, site?.timezone].filter(Boolean).join(' · ')
+  return {
+    title: [...names, ...codes, site?.timezone].filter(Boolean).join(' · '),
+    name: names.length ? names.join(' › ') : 'Priscolin Bekasi',
+    codes: codes.length ? codes.join(' · ') : site?.timezone ?? 'Asia/Jakarta',
+  }
+}
+
+function ScopeChip({ site }: { site: SiteContext | null }) {
+  const text = scopeText(site)
   return (
-    <div className="port-switcher" title={title}>
-      <span className="port-switcher__name">{names.length ? names.join(' › ') : 'Priscolin Bekasi'}</span>
-      <span className="port-switcher__tz">{codes.length ? codes.join(' · ') : site?.timezone ?? 'Asia/Jakarta'}</span>
+    <div className="port-switcher" title={text.title}>
+      <span className="port-switcher__name">{text.name}</span>
+      <span className="port-switcher__tz">{text.codes}</span>
+    </div>
+  )
+}
+
+/** The chip, as a menu of the user's sites when there is more than one to choose from. */
+function SiteSwitcher({ site }: { site: SiteContext | null }) {
+  const { t } = useLocale()
+  const { siteId, sites, setSiteId } = useActiveSite()
+  const [open, setOpen] = useState(false)
+  const box = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+    const onDown = (event: MouseEvent) => {
+      if (!box.current?.contains(event.target as Node)) setOpen(false)
+    }
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpen(false)
+    }
+    document.addEventListener('mousedown', onDown)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('mousedown', onDown)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [open])
+
+  if (sites.length < 2) return <ScopeChip site={site} />
+
+  const text = scopeText(site)
+  const groups = new Map<string, typeof sites>()
+  for (const entry of sites) {
+    const key = entry.companyName ?? ''
+    groups.set(key, [...(groups.get(key) ?? []), entry])
+  }
+
+  return (
+    <div className="site-switch" ref={box}>
+      <button
+        type="button"
+        className="port-switcher site-switch__button"
+        aria-haspopup="menu"
+        aria-expanded={open}
+        title={`${t.switchSite}: ${text.title}`}
+        onClick={() => setOpen((on) => !on)}
+      >
+        <span className="site-switch__lines">
+          <span className="port-switcher__name">{text.name}</span>
+          <span className="port-switcher__tz">{text.codes}</span>
+        </span>
+        <ChevronDown size={14} aria-hidden="true" />
+      </button>
+      {open ? (
+        <div className="site-switch__menu" role="menu" aria-label={t.switchSite}>
+          {[...groups.entries()].map(([company, list]) => (
+            <div key={company} className="site-switch__group" role="group" aria-label={company}>
+              <p className="site-switch__company">
+                {company}
+                {list[0].companyCode ? <span>{list[0].companyCode}</span> : null}
+              </p>
+              {list.map((entry) => (
+                <button
+                  key={entry.id}
+                  type="button"
+                  role="menuitemradio"
+                  aria-checked={entry.id === siteId}
+                  className={entry.id === siteId ? 'site-switch__item site-switch__item--on' : 'site-switch__item'}
+                  onClick={() => {
+                    setSiteId(entry.id)
+                    setOpen(false)
+                  }}
+                >
+                  <span>
+                    {entry.name}
+                    {entry.siteCode ? <small>{entry.siteCode}</small> : null}
+                  </span>
+                  {entry.id === siteId ? <Check size={16} aria-hidden="true" /> : null}
+                </button>
+              ))}
+            </div>
+          ))}
+        </div>
+      ) : null}
     </div>
   )
 }

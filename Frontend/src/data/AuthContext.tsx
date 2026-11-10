@@ -5,6 +5,9 @@ export interface SessionSite {
   id: string
   name: string
   timezone: string
+  siteCode?: string | null
+  companyName?: string
+  companyCode?: string | null
 }
 
 export interface PageRight {
