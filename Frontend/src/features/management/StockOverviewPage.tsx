@@ -1,13 +1,17 @@
 import { ChevronRight, Link2, Printer } from 'lucide-react'
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
+import { Fragment, useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { api } from '../../data/api.ts'
 import {
   CLASS_ORDER,
+  EXPANDABLE,
   classAcrossSites,
   compareTankIds,
   formatPercent,
   formatTonnes,
+  productOf,
+  productTotals,
+  tintOf,
   type AttentionItem,
   type ClassTotals,
   type CommodityClass,
@@ -22,6 +26,7 @@ import { SourceBadge } from '../dataSource/SourceBadge.tsx'
 import { ClassAtSiteCard, CommodityCard, KpiCard, SiteStockCard } from './Cards.tsx'
 import { CardActionsContext, HoverTarget } from './HoverCard.tsx'
 import { MixStrip } from './MixTip.tsx'
+import { ViewOptionsContext, useViewOptions } from './viewOptions.ts'
 import { Count, stagger } from './motion.tsx'
 import { Change, ClassDot, DataBadge, FillText, Kpi, Legend, Skeleton, StatusChip, StockBar, fill, useClassLabel } from './parts.tsx'
 
@@ -35,6 +40,8 @@ interface Nav {
   status: string | null
   view: 'site' | 'commodity'
   tank: string | null
+  /** One product of the class being looked at, such as RBDPO under Refined oils. */
+  prod: string | null
 }
 
 function readNav(params: URLSearchParams): Nav {
@@ -45,6 +52,7 @@ function readNav(params: URLSearchParams): Nav {
     status: params.get('status'),
     view: params.get('view') === 'commodity' ? 'commodity' : 'site',
     tank: params.get('tank'),
+    prod: params.get('prod'),
   }
 }
 
@@ -72,13 +80,36 @@ function usePortfolio() {
 }
 
 export function StockOverviewPage() {
-  const { t, locale } = useLocale()
+  const { t } = useLocale()
   const label = useClassLabel()
   const [params, setParams] = useSearchParams()
   const { data, failed } = usePortfolio()
   const [copied, setCopied] = useState(false)
   const [highlight, setHighlight] = useState<CommodityClass | null>(null)
   const nav = readNav(params)
+
+  // Refined oils shown as one group or split into products. The last choice is remembered, and the link carries it.
+  const [splitPref] = useState(() => {
+    try {
+      return window.localStorage.getItem('pid.mgSplit') === '1'
+    } catch {
+      return false
+    }
+  })
+  const split = params.has('split') ? params.get('split') === 'refined' : splitPref
+  const toggleSplit = () => {
+    const next = !split
+    try {
+      window.localStorage.setItem('pid.mgSplit', next ? '1' : '0')
+    } catch {
+      // Storage can be blocked. The choice still holds for this visit.
+    }
+    setParams((previous) => {
+      const query = new URLSearchParams(previous)
+      query.set('split', next ? 'refined' : 'none')
+      return query
+    })
+  }
 
   // Drilling in slides the new level in from the right, going back from the left, and a tab switch just fades.
   const depth = nav.status ? 1 : (nav.site ? 1 : 0) + (nav.cls ? 1 : 0)
@@ -90,16 +121,19 @@ export function StockOverviewPage() {
 
   const go = useCallback(
     (next: Partial<Nav>) => {
-      const merged = { site: null, cls: null, status: null, view: 'site' as const, tank: null, ...next }
+      const merged = { site: null, cls: null, status: null, view: 'site' as const, tank: null, prod: null, ...next }
       const query = new URLSearchParams()
       if (merged.site) query.set('site', merged.site)
       if (merged.cls) query.set('cls', merged.cls)
       if (merged.status) query.set('status', merged.status)
       if (merged.view === 'commodity') query.set('view', 'commodity')
       if (merged.tank) query.set('tank', merged.tank)
+      if (merged.prod) query.set('prod', merged.prod)
+      const keep = params.get('split')
+      if (keep) query.set('split', keep)
       setParams(query)
     },
-    [setParams],
+    [params, setParams],
   )
 
   const sites = useMemo(() => data?.sites ?? [], [data])
@@ -124,7 +158,7 @@ export function StockOverviewPage() {
   const openTank = (siteId: string, tankId: string) => go({ ...nav, tank: `${siteId}/${tankId}` })
   const cardActions = {
     openSite: (siteId: string) => go({ site: siteId }),
-    openClass: (siteId: string, cls: CommodityClass) => go({ site: siteId, cls }),
+    openClass: (siteId: string, cls: CommodityClass, product?: string) => go({ site: siteId, cls, prod: product ?? null }),
     openCommodity: (cls: CommodityClass) => go({ cls, view: 'commodity' }),
     openTank: (siteId: string, tankId: string) => go({ tank: `${siteId}/${tankId}` }),
     openStatus: (status: string) => go({ status }),
@@ -140,7 +174,8 @@ export function StockOverviewPage() {
     if (site) crumbs.push({ text: site.name, to: null })
   } else {
     if (site) crumbs.push({ text: site.name, to: nav.cls ? { site: site.id } : null })
-    if (nav.cls) crumbs.push({ text: label(nav.cls), to: null })
+    if (nav.cls) crumbs.push({ text: label(nav.cls), to: nav.prod && site ? { site: site.id, cls: nav.cls } : null })
+    if (nav.cls && nav.prod) crumbs.push({ text: nav.prod, to: null })
   }
 
   const body = !data ? (
@@ -150,9 +185,9 @@ export function StockOverviewPage() {
   ) : nav.status ? (
     <FlaggedView sites={sites} status={nav.status} onTank={openTank} onSite={(id) => go({ site: id })} />
   ) : nav.site && nav.cls && site ? (
-    <TankTable rows={tanksOf(site, nav.cls)} onTank={openTank} />
+    <TankTable rows={tanksOf(site, nav.cls, nav.prod)} onTank={openTank} />
   ) : nav.site && site ? (
-    <SiteView site={site} nearFull={data?.portfolio.nearFull ?? 0.9} onClass={(cls) => go({ site: site.id, cls })} onHighlight={setHighlight} />
+    <SiteView site={site} nearFull={data?.portfolio.nearFull ?? 0.9} onClass={(cls) => go({ site: site.id, cls })} onProduct={(cls, product) => go({ site: site.id, cls, prod: product })} onHighlight={setHighlight} />
   ) : nav.cls ? (
     <SitesForClass sites={sites} cls={nav.cls} onSite={(id) => go({ site: id, cls: nav.cls, view: 'commodity' })} />
   ) : (
@@ -161,14 +196,11 @@ export function StockOverviewPage() {
 
   return (
     <CardActionsContext value={cardActions}>
+    <ViewOptionsContext value={{ split, toggleSplit }}>
     <div className="page mg" data-hl={highlight ?? undefined}>
       <header className="mg-head">
         <div>
           <h1 className="page-title">{t.stockOverview}</h1>
-          <p className="page-note">
-            {t.mgSubtitle}
-            {data ? ` · ${t.mgAsOf} ${new Date(data.generatedAt).toLocaleString(locale)}` : ''}
-          </p>
         </div>
         <div className="mg-head__actions mg-noprint">
           <button type="button" className="mg-btn" onClick={copyLink}>
@@ -211,6 +243,7 @@ export function StockOverviewPage() {
 
       {dialog ? <TankDialog site={dialog.site} tank={dialog.tank} onClose={closeTank} /> : null}
     </div>
+    </ViewOptionsContext>
     </CardActionsContext>
   )
 }
@@ -223,9 +256,9 @@ function statusTitle(t: ReturnType<typeof useLocale>['t'], status: string): stri
   return t.mgOldData
 }
 
-function tanksOf(site: PortfolioSite, cls: CommodityClass): Array<{ site: PortfolioSite; tank: PortfolioTank }> {
+function tanksOf(site: PortfolioSite, cls: CommodityClass, product: string | null): Array<{ site: PortfolioSite; tank: PortfolioTank }> {
   return site.tanks
-    .filter((tank) => tank.commodityClass === cls)
+    .filter((tank) => tank.commodityClass === cls && (product == null || productOf(tank) === product))
     .sort((a, b) => compareTankIds(a.tankId, b.tankId))
     .map((tank) => ({ site, tank }))
 }
@@ -246,28 +279,13 @@ function Overview({
   onHighlight: (cls: CommodityClass | null) => void
 }) {
   const { t, locale } = useLocale()
+  const { split } = useViewOptions()
   const { portfolio, sites } = data
   const scaleMax = Math.max(1, ...sites.map((site) => site.capacityTotalKg))
   const classScaleMax = Math.max(1, ...CLASS_ORDER.map((code) => classAcrossSites(sites, code).capacityTotalKg))
 
-  const fullest = sites.filter((site) => site.fillRatio != null && site.capacityKg > 0).sort((a, b) => (b.fillRatio ?? 0) - (a.fillRatio ?? 0))[0]
-  const headline = [
-    portfolio.fillRatio == null
-      ? t.mgHeadlineNone
-      : fill(t.mgHeadlineFill, {
-          fill: formatPercent(portfolio.fillRatio, locale),
-          sites: portfolio.sitesTotal,
-        }),
-    fullest && sites.length > 1 ? fill(t.mgHeadlineFullest, { site: fullest.name, fill: formatPercent(fullest.fillRatio, locale) }) : '',
-    portfolio.sitesFresh < portfolio.sitesTotal ? fill(t.mgHeadlineStale, { count: portfolio.sitesTotal - portfolio.sitesFresh, total: portfolio.sitesTotal }) : '',
-  ]
-    .filter(Boolean)
-    .join(' ')
-
   return (
     <>
-      <p className="mg-headline">{headline}</p>
-
       <div className="mg-kpis">
         <Kpi
           label={t.mgKpiStock}
@@ -280,7 +298,13 @@ function Overview({
         <Kpi label={t.mgKpiCapacity} value={formatTonnes(portfolio.capacityTotalKg, locale)} unit="t" count={{ value: portfolio.capacityTotalKg, format: (n) => formatTonnes(n, locale) }} card={(hide) => <KpiCard kind="capacity" portfolio={portfolio} sites={sites} hide={hide} />} />
         <Kpi label={t.mgKpiFill} value={formatPercent(portfolio.fillRatio, locale)} count={portfolio.fillRatio == null ? undefined : { value: portfolio.fillRatio, format: (n) => formatPercent(n, locale) }} card={(hide) => <KpiCard kind="fill" portfolio={portfolio} sites={sites} hide={hide} />} />
         <Kpi label={t.mgKpiTanks} value={`${portfolio.tanksReporting} / ${portfolio.tanksTotal}`} count={{ value: portfolio.tanksReporting, format: (n) => `${Math.round(n)} / ${portfolio.tanksTotal}` }} card={(hide) => <KpiCard kind="tanks" portfolio={portfolio} sites={sites} hide={hide} />} />
-        <Kpi label={t.mgKpiSites} value={`${portfolio.sitesFresh} / ${portfolio.sitesTotal}`} count={{ value: portfolio.sitesFresh, format: (n) => `${Math.round(n)} / ${portfolio.sitesTotal}` }} card={(hide) => <KpiCard kind="sites" portfolio={portfolio} sites={sites} hide={hide} />} />
+        <Kpi
+          label={t.mgKpiFree}
+          value={formatTonnes(Math.max(0, portfolio.capacityKg - portfolio.quantityKg), locale)}
+          unit="t"
+          count={{ value: Math.max(0, portfolio.capacityKg - portfolio.quantityKg), format: (n) => formatTonnes(n, locale) }}
+          card={(hide) => <KpiCard kind="free" portfolio={portfolio} sites={sites} hide={hide} />}
+        />
       </div>
 
       <Attention items={portfolio.attention} nearFullPct={nearFullPct} onOpen={(status) => go({ status })} />
@@ -357,7 +381,9 @@ function Overview({
           {CLASS_ORDER.map((code) => ({ code, totals: classAcrossSites(sites, code) }))
             .filter((row) => row.totals.tanks > 0)
             .map(({ code, totals }, index) => (
-              <li key={code} style={stagger(index)}>
+              <Fragment key={code}>
+              <li style={stagger(index)}>
+                <ExpandToggle code={code} />
                 <button type="button" className="mg-row mg-row--class" data-class={code} onClick={() => go({ cls: code, view: 'commodity' })}>
                   <ClassName code={code} />
                   <ClassStock totals={totals} scaleMax={classScaleMax} cardKey={`class-${code}`} card={(hide) => <CommodityCard code={code} sites={sites} hide={hide} />} />
@@ -365,6 +391,10 @@ function Overview({
                   <span className="num">{totals.tanks}</span>
                 </button>
               </li>
+              {split && EXPANDABLE.has(code) ? (
+                <ProductRows code={code} tanks={sites.flatMap((item) => item.tanks.filter((tank) => tank.commodityClass === code))} scaleMax={classScaleMax} />
+              ) : null}
+              </Fragment>
             ))}
         </ul>
       )}
@@ -430,8 +460,9 @@ function Attention({ items, nearFullPct, onOpen }: { items: AttentionItem[]; nea
 
 /* ------------------------------------------------------------------ deeper levels */
 
-function SiteView({ site, nearFull, onClass, onHighlight }: { site: PortfolioSite; nearFull: number; onClass: (cls: CommodityClass) => void; onHighlight: (cls: CommodityClass | null) => void }) {
+function SiteView({ site, nearFull, onClass, onProduct, onHighlight }: { site: PortfolioSite; nearFull: number; onClass: (cls: CommodityClass) => void; onProduct: (cls: CommodityClass, product: string) => void; onHighlight: (cls: CommodityClass | null) => void }) {
   const { t, locale } = useLocale()
+  const { split } = useViewOptions()
   const siteCard = (hide: () => void) => <SiteStockCard site={site} nearFull={nearFull} hide={hide} />
   const scaleMax = Math.max(1, ...site.classes.map((row) => row.capacityTotalKg))
   return (
@@ -460,7 +491,9 @@ function SiteView({ site, nearFull, onClass, onHighlight }: { site: PortfolioSit
         {CLASS_ORDER.map((code) => site.classes.find((row) => row.code === code))
           .filter((row): row is ClassTotals => row != null)
           .map((row, index) => (
-            <li key={row.code} style={stagger(index)}>
+            <Fragment key={row.code}>
+            <li style={stagger(index)}>
+              <ExpandToggle code={row.code} />
               <button type="button" className="mg-row mg-row--class" data-class={row.code} onClick={() => onClass(row.code)}>
                 <ClassName code={row.code} />
                 <ClassStock totals={row} scaleMax={scaleMax} cardKey={`site-class-${row.code}`} card={(hide) => <ClassAtSiteCard site={site} code={row.code} hide={hide} />} />
@@ -468,6 +501,10 @@ function SiteView({ site, nearFull, onClass, onHighlight }: { site: PortfolioSit
                 <span className="num">{row.tanks}</span>
               </button>
             </li>
+            {split && EXPANDABLE.has(row.code) ? (
+              <ProductRows code={row.code} tanks={site.tanks.filter((tank) => tank.commodityClass === row.code)} scaleMax={scaleMax} onOpen={(product) => onProduct(row.code, product)} />
+            ) : null}
+            </Fragment>
           ))}
       </ul>
     </>
@@ -612,5 +649,59 @@ function TankTable({
         </tbody>
       </table>
     </div>
+  )
+}
+
+/** The chevron beside a class that can be opened into its products. It flips the same switch as the legend. */
+function ExpandToggle({ code }: { code: CommodityClass }) {
+  const { t } = useLocale()
+  const { split, toggleSplit } = useViewOptions()
+  if (!EXPANDABLE.has(code)) return null
+  return (
+    <button type="button" className={split ? 'mg-expand is-open' : 'mg-expand'} aria-expanded={split} aria-label={split ? t.mgSplitHide : t.mgSplitShow} title={split ? t.mgSplitHide : t.mgSplitShow} onClick={toggleSplit}>
+      <ChevronRight size={14} aria-hidden="true" />
+    </button>
+  )
+}
+
+/** A class's products as indented rows under it. Each can open its own tank list when `onOpen` is given. */
+function ProductRows({ code, tanks, scaleMax, onOpen }: { code: CommodityClass; tanks: PortfolioTank[]; scaleMax: number; onOpen?: (product: string) => void }) {
+  const { locale } = useLocale()
+  return (
+    <>
+      {/* A product with no stock and no capacity has nothing to show, so it stays out of the list. */}
+      {productTotals(tanks)
+        .filter((item) => item.quantityKg > 0 || item.capacityTotalKg > 0)
+        .map((item, index) => {
+        const body = (
+          <>
+            <span className="mg-name">
+              <strong>
+                <i className="mg-dot" style={{ background: tintOf(item.key, code).background }} aria-hidden="true" /> {item.key}
+              </strong>
+            </span>
+            <span className="mg-stock">
+              <StockBar quantityKg={item.quantityKg} capacityTotalKg={item.capacityTotalKg} scaleMax={scaleMax} />
+              <small>
+                {formatTonnes(item.quantityKg, locale)} / {formatTonnes(item.capacityTotalKg, locale)} t
+              </small>
+            </span>
+            <span className="num mg-fill"><FillText ratio={item.fillRatio} /></span>
+            <span className="num">{item.tanks}</span>
+          </>
+        )
+        return (
+          <li key={item.key} className="mg-sub" style={stagger(index)}>
+            {onOpen ? (
+              <button type="button" className="mg-row mg-row--class mg-row--sub" onClick={() => onOpen(item.key)}>
+                {body}
+              </button>
+            ) : (
+              <div className="mg-row mg-row--class mg-row--sub">{body}</div>
+            )}
+          </li>
+        )
+      })}
+    </>
   )
 }

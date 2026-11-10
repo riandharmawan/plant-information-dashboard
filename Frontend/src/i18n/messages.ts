@@ -405,6 +405,15 @@ export interface Messages {
   tempC: string
   colourRLov: string
   colourYLov: string
+  varianceAlert: string
+  varianceAlerts: string
+  varianceTooltip: string
+  varianceNone: string
+  varianceRuleNote: string
+  parameter: string
+  previousResult: string
+  change: string
+  current: string
   truckScatter: string
   vesselScatter: string
   palkaStrip: string
@@ -439,22 +448,6 @@ export interface Messages {
   moduleNotEnabled: string
   moduleNotEnabledBody: string
   switchSite: string
-  searchRoles: string
-  rolesShown: string
-  roleAccess: string
-  roleInUseHint: string
-  deleteRoleTitle: string
-  deleteRoleBody: string
-  detailsTab: string
-  permissionsTab: string
-  presets: string
-  presetReadOnly: string
-  presetFull: string
-  presetClear: string
-  selectAllFor: string
-  systemRoleNote: string
-  newRoleHint: string
-  rolesSummary: string
   allLabel: string
   notInUse: string
   inactiveInDataHub: string
@@ -471,6 +464,22 @@ export interface Messages {
   deactivatedNotice: string
   timezoneSaved: string
   invalidTimezone: string
+  searchRoles: string
+  rolesShown: string
+  roleAccess: string
+  roleInUseHint: string
+  deleteRoleTitle: string
+  deleteRoleBody: string
+  detailsTab: string
+  permissionsTab: string
+  presets: string
+  presetReadOnly: string
+  presetFull: string
+  presetClear: string
+  selectAllFor: string
+  systemRoleNote: string
+  newRoleHint: string
+  rolesSummary: string
   allUsers: string
   noEmail: string
   noSiteAccess: string
@@ -550,21 +559,17 @@ export interface Messages {
   operationsGroup: string
   managementGroup: string
   stockOverview: string
-  mgSubtitle: string
-  mgAsOf: string
   mgPrint: string
   mgCopyLink: string
   mgLinkCopied: string
   mgAllSites: string
-  mgHeadlineFill: string
-  mgHeadlineFullest: string
-  mgHeadlineStale: string
-  mgHeadlineNone: string
   mgKpiStock: string
   mgKpiCapacity: string
   mgKpiFill: string
   mgKpiTanks: string
-  mgKpiSites: string
+  mgKpiFree: string
+  mgCardFreeTitle: string
+  mgCardFreeNote: string
   mgVsYesterday: string
   mgNeedsAttention: string
   mgNothingToFlag: string
@@ -597,13 +602,38 @@ export interface Messages {
   mgRounds: string
   mgOldData: string
   mgTanksReporting: string
-  mgClassCrude: string
   mgClassRefined: string
-  mgClassByproduct: string
-  mgClassBiodiesel: string
   mgClassGlycerin: string
   mgClassChemical: string
   mgClassOther: string
+  mgSplitLabel: string
+  mgSplitGrouped: string
+  mgSplitProducts: string
+  mgSplitShow: string
+  mgSplitHide: string
+  mgCardProducts: string
+  mgClassCpo: string
+  mgClassFame: string
+  mgClassPfad: string
+  mgClassPkfad: string
+  mgClassCpko: string
+  mgShortCpo: string
+  mgShortFame: string
+  mgShortPfad: string
+  mgShortPkfad: string
+  mgShortCpko: string
+  mgClassPome: string
+  mgClassRpome: string
+  mgClassLimbah: string
+  mgClassSludge: string
+  mgShortPome: string
+  mgShortRpome: string
+  mgShortLimbah: string
+  mgShortSludge: string
+  mgShortRefined: string
+  mgShortGlycerin: string
+  mgShortChemical: string
+  mgShortOther: string
   mgHistory: string
   mgHistoryNone: string
   mgSiteFailed: string
@@ -632,10 +662,8 @@ export interface Messages {
   mgCardCapTitle: string
   mgCardFillTitle: string
   mgCardTanksTitle: string
-  mgCardSitesTitle: string
   mgCardCounted: string
   mgCardNoReading: string
-  mgCardOldRule: string
   masterGroup: string
   refineryFractionation: string
   utility: string
@@ -1172,6 +1200,15 @@ export const MESSAGES: Record<Locale, Messages> = {
     tempC: 'Temp °C',
     colourRLov: 'R (Lovibond)',
     colourYLov: 'Y (Lovibond)',
+    varianceAlert: 'Variance',
+    varianceAlerts: 'Variance alerts',
+    varianceTooltip: 'Moved {pct} from {previous} on {day}',
+    varianceNone: 'No parameter moved 15% or more from its last recorded result.',
+    varianceRuleNote: 'Flagged when a result moves 15% or more from the tank\u2019s last recorded result for that parameter, past a small floor so near-zero readings do not trigger it.',
+    parameter: 'Parameter',
+    previousResult: 'Previous result',
+    change: 'Change',
+    current: 'Current',
     truckScatter: 'FFA % against M&I % · one dot per truck · lines at the contract max',
     vesselScatter: 'Composite FFA % against M&I % · one dot per ticket · lines at the contract max',
     palkaStrip: 'FFA % per hold sample · line at the contract max',
@@ -1206,22 +1243,6 @@ export const MESSAGES: Record<Locale, Messages> = {
     moduleNotEnabled: 'Not available for this site',
     moduleNotEnabledBody: 'This module is not switched on for the site you are viewing. Pick another site, or ask an administrator to turn it on.',
     switchSite: 'Switch site',
-    searchRoles: 'Search roles',
-    rolesShown: '{n} of {total} roles',
-    roleAccess: 'Access',
-    roleInUseHint: 'Assigned to {n} user(s). Remove it from them first.',
-    deleteRoleTitle: 'Delete this role?',
-    deleteRoleBody: '{name} will be removed. This cannot be undone.',
-    detailsTab: 'Details',
-    permissionsTab: 'Permissions',
-    presets: 'Presets',
-    presetReadOnly: 'Read only',
-    presetFull: 'Full access',
-    presetClear: 'Clear all',
-    selectAllFor: 'Select all: {what}',
-    systemRoleNote: 'System roles keep their name.',
-    newRoleHint: 'Name the role and choose what it may do',
-    rolesSummary: 'View {v} · Edit {e} · Delete {d}',
     allLabel: 'All',
     notInUse: 'Not in use',
     inactiveInDataHub: 'Inactive in DataHub',
@@ -1238,6 +1259,22 @@ export const MESSAGES: Record<Locale, Messages> = {
     deactivatedNotice: '{name} is no longer in use.',
     timezoneSaved: '{name} timezone set to {zone}.',
     invalidTimezone: 'That timezone is not valid.',
+    searchRoles: 'Search roles',
+    rolesShown: '{n} of {total} roles',
+    roleAccess: 'Access',
+    roleInUseHint: 'Assigned to {n} user(s). Remove it from them first.',
+    deleteRoleTitle: 'Delete this role?',
+    deleteRoleBody: '{name} will be removed. This cannot be undone.',
+    detailsTab: 'Details',
+    permissionsTab: 'Permissions',
+    presets: 'Presets',
+    presetReadOnly: 'Read only',
+    presetFull: 'Full access',
+    presetClear: 'Clear all',
+    selectAllFor: 'Select all: {what}',
+    systemRoleNote: 'System roles keep their name.',
+    newRoleHint: 'Name the role and choose what it may do',
+    rolesSummary: 'View {v} · Edit {e} · Delete {d}',
     allUsers: 'All users',
     noEmail: 'No email',
     noSiteAccess: 'No site access',
@@ -1317,21 +1354,17 @@ export const MESSAGES: Record<Locale, Messages> = {
     operationsGroup: 'Operations',
     managementGroup: 'Management',
     stockOverview: 'Stock Overview',
-    mgSubtitle: 'Tank stock across the sites you hold',
-    mgAsOf: 'As of',
     mgPrint: 'Print',
     mgCopyLink: 'Copy link',
     mgLinkCopied: 'Link copied',
     mgAllSites: 'All sites',
-    mgHeadlineFill: 'Stock is {fill} of capacity across {sites} sites.',
-    mgHeadlineFullest: '{site} is fullest at {fill}.',
-    mgHeadlineStale: 'Data is older than expected at {count} of {total} sites.',
-    mgHeadlineNone: 'No site has tank data yet.',
     mgKpiStock: 'Stock',
     mgKpiCapacity: 'Capacity',
     mgKpiFill: 'Fill level',
     mgKpiTanks: 'Tanks reporting',
-    mgKpiSites: 'Sites with fresh data',
+    mgKpiFree: 'Free space',
+    mgCardFreeTitle: 'Free space by site',
+    mgCardFreeNote: 'Free space is capacity minus stock, for tanks that have a reading and a capacity.',
     mgVsYesterday: 'vs yesterday',
     mgNeedsAttention: 'Needs attention',
     mgNothingToFlag: 'Nothing needs attention.',
@@ -1345,7 +1378,7 @@ export const MESSAGES: Record<Locale, Messages> = {
     mgColSite: 'Site',
     mgColStockCap: 'Stock vs capacity',
     mgColFill: 'Fill',
-    mgColMix: 'Mix',
+    mgColMix: 'Mix (t)',
     mgColChange: 'Change',
     mgColData: 'Data',
     mgColClass: 'Commodity',
@@ -1364,13 +1397,38 @@ export const MESSAGES: Record<Locale, Messages> = {
     mgRounds: 'Rounds',
     mgOldData: 'Old data',
     mgTanksReporting: '{a} of {b} tanks',
-    mgClassCrude: 'Crude oils',
     mgClassRefined: 'Refined oils',
-    mgClassByproduct: 'By-products (PFAD, POME)',
-    mgClassBiodiesel: 'Biodiesel (FAME)',
     mgClassGlycerin: 'Glycerin & fatty matter',
     mgClassChemical: 'Chemicals',
     mgClassOther: 'Other',
+    mgSplitLabel: 'Grouped commodities',
+    mgSplitGrouped: 'Grouped',
+    mgSplitProducts: 'By product',
+    mgSplitShow: 'Show products',
+    mgSplitHide: 'Hide products',
+    mgCardProducts: 'Products',
+    mgClassCpo: 'CPO',
+    mgClassFame: 'FAME',
+    mgClassPfad: 'PFAD',
+    mgClassPkfad: 'PKFAD',
+    mgClassCpko: 'CPKO',
+    mgShortCpo: 'CPO',
+    mgShortFame: 'FAME',
+    mgShortPfad: 'PFAD',
+    mgShortPkfad: 'PKFAD',
+    mgShortCpko: 'CPKO',
+    mgClassPome: 'POME',
+    mgClassRpome: 'RPOME',
+    mgClassLimbah: 'LIMBAH',
+    mgClassSludge: 'SLUDGE',
+    mgShortPome: 'POME',
+    mgShortRpome: 'RPOME',
+    mgShortLimbah: 'Limbah',
+    mgShortSludge: 'Sludge',
+    mgShortRefined: 'Refined',
+    mgShortGlycerin: 'Glycerin',
+    mgShortChemical: 'Chemicals',
+    mgShortOther: 'Other',
     mgHistory: 'History',
     mgHistoryNone: 'No history for this tank yet.',
     mgSiteFailed: '{site} could not be loaded.',
@@ -1399,10 +1457,8 @@ export const MESSAGES: Record<Locale, Messages> = {
     mgCardCapTitle: 'Capacity by site',
     mgCardFillTitle: 'Fill level by site',
     mgCardTanksTitle: 'Tank status',
-    mgCardSitesTitle: 'Data freshness by site',
     mgCardCounted: 'In fill level',
     mgCardNoReading: 'No reading',
-    mgCardOldRule: 'Live data older than 1 hour, or rounds older than 2 days, count as old.',
     masterGroup: 'Master data',
     refineryFractionation: 'Refinery and fractionation',
     utility: 'Utility',
@@ -1937,6 +1993,15 @@ export const MESSAGES: Record<Locale, Messages> = {
     tempC: 'Suhu °C',
     colourRLov: 'R (Lovibond)',
     colourYLov: 'Y (Lovibond)',
+    varianceAlert: 'Variasi',
+    varianceAlerts: 'Peringatan variasi',
+    varianceTooltip: 'Bergerak {pct} dari {previous} pada {day}',
+    varianceNone: 'Tidak ada parameter yang bergerak 15% atau lebih dari hasil tercatat sebelumnya.',
+    varianceRuleNote: 'Ditandai saat hasil bergerak 15% atau lebih dari hasil tercatat terakhir tangki untuk parameter itu, melewati batas kecil agar pembacaan mendekati nol tidak memicunya.',
+    parameter: 'Parameter',
+    previousResult: 'Hasil sebelumnya',
+    change: 'Perubahan',
+    current: 'Saat ini',
     truckScatter: 'FFA % terhadap M&I % · satu titik per truk · garis pada batas kontrak',
     vesselScatter: 'FFA % komposit terhadap M&I % · satu titik per tiket · garis pada batas kontrak',
     palkaStrip: 'FFA % per sampel palka · garis pada batas kontrak',
@@ -1971,22 +2036,6 @@ export const MESSAGES: Record<Locale, Messages> = {
     moduleNotEnabled: 'Tidak tersedia untuk site ini',
     moduleNotEnabledBody: 'Modul ini tidak diaktifkan untuk site yang sedang Anda lihat. Pilih site lain, atau minta administrator mengaktifkannya.',
     switchSite: 'Ganti site',
-    searchRoles: 'Cari peran',
-    rolesShown: '{n} dari {total} peran',
-    roleAccess: 'Akses',
-    roleInUseHint: 'Dipakai {n} pengguna. Lepaskan dari mereka terlebih dahulu.',
-    deleteRoleTitle: 'Hapus peran ini?',
-    deleteRoleBody: '{name} akan dihapus. Tindakan ini tidak dapat dibatalkan.',
-    detailsTab: 'Detail',
-    permissionsTab: 'Izin',
-    presets: 'Preset',
-    presetReadOnly: 'Hanya lihat',
-    presetFull: 'Akses penuh',
-    presetClear: 'Hapus semua',
-    selectAllFor: 'Pilih semua: {what}',
-    systemRoleNote: 'Peran sistem mempertahankan namanya.',
-    newRoleHint: 'Beri nama peran dan pilih apa yang boleh dilakukan',
-    rolesSummary: 'Lihat {v} · Ubah {e} · Hapus {d}',
     allLabel: 'Semua',
     notInUse: 'Tidak digunakan',
     inactiveInDataHub: 'Nonaktif di DataHub',
@@ -2003,6 +2052,22 @@ export const MESSAGES: Record<Locale, Messages> = {
     deactivatedNotice: '{name} tidak lagi digunakan.',
     timezoneSaved: 'Zona waktu {name} diatur ke {zone}.',
     invalidTimezone: 'Zona waktu tidak valid.',
+    searchRoles: 'Cari peran',
+    rolesShown: '{n} dari {total} peran',
+    roleAccess: 'Akses',
+    roleInUseHint: 'Dipakai {n} pengguna. Lepaskan dari mereka terlebih dahulu.',
+    deleteRoleTitle: 'Hapus peran ini?',
+    deleteRoleBody: '{name} akan dihapus. Tindakan ini tidak dapat dibatalkan.',
+    detailsTab: 'Detail',
+    permissionsTab: 'Izin',
+    presets: 'Preset',
+    presetReadOnly: 'Hanya lihat',
+    presetFull: 'Akses penuh',
+    presetClear: 'Hapus semua',
+    selectAllFor: 'Pilih semua: {what}',
+    systemRoleNote: 'Peran sistem mempertahankan namanya.',
+    newRoleHint: 'Beri nama peran dan pilih apa yang boleh dilakukan',
+    rolesSummary: 'Lihat {v} · Ubah {e} · Hapus {d}',
     allUsers: 'Semua pengguna',
     noEmail: 'Tanpa email',
     noSiteAccess: 'Tanpa akses site',
@@ -2082,21 +2147,17 @@ export const MESSAGES: Record<Locale, Messages> = {
     operationsGroup: 'Operasi',
     managementGroup: 'Manajemen',
     stockOverview: 'Ringkasan Stok',
-    mgSubtitle: 'Stok tangki di semua site yang Anda pegang',
-    mgAsOf: 'Per',
     mgPrint: 'Cetak',
     mgCopyLink: 'Salin tautan',
     mgLinkCopied: 'Tautan disalin',
     mgAllSites: 'Semua site',
-    mgHeadlineFill: 'Stok {fill} dari kapasitas di {sites} site.',
-    mgHeadlineFullest: '{site} paling penuh, {fill}.',
-    mgHeadlineStale: 'Data lebih lama dari seharusnya di {count} dari {total} site.',
-    mgHeadlineNone: 'Belum ada site dengan data tangki.',
     mgKpiStock: 'Stok',
     mgKpiCapacity: 'Kapasitas',
     mgKpiFill: 'Tingkat isi',
     mgKpiTanks: 'Tangki melapor',
-    mgKpiSites: 'Site dengan data terbaru',
+    mgKpiFree: 'Ruang kosong',
+    mgCardFreeTitle: 'Ruang kosong per site',
+    mgCardFreeNote: 'Ruang kosong adalah kapasitas dikurangi stok, untuk tangki yang punya pembacaan dan kapasitas.',
     mgVsYesterday: 'vs kemarin',
     mgNeedsAttention: 'Perlu perhatian',
     mgNothingToFlag: 'Tidak ada yang perlu perhatian.',
@@ -2110,7 +2171,7 @@ export const MESSAGES: Record<Locale, Messages> = {
     mgColSite: 'Site',
     mgColStockCap: 'Stok vs kapasitas',
     mgColFill: 'Isi',
-    mgColMix: 'Komposisi',
+    mgColMix: 'Komposisi (t)',
     mgColChange: 'Perubahan',
     mgColData: 'Data',
     mgColClass: 'Komoditas',
@@ -2129,13 +2190,38 @@ export const MESSAGES: Record<Locale, Messages> = {
     mgRounds: 'Putaran',
     mgOldData: 'Data lama',
     mgTanksReporting: '{a} dari {b} tangki',
-    mgClassCrude: 'Minyak mentah',
     mgClassRefined: 'Minyak olahan',
-    mgClassByproduct: 'Produk samping (PFAD, POME)',
-    mgClassBiodiesel: 'Biodiesel (FAME)',
     mgClassGlycerin: 'Gliserin & fatty matter',
     mgClassChemical: 'Bahan kimia',
     mgClassOther: 'Lainnya',
+    mgSplitLabel: 'Komoditas gabungan',
+    mgSplitGrouped: 'Digabung',
+    mgSplitProducts: 'Per produk',
+    mgSplitShow: 'Tampilkan produk',
+    mgSplitHide: 'Sembunyikan produk',
+    mgCardProducts: 'Produk',
+    mgClassCpo: 'CPO',
+    mgClassFame: 'FAME',
+    mgClassPfad: 'PFAD',
+    mgClassPkfad: 'PKFAD',
+    mgClassCpko: 'CPKO',
+    mgShortCpo: 'CPO',
+    mgShortFame: 'FAME',
+    mgShortPfad: 'PFAD',
+    mgShortPkfad: 'PKFAD',
+    mgShortCpko: 'CPKO',
+    mgClassPome: 'POME',
+    mgClassRpome: 'RPOME',
+    mgClassLimbah: 'LIMBAH',
+    mgClassSludge: 'SLUDGE',
+    mgShortPome: 'POME',
+    mgShortRpome: 'RPOME',
+    mgShortLimbah: 'Limbah',
+    mgShortSludge: 'Sludge',
+    mgShortRefined: 'Olahan',
+    mgShortGlycerin: 'Gliserin',
+    mgShortChemical: 'Kimia',
+    mgShortOther: 'Lainnya',
     mgHistory: 'Riwayat',
     mgHistoryNone: 'Belum ada riwayat untuk tangki ini.',
     mgSiteFailed: '{site} tidak dapat dimuat.',
@@ -2164,10 +2250,8 @@ export const MESSAGES: Record<Locale, Messages> = {
     mgCardCapTitle: 'Kapasitas per site',
     mgCardFillTitle: 'Tingkat isi per site',
     mgCardTanksTitle: 'Status tangki',
-    mgCardSitesTitle: 'Kesegaran data per site',
     mgCardCounted: 'Masuk tingkat isi',
     mgCardNoReading: 'Tanpa pembacaan',
-    mgCardOldRule: 'Data langsung lebih dari 1 jam, atau putaran lebih dari 2 hari, dianggap lama.',
     masterGroup: 'Data master',
     refineryFractionation: 'Refinery dan fraksinasi',
     utility: 'Utilitas',

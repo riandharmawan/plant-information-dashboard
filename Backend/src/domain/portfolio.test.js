@@ -5,10 +5,10 @@ import { isInUse, sameTankDelta, sourceOf, summarisePortfolio, summariseSite, ta
 
 test('products from every site land in the same few classes', () => {
   const expected = {
-    CPO: 'crude', CPKO: 'crude', 'CRUDE PALM OIL': 'crude',
+    CPO: 'cpo', CPKO: 'cpko', 'CRUDE PALM OIL': 'cpo',
     RBDPO: 'refined', RBDPL: 'refined', OLEIN: 'refined', 'IV 64': 'refined', RPS: 'refined', PMF: 'refined', RBDPKO: 'refined',
-    PFAD: 'byproduct', POME: 'byproduct', RPOME: 'byproduct', PKFAD: 'byproduct', SLUDGE: 'byproduct', LIMBAH: 'byproduct',
-    FAME: 'biodiesel', FAME_SAMPLE: 'biodiesel', 'FAME ENZYM 3': 'biodiesel',
+    PFAD: 'pfad', PKFAD: 'pkfad', POME: 'pome', RPOME: 'rpome', LIMBAH: 'limbah', SLUDGE: 'sludge',
+    FAME: 'fame', FAME_SAMPLE: 'fame', 'FAME ENZYM 3': 'fame',
     CG: 'glycerin', 'CRUDE GLYCERIN': 'glycerin', FM: 'glycerin', 'FATTY MATTER': 'glycerin', 'FM DAILY': 'glycerin',
     METHANOL: 'chemical', 'METHANOL 3': 'chemical', 'CAUSTIC SODA': 'chemical', NAOH: 'chemical', SODIUM: 'chemical', HCL: 'chemical', 'SM PURE 6': 'chemical',
     '': 'other', '-': 'other', MYSTERY: 'other',
@@ -16,10 +16,12 @@ test('products from every site land in the same few classes', () => {
   for (const [name, code] of Object.entries(expected)) assert.equal(commodityClassOf(name), code, name)
 })
 
-test('RPOME is a by-product, not refined palm oil, and a missing product falls back to the gauge group', () => {
-  assert.equal(commodityClassOf('RPOME'), 'byproduct')
+test('RPOME and POME are their own classes, not refined palm oil, and a missing product falls back to the gauge group', () => {
+  assert.equal(commodityClassOf('RPOME'), 'rpome')
+  assert.equal(commodityClassOf('POME'), 'pome')
+  assert.equal(commodityClassOf('CPO'), 'cpo')
   assert.equal(commodityClassOf('', 'RBDPO'), 'refined')
-  assert.equal(commodityClassOf(null, 'FAME_DAILY'), 'biodiesel')
+  assert.equal(commodityClassOf(null, 'FAME_DAILY'), 'fame')
 })
 
 const tank = (id, quantityKg, capacityKg, extra = {}) => ({
@@ -64,7 +66,7 @@ test('a site adds up stock, capacity and fill on the tanks that have both, and c
   assert.equal(s.tanksTotal, 5)
   assert.equal(s.tanksReporting, 4)
   assert.deepEqual(s.counts, { ok: 2, 'near-full': 1, over: 0, empty: 1, 'no-data': 1 })
-  assert.deepEqual(s.classes.map((c) => c.code), ['crude', 'biodiesel'])
+  assert.deepEqual(s.classes.map((c) => c.code), ['cpo', 'fame'])
   assert.equal(s.kind, 'live')
   assert.equal(s.stale, false)
   assert.equal(s.ageMinutes, 4)

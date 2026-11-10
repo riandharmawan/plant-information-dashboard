@@ -1,6 +1,7 @@
 import { ArrowDown, ArrowUp, Ban, CircleHelp, TriangleAlert } from 'lucide-react'
 import type { ReactNode } from 'react'
 import {
+  EXPANDABLE,
   formatPercent,
   type CommodityClass,
   type PortfolioSite,
@@ -9,6 +10,7 @@ import {
 import { useLocale } from '../../i18n/LocaleContext.tsx'
 import { HoverTarget } from './HoverCard.tsx'
 import { Count } from './motion.tsx'
+import { useViewOptions } from './viewOptions.ts'
 import type { Messages } from '../../i18n/messages.ts'
 
 export function fill(template: string, values: Record<string, string | number>): string {
@@ -16,12 +18,18 @@ export function fill(template: string, values: Record<string, string | number>):
 }
 
 const CLASS_LABEL: Record<CommodityClass, keyof Messages> = {
-  crude: 'mgClassCrude',
+  cpo: 'mgClassCpo',
   refined: 'mgClassRefined',
-  byproduct: 'mgClassByproduct',
-  biodiesel: 'mgClassBiodiesel',
+  pfad: 'mgClassPfad',
+  pome: 'mgClassPome',
+  pkfad: 'mgClassPkfad',
+  rpome: 'mgClassRpome',
+  fame: 'mgClassFame',
   glycerin: 'mgClassGlycerin',
+  limbah: 'mgClassLimbah',
   chemical: 'mgClassChemical',
+  sludge: 'mgClassSludge',
+  cpko: 'mgClassCpko',
   other: 'mgClassOther',
 }
 
@@ -187,6 +195,8 @@ export function Legend({
   onPick: (code: CommodityClass) => void
 }) {
   const label = useClassLabel()
+  const { t } = useLocale()
+  const { split, toggleSplit } = useViewOptions()
   if (classes.length === 0) return null
   return (
     <ul className="mg-legend mg-noprint" aria-label="Commodity">
@@ -206,6 +216,19 @@ export function Legend({
           </button>
         </li>
       ))}
+      {classes.some((code) => EXPANDABLE.has(code)) ? (
+        <li className="mg-legend__split">
+          <span>{t.mgSplitLabel}</span>
+          <span className="mg-segmented" role="group" aria-label={t.mgSplitLabel}>
+            <button type="button" aria-pressed={!split} onClick={() => split && toggleSplit()}>
+              {t.mgSplitGrouped}
+            </button>
+            <button type="button" aria-pressed={split} onClick={() => !split && toggleSplit()}>
+              {t.mgSplitProducts}
+            </button>
+          </span>
+        </li>
+      ) : null}
     </ul>
   )
 }

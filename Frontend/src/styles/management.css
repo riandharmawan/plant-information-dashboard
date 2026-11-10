@@ -9,12 +9,18 @@
   --mg-muted: var(--color-text-steel);
   --mg-line: var(--color-border-light);
   /* Commodity classes keep one colour everywhere. Fixed order from the validated reference palette. */
-  --mg-c-crude: #2a78d6;
+  --mg-c-cpo: #2a78d6;
   --mg-c-refined: #eb6834;
-  --mg-c-byproduct: #1baf7a;
-  --mg-c-biodiesel: #eda100;
-  --mg-c-glycerin: #e87ba4;
-  --mg-c-chemical: #008300;
+  --mg-c-pfad: #1baf7a;
+  --mg-c-pome: #6250d6;
+  --mg-c-pkfad: #8a9a12;
+  --mg-c-rpome: #e87ba4;
+  --mg-c-fame: #eda100;
+  --mg-c-glycerin: #008300;
+  --mg-c-limbah: #e34948;
+  --mg-c-chemical: #1d9bd1;
+  --mg-c-sludge: #a8581a;
+  --mg-c-cpko: #b5409a;
   --mg-c-other: #9aa5a1;
   --mg-warn: #8a5a00;
   --mg-warn-bg: #fff4cc;
@@ -28,12 +34,18 @@
   position: relative;
 }
 
-.mg-c--crude { background: var(--mg-c-crude); }
+.mg-c--cpo { background: var(--mg-c-cpo); }
 .mg-c--refined { background: var(--mg-c-refined); }
-.mg-c--byproduct { background: var(--mg-c-byproduct); }
-.mg-c--biodiesel { background: var(--mg-c-biodiesel); }
+.mg-c--pfad { background: var(--mg-c-pfad); }
+.mg-c--pome { background: var(--mg-c-pome); }
+.mg-c--pkfad { background: var(--mg-c-pkfad); }
+.mg-c--rpome { background: var(--mg-c-rpome); }
+.mg-c--fame { background: var(--mg-c-fame); }
 .mg-c--glycerin { background: var(--mg-c-glycerin); }
+.mg-c--limbah { background: var(--mg-c-limbah); }
 .mg-c--chemical { background: var(--mg-c-chemical); }
+.mg-c--sludge { background: var(--mg-c-sludge); }
+.mg-c--cpko { background: var(--mg-c-cpko); }
 .mg-c--other { background: var(--mg-c-other); }
 
 .mg-muted { color: var(--mg-muted); }
@@ -97,13 +109,6 @@
   background: var(--mg-warn-bg);
   color: var(--mg-warn);
   font-size: var(--font-size-sm);
-}
-
-.mg-headline {
-  margin: 0 0 var(--spacing-3);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
-  line-height: 1.4;
 }
 
 .mg-kpis {
@@ -191,7 +196,7 @@ button.mg-row { cursor: pointer; }
 button.mg-row:hover { background: var(--color-bg-lighter); }
 button.mg-row:focus-visible { outline: 2px solid var(--color-sea-light); outline-offset: -2px; }
 
-.mg-row--site { grid-template-columns: minmax(120px, 1.1fr) minmax(180px, 2fr) 70px minmax(120px, 1.2fr) 90px minmax(130px, 1.2fr); }
+.mg-row--site { grid-template-columns: minmax(110px, 1fr) minmax(140px, 1.5fr) 64px minmax(250px, 2.6fr) 84px minmax(130px, 1.1fr); }
 .mg-row--class { grid-template-columns: minmax(150px, 1.4fr) minmax(200px, 3fr) 80px 60px; }
 .mg-row--flat { grid-template-columns: 1fr auto; }
 
@@ -216,8 +221,27 @@ button.mg-row:focus-visible { outline: 2px solid var(--color-sea-light); outline
 .mg-bar__fill { height: 100%; border-radius: 4px; background: var(--mg-stock); }
 .mg-bar__tick { position: absolute; top: -2px; bottom: -2px; width: 2px; background: var(--mg-ink); opacity: 0.45; }
 
-.mg-mix { display: flex; gap: 2px; height: 10px; border-radius: 4px; background: var(--mg-track); overflow: hidden; }
-.mg-mix__seg { min-width: 2px; border-radius: 2px; }
+.mg-mixwrap { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+/* A taller strip so a number fits inside each segment that is wide enough for one. */
+.mg-mix { display: flex; gap: 2px; height: 38px; border-radius: 6px; background: var(--mg-track); overflow: hidden; }
+.mg-mix__seg { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-width: 2px; border-radius: 4px; overflow: hidden; color: #fff; font-size: 12px; font-weight: var(--font-weight-semibold); font-variant-numeric: tabular-nums; line-height: 1; white-space: nowrap; }
+.mg-mix__name { font-size: 10px; font-weight: var(--font-weight-medium); letter-spacing: 0.01em; opacity: 0.92; }
+.mg-mix__seg b,
+.mg-mix__seg .mg-mix__name { padding: 0 4px; pointer-events: none; }
+.mg-mix__seg b { font-weight: inherit; }
+/* Dark text where the colour is light, white where it is dark, so every label reads clearly. */
+.mg-mix__seg.mg-c--refined,
+.mg-mix__seg.mg-c--pfad,
+.mg-mix__seg.mg-c--pkfad,
+.mg-mix__seg.mg-c--rpome,
+.mg-mix__seg.mg-c--fame,
+.mg-mix__seg.mg-c--chemical,
+.mg-mix__seg.mg-c--other { color: #14201c; }
+/* Segments too narrow for a number are listed under the strip, so every figure is on screen. */
+.mg-mix__rest { display: flex; flex-wrap: wrap; gap: 2px 10px; margin: 0; padding: 0; list-style: none; color: var(--mg-muted); font-size: var(--font-size-xs); font-variant-numeric: tabular-nums; }
+.mg-mix__rest li { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+.mg-mix__rest .mg-dot { width: 8px; height: 8px; margin-right: 0; }
+.mg-mix__rest b { color: var(--mg-ink); font-weight: var(--font-weight-semibold); }
 
 .mg-change { display: inline-flex; align-items: center; gap: 2px; font-variant-numeric: tabular-nums; }
 
@@ -264,10 +288,14 @@ button.mg-row:focus-visible { outline: 2px solid var(--color-sea-light); outline
 .mg-chart { margin-top: var(--spacing-2); }
 
 /* The page sits beside a sidebar, so layout follows the width of the page, not the window. */
-@container mg (max-width: 860px) {
-  .mg-row--site { grid-template-columns: minmax(100px, 0.9fr) minmax(120px, 1.5fr) 60px minmax(185px, 1.3fr); }
-  .mg-row--site > :nth-child(4),
-  .mg-row--site > :nth-child(5) { display: none; }
+@container mg (max-width: 1000px) {
+  .mg-row--site { grid-template-columns: minmax(100px, 0.9fr) minmax(120px, 1.5fr) 60px minmax(185px, 1.3fr); row-gap: 8px; }
+  .mg-row--head.mg-row--site > :nth-child(4),
+  .mg-row--head.mg-row--site > :nth-child(5) { display: none; }
+  button.mg-row--site > :nth-child(4) { grid-column: 1 / -1; grid-row: 2; }
+  button.mg-row--site > :nth-child(5) { display: none; }
+  /* The column header is hidden here, so the strip names itself and its unit. */
+  .mg-mixwrap::before { content: attr(data-label); color: var(--mg-muted); font-size: var(--font-size-xs); }
 }
 
 @container mg (max-width: 520px) {
@@ -278,8 +306,8 @@ button.mg-row:focus-visible { outline: 2px solid var(--color-sea-light); outline
   .mg-row--head { display: none; }
   .mg-row--site > .mg-stock,
   .mg-row--class > .mg-stock { grid-column: 1 / -1; grid-row: 2; }
-  .mg-row--site > :nth-child(4),
-  .mg-row--site > :nth-child(5) { display: none; }
+  button.mg-row--site > :nth-child(4) { grid-column: 1 / -1; grid-row: 3; }
+  button.mg-row--site > :nth-child(5) { display: none; }
   .mg-row--site > :nth-child(6) { grid-column: 1 / -1; }
   .mg-row--class > .num:last-child { display: none; }
   .mg-dialog { padding: var(--spacing-3); }
@@ -325,6 +353,10 @@ button.mg-row:focus-visible { outline: 2px solid var(--color-sea-light); outline
   from { transform: scaleX(0); }
   to { transform: scaleX(1); }
 }
+@keyframes mg-reveal {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
 @keyframes mg-pop {
   from { opacity: 0; transform: translateY(10px) scale(0.96); }
   to { opacity: 1; transform: none; }
@@ -357,7 +389,6 @@ button.mg-row:focus-visible { outline: 2px solid var(--color-sea-light); outline
 .mg-kpi:nth-child(4) { animation-delay: 150ms; }
 .mg-kpi:nth-child(5) { animation-delay: 200ms; }
 .mg-kpi:hover { transform: translateY(-1px); box-shadow: var(--shadow-sm); }
-.mg-headline { animation: mg-fade 0.4s ease both; }
 
 /* Bars grow from the left and glide when a refresh changes them. */
 .mg-bar__track {
@@ -368,8 +399,7 @@ button.mg-row:focus-visible { outline: 2px solid var(--color-sea-light); outline
 }
 .mg-bar__fill { transition: width 0.6s cubic-bezier(0.2, 0.7, 0.2, 1); }
 .mg-mix {
-  transform-origin: left center;
-  animation: mg-grow 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation: mg-reveal 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
   animation-delay: calc(var(--i, 0) * 45ms + 160ms);
 }
 .mg-mix__seg { transition: flex-grow 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.2s; }
@@ -436,26 +466,44 @@ button.mg-row:focus-visible::after { opacity: 1; right: 11px; }
 .mg-legend__item .mg-dot { margin-right: 0; }
 
 .mg-row[data-class] { transition: background 0.15s, opacity 0.2s; }
-.mg[data-hl="crude"] .mg-mix__seg:not(.mg-c--crude),
+.mg[data-hl="cpo"] .mg-mix__seg:not(.mg-c--cpo),
 .mg[data-hl="refined"] .mg-mix__seg:not(.mg-c--refined),
-.mg[data-hl="byproduct"] .mg-mix__seg:not(.mg-c--byproduct),
-.mg[data-hl="biodiesel"] .mg-mix__seg:not(.mg-c--biodiesel),
+.mg[data-hl="pfad"] .mg-mix__seg:not(.mg-c--pfad),
+.mg[data-hl="pome"] .mg-mix__seg:not(.mg-c--pome),
+.mg[data-hl="pkfad"] .mg-mix__seg:not(.mg-c--pkfad),
+.mg[data-hl="rpome"] .mg-mix__seg:not(.mg-c--rpome),
+.mg[data-hl="fame"] .mg-mix__seg:not(.mg-c--fame),
 .mg[data-hl="glycerin"] .mg-mix__seg:not(.mg-c--glycerin),
+.mg[data-hl="limbah"] .mg-mix__seg:not(.mg-c--limbah),
 .mg[data-hl="chemical"] .mg-mix__seg:not(.mg-c--chemical),
+.mg[data-hl="sludge"] .mg-mix__seg:not(.mg-c--sludge),
+.mg[data-hl="cpko"] .mg-mix__seg:not(.mg-c--cpko),
 .mg[data-hl="other"] .mg-mix__seg:not(.mg-c--other) { opacity: 0.2; }
-.mg[data-hl="crude"] .mg-legend__item:not([data-class="crude"]),
+.mg[data-hl="cpo"] .mg-legend__item:not([data-class="cpo"]),
 .mg[data-hl="refined"] .mg-legend__item:not([data-class="refined"]),
-.mg[data-hl="byproduct"] .mg-legend__item:not([data-class="byproduct"]),
-.mg[data-hl="biodiesel"] .mg-legend__item:not([data-class="biodiesel"]),
+.mg[data-hl="pfad"] .mg-legend__item:not([data-class="pfad"]),
+.mg[data-hl="pome"] .mg-legend__item:not([data-class="pome"]),
+.mg[data-hl="pkfad"] .mg-legend__item:not([data-class="pkfad"]),
+.mg[data-hl="rpome"] .mg-legend__item:not([data-class="rpome"]),
+.mg[data-hl="fame"] .mg-legend__item:not([data-class="fame"]),
 .mg[data-hl="glycerin"] .mg-legend__item:not([data-class="glycerin"]),
+.mg[data-hl="limbah"] .mg-legend__item:not([data-class="limbah"]),
 .mg[data-hl="chemical"] .mg-legend__item:not([data-class="chemical"]),
+.mg[data-hl="sludge"] .mg-legend__item:not([data-class="sludge"]),
+.mg[data-hl="cpko"] .mg-legend__item:not([data-class="cpko"]),
 .mg[data-hl="other"] .mg-legend__item:not([data-class="other"]) { opacity: 0.5; }
-.mg[data-hl="crude"] .mg-row[data-class]:not([data-class="crude"]),
+.mg[data-hl="cpo"] .mg-row[data-class]:not([data-class="cpo"]),
 .mg[data-hl="refined"] .mg-row[data-class]:not([data-class="refined"]),
-.mg[data-hl="byproduct"] .mg-row[data-class]:not([data-class="byproduct"]),
-.mg[data-hl="biodiesel"] .mg-row[data-class]:not([data-class="biodiesel"]),
+.mg[data-hl="pfad"] .mg-row[data-class]:not([data-class="pfad"]),
+.mg[data-hl="pome"] .mg-row[data-class]:not([data-class="pome"]),
+.mg[data-hl="pkfad"] .mg-row[data-class]:not([data-class="pkfad"]),
+.mg[data-hl="rpome"] .mg-row[data-class]:not([data-class="rpome"]),
+.mg[data-hl="fame"] .mg-row[data-class]:not([data-class="fame"]),
 .mg[data-hl="glycerin"] .mg-row[data-class]:not([data-class="glycerin"]),
+.mg[data-hl="limbah"] .mg-row[data-class]:not([data-class="limbah"]),
 .mg[data-hl="chemical"] .mg-row[data-class]:not([data-class="chemical"]),
+.mg[data-hl="sludge"] .mg-row[data-class]:not([data-class="sludge"]),
+.mg[data-hl="cpko"] .mg-row[data-class]:not([data-class="cpko"]),
 .mg[data-hl="other"] .mg-row[data-class]:not([data-class="other"]) { opacity: 0.4; }
 
 /* The tank dialog fades and lifts in, and back out. */
@@ -657,3 +705,51 @@ button.mg-tip__row:focus-visible { background: var(--color-bg-lighter); }
 .mg-tip__hist i { display: block; width: 100%; border-radius: 3px 3px 0 0; background: var(--mg-stock); opacity: 0.85; transition: height 0.4s cubic-bezier(0.2, 0.7, 0.2, 1); }
 .mg-tip__hist .is-hot i { background: #e0a100; }
 .mg-tip__hist small { color: var(--mg-muted); font-size: 9px; white-space: nowrap; }
+
+/* Refined oils as one group or split into products. */
+.mg-legend__split { display: inline-flex; align-items: center; gap: 8px; margin-left: auto; color: var(--mg-muted); font-size: var(--font-size-sm); }
+.mg-segmented { display: inline-flex; padding: 2px; border: 1px solid var(--mg-line); border-radius: 999px; background: var(--color-bg-white); }
+.mg-segmented button {
+  padding: 3px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: var(--mg-muted);
+  font: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.mg-segmented button:hover { color: var(--mg-ink); }
+.mg-segmented button[aria-pressed='true'] { background: var(--color-sea-mid); color: #fff; }
+
+.mg-list > li { position: relative; }
+.mg-row--class { padding-left: 34px; }
+.mg-expand {
+  position: absolute;
+  z-index: 1;
+  left: 8px;
+  top: 14px;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--mg-muted);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.mg-expand:hover,
+.mg-expand:focus-visible { background: var(--color-secondary-hover); color: var(--mg-ink); }
+.mg-expand svg { transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.mg-expand.is-open svg { transform: rotate(90deg); }
+
+.mg-sub { background: var(--color-bg-lighter); }
+.mg-row--sub { padding-block: 8px; padding-left: 52px; font-size: var(--font-size-sm); }
+.mg-row--sub .mg-name strong { font-weight: var(--font-weight-medium); }
+div.mg-row--sub { cursor: default; }
+.mg-row--sub .mg-bar__track { height: 8px; }

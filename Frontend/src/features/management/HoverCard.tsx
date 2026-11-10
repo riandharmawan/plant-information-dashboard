@@ -12,7 +12,7 @@ const CARD_WIDTH = 320
  */
 export interface CardActions {
   openSite: (siteId: string) => void
-  openClass: (siteId: string, cls: CommodityClass) => void
+  openClass: (siteId: string, cls: CommodityClass, product?: string) => void
   openCommodity: (cls: CommodityClass) => void
   openTank: (siteId: string, tankId: string) => void
   openStatus: (status: string) => void

@@ -2,6 +2,7 @@ import { ChevronRight } from 'lucide-react'
 import type { ReactNode } from 'react'
 import {
   CLASS_ORDER,
+  EXPANDABLE,
   FILL_BIN_LABELS,
   classAcrossSites,
   closestToFull,
@@ -9,6 +10,9 @@ import {
   fillSpread,
   formatPercent,
   formatTonnes,
+  productOf,
+  productTotals,
+  tintOf,
   uncountedCapacity,
   type CommodityClass,
   type PortfolioSite,
@@ -187,45 +191,72 @@ function TankList({ site, tanks, hide, title }: { site: PortfolioSite; tanks: Po
 
 /* ------------------------------------------------------------------ a commodity at one site */
 
-/** The detail behind one commodity at one site. The mix strip and the commodity rows of a site share it. */
-export function ClassAtSiteCard({ site, code, hide }: { site: PortfolioSite; code: CommodityClass; hide: () => void }) {
+/**
+ * The detail behind one commodity at one site, or behind one product of it. The mix strip and the commodity
+ * rows of a site share it. A class that can be opened up also lists its products.
+ */
+export function ClassAtSiteCard({ site, code, product, hide }: { site: PortfolioSite; code: CommodityClass; product?: string; hide: () => void }) {
   const { t, locale } = useLocale()
   const label = useClassLabel()
   const actions = useCardActions()
   const row = site.classes.find((item) => item.code === code)
   if (!row) return null
-  const tanks = site.tanks.filter((tank) => tank.commodityClass === code)
+  const inClass = site.tanks.filter((tank) => tank.commodityClass === code)
+  const tanks = product ? inClass.filter((tank) => productOf(tank) === product) : inClass
+  const totals = product ? productTotals(tanks)[0] : row
+  if (!totals) return null
   const largest = [...tanks]
     .filter((tank) => tank.quantityKg != null)
     .sort((a, b) => (b.quantityKg ?? 0) - (a.quantityKg ?? 0) || compareTankIds(a.tankId, b.tankId))
     .slice(0, 4)
   const counts = Object.fromEntries(STATUSES.map((status) => [status, tanks.filter((tank) => tank.status === status).length])) as Record<TankStatus, number>
-  const share = site.quantityKg > 0 ? row.quantityKg / site.quantityKg : null
+  const share = site.quantityKg > 0 ? totals.quantityKg / site.quantityKg : null
+  const products = !product && EXPANDABLE.has(code) ? productTotals(inClass) : []
+  const title = product ?? label(code)
   return (
     <>
       <header className="mg-tip__head">
-        <ClassDot code={code} />
-        <strong>{label(code)}</strong>
-        <span className="mg-muted">· {site.name}</span>
+        {product ? <i className="mg-dot" style={{ background: tintOf(product, code).background }} aria-hidden="true" /> : <ClassDot code={code} />}
+        <strong>{title}</strong>
+        <span className="mg-muted">· {product ? `${label(code)} · ` : ''}{site.name}</span>
         <SourceBadge source={site.source} compact />
       </header>
-      <Big value={formatTonnes(row.quantityKg, locale)} unit="t" side={share != null ? fill(t.mgTipShare, { pct: formatPercent(share, locale, 0) }) : null} />
+      <Big value={formatTonnes(totals.quantityKg, locale)} unit="t" side={share != null ? fill(t.mgTipShare, { pct: formatPercent(share, locale, 0) }) : null} />
       <Stats
         items={[
-          { label: t.mgColFill, value: formatPercent(row.fillRatio, locale) },
-          { label: t.mgColCap, value: formatTonnes(row.capacityTotalKg, locale) },
-          { label: t.mgColTanks, value: `${row.reporting}/${row.tanks}` },
+          { label: t.mgColFill, value: formatPercent(totals.fillRatio, locale) },
+          { label: t.mgColCap, value: formatTonnes(totals.capacityTotalKg, locale) },
+          { label: t.mgColTanks, value: `${totals.reporting}/${totals.tanks}` },
         ]}
       />
       <StatusSplit counts={counts} />
+      {products.length > 1 ? (
+        <>
+          <Title>{t.mgCardProducts}</Title>
+          <ul className="mg-tip__rows">
+            {products.slice(0, MAX_ROWS).map((item) => (
+              <MiniRow
+                key={item.key}
+                label={<><i className="mg-dot" style={{ background: tintOf(item.key, code).background }} aria-hidden="true" />{item.key}</>}
+                ratio={row.quantityKg > 0 ? item.quantityKg / row.quantityKg : 0}
+                value={`${formatTonnes(item.quantityKg, locale)} t · ${formatPercent(item.fillRatio, locale, 0)}`}
+                onClick={() => {
+                  hide()
+                  actions.openClass(site.id, code, item.key)
+                }}
+              />
+            ))}
+          </ul>
+        </>
+      ) : null}
       <TankList site={site} tanks={largest} hide={hide} title={t.mgTipLargest} />
       <Foot
         onClick={() => {
           hide()
-          actions.openClass(site.id, code)
+          actions.openClass(site.id, code, product)
         }}
       >
-        {fill(t.mgTipOpen, { cls: label(code), site: site.name })}
+        {fill(t.mgTipOpen, { cls: title, site: site.name })}
       </Foot>
     </>
   )
@@ -333,7 +364,7 @@ export function CommodityCard({ code, sites, hide }: { code: CommodityClass; sit
 
 /* ------------------------------------------------------------------ the figures at the top */
 
-type KpiKind = 'stock' | 'capacity' | 'fill' | 'tanks' | 'sites'
+type KpiKind = 'stock' | 'capacity' | 'fill' | 'tanks' | 'free'
 
 /** One card per figure at the top. Each breaks the figure down by site, and the rows open the site. */
 export function KpiCard({ kind, portfolio, sites, hide }: { kind: KpiKind; portfolio: PortfolioSummary; sites: PortfolioSite[]; hide: () => void }) {
@@ -474,23 +505,48 @@ export function KpiCard({ kind, portfolio, sites, hide }: { kind: KpiKind; portf
     )
   }
 
+  // Free space: how much more could be received, tank by tank where there is a reading and a capacity.
+  const free = (kg: number, capacityKg: number) => Math.max(0, capacityKg - kg)
+  const siteRows = sites
+    .map((site) => ({ site, free: free(site.quantityKg, site.capacityKg) }))
+    .sort((left, right) => right.free - left.free)
+  const classRows = CLASS_ORDER.map((code) => classAcrossSites(sites, code))
+    .filter((row) => row.capacityKg > 0)
+    .map((row) => ({ row, free: free(row.quantityKg, row.capacityKg) }))
+    .sort((left, right) => right.free - left.free)
+  const siteTop = Math.max(1, ...siteRows.map((item) => item.free))
+  const classTop = Math.max(1, ...classRows.map((item) => item.free))
   return (
     <>
-      <Title>{t.mgCardSitesTitle}</Title>
-      <ul className="mg-tip__rows mg-tip__rows--plain">
-        {sites.slice(0, MAX_ROWS).map((site) => (
-          <li key={site.id}>
-            <button type="button" className="mg-tip__row mg-tip__row--sites" onClick={open(site.id)}>
-              <b>{site.name}</b>
-              <span className="mg-datacell">
-                <SourceBadge source={site.source} />
-                <DataBadge site={site} />
-              </span>
-            </button>
-          </li>
+      <Title>{t.mgCardFreeTitle}</Title>
+      <ul className="mg-tip__rows">
+        {siteRows.slice(0, MAX_ROWS).map(({ site, free: room }) => (
+          <MiniRow
+            key={site.id}
+            label={site.name}
+            sub={`${formatPercent(site.fillRatio, locale, 0)} ${t.mgColFill.toLowerCase()}`}
+            ratio={room / siteTop}
+            value={`${formatTonnes(room, locale)} t`}
+            onClick={open(site.id)}
+          />
         ))}
       </ul>
-      <p className="mg-tip__note">{t.mgCardOldRule}</p>
+      <Title>{t.mgByCommodity}</Title>
+      <ul className="mg-tip__rows">
+        {classRows.slice(0, MAX_ROWS).map(({ row, free: room }) => (
+          <MiniRow
+            key={row.code}
+            label={<><ClassDot code={row.code} />{label(row.code)}</>}
+            ratio={room / classTop}
+            value={`${formatTonnes(room, locale)} t`}
+            onClick={() => {
+              hide()
+              actions.openCommodity(row.code)
+            }}
+          />
+        ))}
+      </ul>
+      <p className="mg-tip__note">{t.mgCardFreeNote}</p>
     </>
   )
 }
