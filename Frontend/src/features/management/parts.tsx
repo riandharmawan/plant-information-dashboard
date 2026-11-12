@@ -1,5 +1,5 @@
-import { ArrowDown, ArrowUp, Ban, CircleHelp, TriangleAlert } from 'lucide-react'
-import type { ReactNode } from 'react'
+import { ArrowDown, ArrowUp, Ban, CircleHelp, Clock, TriangleAlert } from 'lucide-react'
+import { useEffect, useState, type ReactNode } from 'react'
 import {
   EXPANDABLE,
   formatPercent,
@@ -8,6 +8,7 @@ import {
   type TankStatus,
 } from '../../domain/management.ts'
 import { useLocale } from '../../i18n/LocaleContext.tsx'
+import { SourceBadge } from '../dataSource/SourceBadge.tsx'
 import { HoverTarget } from './HoverCard.tsx'
 import { Count } from './motion.tsx'
 import { useViewOptions } from './viewOptions.ts'
@@ -123,6 +124,50 @@ export function DataBadge({ site }: { site: Pick<PortfolioSite, 'kind' | 'asOf' 
     <span className={site.stale ? 'mg-data mg-data--stale' : 'mg-data'}>
       <i aria-hidden="true" />
       {site.stale ? `${t.mgOldData} · ${text}` : `${t.mgRounds} · ${text}`}
+    </span>
+  )
+}
+
+/** The current time, refreshed every minute, so an age on screen keeps counting. */
+function useNow(): number {
+  const [now, setNow] = useState(() => Date.now())
+  useEffect(() => {
+    const timer = window.setInterval(() => setNow(Date.now()), 60000)
+    return () => window.clearInterval(timer)
+  }, [])
+  return now
+}
+
+/**
+ * Where a site's figures come from and how old they are, in the space of an icon and a few characters:
+ * the source as an icon, then a clock and "3h ago". Green while a gauge is live, amber when it is old.
+ * The full text is the tooltip.
+ */
+export function DataStamp({ site }: { site: Pick<PortfolioSite, 'kind' | 'asOf' | 'stale' | 'source'> }) {
+  const { t, locale } = useLocale()
+  const now = useNow()
+  if (!site.asOf) return <SourceBadge source={site.source} compact />
+  let text: string
+  if (site.kind === 'live') {
+    const minutes = Math.max(0, Math.round((now - new Date(site.asOf).getTime()) / 60000))
+    text =
+      minutes < 60 ? fill(t.mgAgoMin, { n: minutes })
+      : minutes < 60 * 48 ? fill(t.mgAgoHour, { n: Math.round(minutes / 60) })
+      : fill(t.mgAgoDay, { n: Math.round(minutes / 1440) })
+  } else {
+    const days = Math.floor((now - new Date(`${site.asOf}T12:00:00Z`).getTime()) / 86400000)
+    text = days <= 0 ? t.mgAgoToday : fill(t.mgAgoDay, { n: days })
+  }
+  const name = site.source === 'atg' ? t.dsAtg : t.dsLogsheet
+  const exact = site.kind === 'live' ? new Date(site.asOf).toLocaleString(locale) : dayText(locale, site.asOf)
+  const tone = site.stale ? 'is-stale' : site.kind === 'live' ? 'is-live' : ''
+  return (
+    <span className="mg-stamp" title={`${name} · ${exact}`}>
+      <SourceBadge source={site.source} compact />
+      <span className={`mg-stamp__age ${tone}`}>
+        <Clock size={12} aria-hidden="true" />
+        {text}
+      </span>
     </span>
   )
 }

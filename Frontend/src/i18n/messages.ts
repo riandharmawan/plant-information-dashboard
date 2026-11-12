@@ -611,6 +611,10 @@ export interface Messages {
   mgStNoData: string
   mgRounds: string
   mgOldData: string
+  mgAgoMin: string
+  mgAgoHour: string
+  mgAgoDay: string
+  mgAgoToday: string
   mgTanksReporting: string
   mgClassRefined: string
   mgClassGlycerin: string
@@ -1416,6 +1420,10 @@ export const MESSAGES: Record<Locale, Messages> = {
     mgStNoData: 'No data',
     mgRounds: 'Rounds',
     mgOldData: 'Old data',
+    mgAgoMin: '{n}m ago',
+    mgAgoHour: '{n}h ago',
+    mgAgoDay: '{n}d ago',
+    mgAgoToday: 'today',
     mgTanksReporting: '{a} of {b} tanks',
     mgClassRefined: 'Refined oils',
     mgClassGlycerin: 'Glycerin & fatty matter',
@@ -2219,6 +2227,10 @@ export const MESSAGES: Record<Locale, Messages> = {
     mgStNoData: 'Tanpa data',
     mgRounds: 'Putaran',
     mgOldData: 'Data lama',
+    mgAgoMin: '{n}m lalu',
+    mgAgoHour: '{n}j lalu',
+    mgAgoDay: '{n}hr lalu',
+    mgAgoToday: 'hari ini',
     mgTanksReporting: '{a} dari {b} tangki',
     mgClassRefined: 'Minyak olahan',
     mgClassGlycerin: 'Gliserin & fatty matter',

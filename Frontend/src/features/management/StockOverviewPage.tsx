@@ -28,7 +28,7 @@ import { CardActionsContext, HoverTarget } from './HoverCard.tsx'
 import { MixStrip } from './MixTip.tsx'
 import { ViewOptionsContext, useViewOptions } from './viewOptions.ts'
 import { Count, stagger } from './motion.tsx'
-import { Change, ClassDot, DataBadge, FillText, Kpi, Legend, Skeleton, StatusChip, StockBar, fill, useClassLabel } from './parts.tsx'
+import { Change, ClassDot, DataBadge, DataStamp, FillText, Kpi, Legend, Skeleton, StatusChip, StockBar, fill, useClassLabel } from './parts.tsx'
 
 const REFRESH_MS = 60000
 const FLAG_KINDS: TankStatus[] = ['near-full', 'over', 'empty', 'no-data']
@@ -362,10 +362,7 @@ function Overview({
                 <span className="num">
                   <Change kg={site.changeKg} />
                 </span>
-                <span className="mg-datacell">
-                  <SourceBadge source={site.source} />
-                  <DataBadge site={site} />
-                </span>
+                <DataStamp site={site} />
               </button>
             </li>
           ))}
