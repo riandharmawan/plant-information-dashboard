@@ -10,7 +10,7 @@ import { CommodityTrendDialog } from './CommodityTrendDialog.tsx'
 import { LiveBadge } from './LiveBadge.tsx'
 import { fillTone } from './tankAlerts.ts'
 
-export function CommodityStock({ tanks, day, averageTemperature }: { tanks: TankLive[]; day: string; averageTemperature: number | null }) {
+export function CommodityStock({ tanks, day, averageTemperature, hasLabData = true }: { tanks: TankLive[]; day: string; averageTemperature: number | null; hasLabData?: boolean }) {
   const { t } = useLocale()
   const rows = commodityStock(tanks)
   const [openCode, setOpenCode] = useState<StockGroup | null>(null)
@@ -27,7 +27,7 @@ export function CommodityStock({ tanks, day, averageTemperature }: { tanks: Tank
       <ul className="commodity-grid">
         {rows.map((row) => (
           <li key={row.code}>
-            <CommodityCard row={row} onOpen={() => setOpenCode(row.code)} />
+            <CommodityCard row={row} hasLabData={hasLabData} onOpen={() => setOpenCode(row.code)} />
           </li>
         ))}
       </ul>
@@ -36,19 +36,26 @@ export function CommodityStock({ tanks, day, averageTemperature }: { tanks: Tank
         tanks={tanks}
         day={day}
         averageTemperature={averageTemperature}
+        hasLabData={hasLabData}
         onClose={() => setOpenCode(null)}
       />
     </section>
   )
 }
 
-function CommodityCard({ row, onOpen }: { row: CommodityStockRow; onOpen: () => void }) {
+function CommodityCard({ row, hasLabData, onOpen }: { row: CommodityStockRow; hasLabData: boolean; onOpen: () => void }) {
   const { t } = useLocale()
   const mass = useMass()
   const percent = row.utilization == null ? null : row.utilization * 100
   const width = percent == null ? 0 : Math.min(100, Math.max(0, percent))
   const tone = fillTone(row.utilization)
   const blank = t.unavailable
+  // The card shows the average. The range behind it is one hover away, so a single off-colour tank is not hidden.
+  const range = (stat: { min: number; max: number } | null) => (stat == null ? blank : stat.min === stat.max ? formatMeasure(stat.min, 1) : `${formatMeasure(stat.min, 1)}–${formatMeasure(stat.max, 1)}`)
+  const colourCount = Math.max(row.colourR?.count ?? 0, row.colourY?.count ?? 0)
+  const colourTitle = colourCount > 1
+    ? t.colourRangeHint.replace('{r}', range(row.colourR)).replace('{y}', range(row.colourY))
+    : colourCount === 1 ? t.colourOneTank : undefined
   const quantity = row.capacityKg == null
     ? blank
     : `${mass.compact(row.quantityKg)} / ${mass.compact(row.capacityKg)} ${mass.symbol}`
@@ -80,11 +87,20 @@ function CommodityCard({ row, onOpen }: { row: CommodityStockRow; onOpen: () => 
           <Thermometer size={13} aria-hidden="true" />
           {row.avgTemperatureC == null ? blank : `${formatMeasure(row.avgTemperatureC, 1)} °C`}
         </span>
-        <span className="commodity-card__fact" title={t.avgQuality}>
-          FFA {row.avgFfa == null ? blank : `${formatMeasure(row.avgFfa, 2)}%`}
-          {' · '}
-          M&I {row.avgMi == null ? blank : `${formatMeasure(row.avgMi, 2)}%`}
-        </span>
+        {hasLabData && (
+          <>
+            <span className="commodity-card__fact" title={t.avgQuality}>
+              FFA {row.avgFfa == null ? blank : `${formatMeasure(row.avgFfa, 2)}%`}
+              {' · '}
+              M&I {row.avgMi == null ? blank : `${formatMeasure(row.avgMi, 2)}%`}
+            </span>
+            <span className="commodity-card__fact" title={colourTitle}>
+              R {row.colourR == null ? blank : formatMeasure(row.colourR.average, 1)}
+              {' · '}
+              Y {row.colourY == null ? blank : formatMeasure(row.colourY.average, 1)}
+            </span>
+          </>
+        )}
       </span>
     </button>
   )

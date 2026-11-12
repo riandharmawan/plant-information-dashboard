@@ -155,4 +155,6 @@ export interface SnapshotMeta {
   roundCount: number
   /** When a gauge system was last read for this site. Null for a site filled from logsheets. */
   liveAsOf?: string | null
+  /** Whether any lab result exists for the site. When it does not, screens hide the lab area. */
+  hasLabData?: boolean
 }

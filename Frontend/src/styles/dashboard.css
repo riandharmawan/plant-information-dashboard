@@ -701,7 +701,6 @@ button.qty-link.qty-link--alert {
 }
 
 .tank-card__head span,
-.tank-card__lab,
 .vessel-card__meta,
 .vessel-card__detail,
 .truck-row p {
@@ -709,22 +708,16 @@ button.qty-link.qty-link--alert {
   font-size: var(--font-size-sm);
 }
 
-.tank-card__body {
-  display: flex;
-  gap: var(--spacing-2);
-  align-items: stretch;
-}
-
 .tank-grid--vessels {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--spacing-3);
+  grid-template-columns: repeat(auto-fill, minmax(186px, 1fr));
+  gap: var(--spacing-2);
 }
 
 .tank-grid--vessels .tank-card {
-  gap: 8px;
-  padding: 14px 16px;
+  gap: 6px;
+  padding: 9px 8px 8px;
   border-radius: var(--radius-lg);
-  background: linear-gradient(160deg, var(--color-bg-white) 0%, var(--color-bg-lighter) 100%);
+  background: var(--color-bg-white);
   transition:
     transform var(--duration-base) var(--easing-default),
     box-shadow var(--duration-base) var(--easing-default),
@@ -746,42 +739,249 @@ button.qty-link.qty-link--alert {
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-brand-red) 20%, transparent);
 }
 
+.tank-grid--vessels .tank-card__head {
+  align-items: center;
+  justify-content: flex-start;
+}
+
 .tank-grid--vessels .tank-card__head strong {
   font-size: var(--font-size-lg);
 }
 
-.tank-grid--vessels .tank-card__body {
-  gap: var(--spacing-3);
-  align-items: center;
+.tank-card__product {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.tank-grid--vessels .tank-card__metrics {
+.tank-card__head .ds-badge {
+  color: var(--ds-ink);
+}
+
+.tank-card__status {
+  color: var(--color-text-steel);
+  font-size: var(--font-size-xs);
+  white-space: nowrap;
+}
+
+.tank-card__status--old {
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: #fff4cc;
+  color: #7a5b00;
+}
+
+/* The figures sit on the glass of the drum. */
+.drum__row {
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 4px;
 }
 
-.tank-grid--vessels .tank-card__metrics dd {
-  font-size: var(--font-size-base);
+.drum__row--top {
+  top: 19%;
 }
 
-@media (max-width: 720px) {
-  .tank-grid--vessels {
-    grid-template-columns: minmax(0, 1fr);
-  }
+.drum__row--bottom {
+  bottom: 10%;
+  flex-wrap: wrap-reverse;
+  row-gap: 3px;
+}
+
+.drum__row--bottom > :last-child {
+  margin-left: auto;
+}
+
+.drum__pill {
+  padding: 1px 7px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--color-text-charcoal);
+  font: inherit;
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.25;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.drum__pill:hover,
+.drum__pill:focus-visible {
+  background: #fff;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-sea-mid) 45%, transparent);
+}
+
+.drum__pill--alert {
+  background: #fef2f2;
+  color: var(--color-brand-red);
+}
+
+.drum__plate {
+  position: absolute;
+  top: 48%;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3px 12px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.92);
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+}
+
+.drum__quantity {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-text-charcoal);
+  font: inherit;
+  font-size: 20px;
+  font-weight: var(--font-weight-bold);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+  cursor: pointer;
+}
+
+.drum__quantity small {
+  margin-left: 2px;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.drum__quantity:hover,
+.drum__quantity:focus-visible {
+  color: var(--color-sea-deep);
+}
+
+.drum__word {
+  color: var(--color-text-steel);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+}
+
+.drum__capacity {
+  color: var(--color-text-steel);
+  font-size: var(--font-size-small);
+}
+
+.drum__capacity--unset {
+  color: #7a5b00;
+}
+
+/* Lab values under the drum: a caption, then four fixed slots. Only the date and the Re-test pill turn amber when the result is old. */
+.tank-lab {
+  margin-top: 2px;
+  padding-top: 6px;
+  border-top: 1px solid var(--color-border-light);
+}
+
+.tank-lab__cap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  min-height: 17px;
+  margin-bottom: 4px;
+  color: var(--color-text-steel);
+  font-size: var(--font-size-xs);
+}
+
+.tank-lab__date {
+  white-space: nowrap;
+}
+
+.tank-lab__date--old {
+  color: #7a5b00;
+}
+
+.tank-lab__badges {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.tank-lab__badges .badge {
+  padding: 1px 7px;
+  font-size: var(--font-size-xs);
+}
+
+.tank-lab__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0 4px;
+}
+
+.tank-lab__cell {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+}
+
+button.tank-lab__cell {
+  cursor: pointer;
+}
+
+button.tank-lab__cell:hover b,
+button.tank-lab__cell:focus-visible b {
+  color: var(--color-sea-deep);
+  text-decoration: underline;
+}
+
+.tank-lab__cell small {
+  color: var(--color-text-steel);
+  font-size: var(--font-size-xs);
+  line-height: 1.2;
+}
+
+.tank-lab__cell b {
+  color: var(--color-text-charcoal);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.tank-lab__cell b u {
+  color: var(--color-text-steel);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-normal);
+  text-decoration: none;
+}
+
+.tank-lab__cell--missing b {
+  color: #b4b4b4;
+  font-weight: var(--font-weight-normal);
 }
 
 .tank-vessel {
-  display: flex;
-  flex: 0 0 120px;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
+  position: relative;
+  width: 100%;
+  height: 150px;
   margin: 0;
 }
 
 .tank-vessel > svg {
+  position: absolute;
+  inset: 0;
   display: block;
-  width: 120px;
-  height: auto;
+  width: 100%;
+  height: 100%;
   overflow: visible;
 }
 
@@ -852,55 +1052,6 @@ button.qty-link.qty-link--alert {
   opacity: 0.75;
 }
 
-.tank-vessel__pct {
-  fill: var(--color-text-charcoal);
-  font-size: 22px;
-  font-weight: var(--font-weight-bold);
-  text-anchor: middle;
-  paint-order: stroke;
-  stroke: rgba(255, 255, 255, 0.85);
-  stroke-width: 4px;
-  stroke-linejoin: round;
-  font-variant-numeric: tabular-nums;
-}
-
-.tank-vessel--empty .tank-vessel__pct {
-  fill: var(--color-text-steel);
-  font-size: 16px;
-}
-
-.tank-vessel__caption {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-  font-size: var(--font-size-small);
-  font-variant-numeric: tabular-nums;
-}
-
-.tank-vessel__temp {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  padding: 2px 8px;
-  border: 1px solid rgba(17, 76, 90, 0.15);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(4px);
-  color: var(--color-sea-deep);
-  font-weight: var(--font-weight-semibold);
-}
-
-.tank-vessel__temp--hot {
-  border-color: color-mix(in srgb, var(--color-brand-red) 35%, white);
-  background: #fef2f2;
-  color: var(--color-brand-red);
-}
-
-.tank-vessel__cap {
-  color: var(--color-text-steel);
-}
-
 @media (prefers-reduced-motion: reduce) {
   .tank-vessel__liquid,
   .tank-grid--vessels .tank-card,
@@ -911,40 +1062,6 @@ button.qty-link.qty-link--alert {
   .tank-vessel__wave {
     animation: none;
   }
-}
-
-.tank-card__metrics {
-  display: grid;
-  flex: 1;
-  gap: 1px;
-  margin: 0;
-}
-
-.tank-card__metrics div {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 6px;
-  align-items: baseline;
-}
-
-.tank-card__metrics dt {
-  color: var(--color-text-steel);
-  font-size: var(--font-size-xs);
-  line-height: 1.3;
-}
-
-.tank-card__metrics dd {
-  margin: 0;
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  line-height: 1.3;
-  font-variant-numeric: tabular-nums;
-}
-
-.tank-card__foot {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
 }
 
 .badge {
@@ -980,11 +1097,6 @@ button.qty-link.qty-link--alert {
 .badge--pass {
   background: rgba(16, 185, 129, 0.14);
   color: #047857;
-}
-
-.tank-card__lab {
-  margin: 0;
-  line-height: 1.3;
 }
 
 .gatekeeper {
@@ -2809,4 +2921,10 @@ td.num.num--variance {
     grid-column: 1 / -1;
     grid-row: 2;
   }
+}
+
+.lab-note {
+  margin: 0 0 var(--spacing-2);
+  color: var(--color-text-steel);
+  font-size: var(--font-size-sm);
 }

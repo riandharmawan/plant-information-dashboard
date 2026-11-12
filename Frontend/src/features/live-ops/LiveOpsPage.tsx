@@ -97,6 +97,8 @@ export function LiveOpsPage() {
   const capacityTotal = stored.reduce((sum, tank) => sum + (tank.capacityKg ?? 0), 0)
   const quantityTotal = stored.reduce((sum, tank) => sum + (tank.quantityKg ?? 0), 0)
   const utilization = capacityTotal > 0 && stored.some((tank) => tank.quantityKg != null) ? quantityTotal / capacityTotal : null
+  // A site with no lab results has no FFA, M&I or colour to show. Until the backend has said so, assume it does.
+  const hasLabData = meta?.hasLabData !== false
   const emptyCount = visible.filter(isEmptyTank).length
   const activeCount = visible.length - emptyCount
   const critical = visible.filter((tank) => isCritical(tank, tempValue))
@@ -166,7 +168,8 @@ export function LiveOpsPage() {
                 onOpen={() => setKpiDetail('variance')}
               />
             </section>
-            <CommodityStock tanks={tanks} day={day} averageTemperature={tempValue} />
+            {!hasLabData && <p className="lab-note">{t.labNotConnected}</p>}
+            <CommodityStock tanks={tanks} day={day} averageTemperature={tempValue} hasLabData={hasLabData} />
             <section className="prod-panel">
               <div className="section-head">
                 <h2 className="card__title">{t.tanks}</h2>
@@ -179,11 +182,11 @@ export function LiveOpsPage() {
                 </div>
               </div>
               {tankView === 'table'
-                ? <TankTable tanks={visible} averageTemperature={tempValue} varianceByTank={varianceByTank} onHistory={openHistory} />
+                ? <TankTable tanks={visible} averageTemperature={tempValue} varianceByTank={varianceByTank} hasLabData={hasLabData} onHistory={openHistory} />
                 : (
                   <div className="tank-grid tank-grid--vessels">
                     {visible.map((tank) => (
-                      <TankCard key={tank.tankId} tank={tank} averageTemperature={tempValue} variance={varianceByTank.get(tank.tankId)} onHistory={openHistory} />
+                      <TankCard key={tank.tankId} tank={tank} averageTemperature={tempValue} variance={varianceByTank.get(tank.tankId)} referenceDay={day} hasLabData={hasLabData} onHistory={openHistory} />
                     ))}
                   </div>
                 )}

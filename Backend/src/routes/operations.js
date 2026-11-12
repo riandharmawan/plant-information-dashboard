@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { query } from '../db.js'
 import { requireAny, requireAuth, requireSiteAccess, requireSiteModule } from '../access.js'
 import { loadCatalog } from '../catalog.js'
+import { labParameters } from '../domain/lab.js'
 import { massToKg, stockFromGauge, stockFromProfile } from '../domain/stock.js'
 import { assessStorage, oilFamilyOf, presentLogistics, presentTank } from '../domain/present.js'
 import { gaugeMeta, liveSounding, loadGaugedTanks, newestReading } from '../tankgauging/live.js'
@@ -71,17 +72,6 @@ async function loadGaugeProfiles(tankIds) {
   return out
 }
 
-const LAB_LABEL = {
-  'lab.ffa': ['FFA', 'FFA', '%'],
-  'lab.moisture': ['MI', 'M&I', '%'],
-  'lab.color_r': ['R', 'R', ''],
-  'lab.color_y': ['Y', 'Y', ''],
-  'lab.iv': ['IV', 'IV', ''],
-  'lab.pv': ['PV', 'PV', ''],
-  'lab.dobi': ['DOBI', 'DOBI', ''],
-  'lab.totox': ['Totox', 'Totox', ''],
-}
-
 function labFrom(row) {
   return {
     tankId: row.tank_code,
@@ -89,11 +79,7 @@ function labFrom(row) {
     analysisDate: row.analysis_date,
     snapshotOn: row.snapshot_on,
     temperatureC: num(row.temperature_c),
-    parameters: (row.tests ?? []).flatMap((test) => {
-      const label = LAB_LABEL[test.canonical_code]
-      if (!label || test.numeric_value == null) return []
-      return [{ code: label[0], label: label[1], value: num(test.numeric_value), unit: label[2] }]
-    }),
+    parameters: labParameters(row.tests),
   }
 }
 
@@ -204,6 +190,8 @@ router.get('/sites/:siteId/snapshot', async (req, res, next) => {
       dataDates: [...activity].sort(),
       roundCount: rounds.size,
       liveAsOf: liveAsOf ? liveAsOf.toISOString() : null,
+      // Whether any lab result exists for this site. Screens hide the lab area when it does not.
+      hasLabData: labs.rows.length > 0,
     })
   } catch (error) {
     next(error)

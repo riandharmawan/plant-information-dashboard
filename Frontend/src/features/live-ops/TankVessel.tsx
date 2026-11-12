@@ -1,7 +1,4 @@
-import { useId } from 'react'
-import { Thermometer } from 'lucide-react'
-import { formatMeasure } from '../../domain/format.ts'
-import { useMass } from './massUnit.ts'
+import { useId, type ReactNode } from 'react'
 import { CRITICAL_FILL } from './tankAlerts.ts'
 
 const TOP = 24
@@ -15,25 +12,24 @@ const RY = 7
 
 export type VesselTone = 'low' | 'high' | 'critical' | 'quarantine' | 'empty'
 
+/**
+ * The tank drawing: metal lid, glass, shaded liquid, side ticks and the critical-fill line. It is drawn tall
+ * and stretched to fill its box, which makes a short wide drum the figures can sit inside. What goes in
+ * the tank is passed as children and laid over the glass.
+ */
 export function TankVessel({
   percent,
   tone,
-  temperatureC,
-  hot,
-  capacityKg,
-  capacityLabel,
-  blank,
+  label,
+  children,
 }: {
   /** Fill from 0 to 100. */
   percent: number
   tone: VesselTone
-  temperatureC: number | null
-  hot: boolean
-  capacityKg: number | null
-  capacityLabel: string
-  blank: string
+  /** Read by screen readers, since the figures are drawn on top of the picture. */
+  label: string
+  children?: ReactNode
 }) {
-  const mass = useMass()
   const id = useId().replace(/[^a-zA-Z0-9_-]/g, '')
   const level = Math.min(100, Math.max(0, percent))
   const surface = BOTTOM - (level / 100) * SPAN
@@ -43,7 +39,7 @@ export function TankVessel({
 
   return (
     <figure className={`tank-vessel tank-vessel--${tone}`}>
-      <svg viewBox="0 0 120 200" role="img" aria-label={`${level.toFixed(1)}%`}>
+      <svg viewBox="0 0 120 200" preserveAspectRatio="none" role="img" aria-label={label}>
         <defs>
           <linearGradient id={`${id}-metal`} x1="0" x2="1" y1="0" y2="0">
             <stop offset="0" className="tank-vessel__metal-edge" />
@@ -91,19 +87,8 @@ export function TankVessel({
         <ellipse cx={CX} cy={TOP} rx={RX} ry={RY} fill={`url(#${id}-metal)`} className="tank-vessel__lid" />
         <rect x={CX - 9} y={TOP - 9} width={18} height={6} rx={2} fill={`url(#${id}-metal)`} className="tank-vessel__lid" />
         <line x1={LEFT} x2={RIGHT} y1={critical} y2={critical} className="tank-vessel__critical" />
-        <text x={CX} y={(TOP + BOTTOM) / 2 + 6} className="tank-vessel__pct">
-          {tone === 'empty' ? blank : `${level.toFixed(0)}%`}
-        </text>
       </svg>
-      <figcaption className="tank-vessel__caption">
-        <span className={hot ? 'tank-vessel__temp tank-vessel__temp--hot' : 'tank-vessel__temp'}>
-          <Thermometer size={12} aria-hidden="true" />
-          {temperatureC == null ? blank : `${formatMeasure(temperatureC, 1)} °C`}
-        </span>
-        <span className="tank-vessel__cap">
-          {capacityLabel} {capacityKg == null ? blank : `${mass.compact(capacityKg)} ${mass.symbol}`}
-        </span>
-      </figcaption>
+      {children}
     </figure>
   )
 }

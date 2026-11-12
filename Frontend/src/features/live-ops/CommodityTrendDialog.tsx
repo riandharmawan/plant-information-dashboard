@@ -21,6 +21,7 @@ export function CommodityTrendDialog({
   tanks,
   day,
   averageTemperature,
+  hasLabData = true,
   onClose,
 }: {
   code: StockGroup | null
@@ -28,6 +29,7 @@ export function CommodityTrendDialog({
   /** Dashboard day. The dialog range defaults to the 30 days ending here. */
   day: string
   averageTemperature: number | null
+  hasLabData?: boolean
   onClose: () => void
 }) {
   const { t, locale } = useLocale()
@@ -153,8 +155,10 @@ export function CommodityTrendDialog({
                       {SHOW_LOADABLE && <th className="num">{t.loadable} ({mass.symbol})</th>}
                       <th className="num">{t.tankLevelPct}</th>
                       <th className="num">{t.tempAxis}</th>
-                      <th className="num">FFA</th>
-                      <th className="num">M&I</th>
+                      {hasLabData && <th className="num">FFA</th>}
+                      {hasLabData && <th className="num">M&I</th>}
+                      {hasLabData && <th className="num">{t.colourRLov}</th>}
+                      {hasLabData && <th className="num">{t.colourYLov}</th>}
                       <th>{t.status}</th>
                     </tr>
                   </thead>
@@ -164,6 +168,9 @@ export function CommodityTrendDialog({
                       const hot = isTempAnomaly(reading?.temperatureC, averageTemperature)
                       const ffa = parameter(tank.quality?.parameters, 'FFA')
                       const moisture = parameter(tank.quality?.parameters, 'MI')
+                      const colorR = parameter(tank.quality?.parameters, 'COLOR_R')
+                      const colorY = parameter(tank.quality?.parameters, 'COLOR_Y')
+                      const missingTitle = tank.quality ? t.labNotOnCertificate : t.labNoResult
                       const status = reading?.operationalStatus || tank.operationalStatus || t.unavailable
                       return (
                         <tr key={tank.tankId} className={overfilled || hot ? 'stock-dialog__row--alert' : undefined}>
@@ -176,8 +183,10 @@ export function CommodityTrendDialog({
                           <td className={hot ? 'num stock-dialog__alert' : 'num'}>
                             {reading?.temperatureC == null ? t.unavailable : `${formatMeasure(reading.temperatureC, 1)} °C`}
                           </td>
-                          <td className="num">{ffa == null ? t.unavailable : formatMeasure(ffa, 2)}</td>
-                          <td className="num">{moisture == null ? t.unavailable : formatMeasure(moisture, 2)}</td>
+                          {hasLabData && <td className="num" title={ffa == null ? missingTitle : undefined}>{ffa == null ? t.unavailable : formatMeasure(ffa, 2)}</td>}
+                          {hasLabData && <td className="num" title={moisture == null ? missingTitle : undefined}>{moisture == null ? t.unavailable : formatMeasure(moisture, 2)}</td>}
+                          {hasLabData && <td className="num" title={colorR == null ? missingTitle : undefined}>{colorR == null ? t.unavailable : formatMeasure(colorR, 1)}</td>}
+                          {hasLabData && <td className="num" title={colorY == null ? missingTitle : undefined}>{colorY == null ? t.unavailable : formatMeasure(colorY, 1)}</td>}
                           <td>
                             <span className={status === 'EMPTY' ? 'badge badge--muted' : overfilled ? 'badge badge--danger' : 'badge'}>{status}</span>
                           </td>
@@ -192,7 +201,7 @@ export function CommodityTrendDialog({
                       <td className="num">{quantityTotal == null ? t.unavailable : mass.amount(quantityTotal)}</td>
                       <td className="num">{emptyTotal == null ? t.unavailable : mass.amount(emptyTotal)}</td>
                       {SHOW_LOADABLE && <td className="num">{loadableTotal == null ? t.unavailable : mass.amount(loadableTotal)}</td>}
-                      <td colSpan={SHOW_LOADABLE ? 5 : 4} />
+                      <td colSpan={(SHOW_LOADABLE ? 4 : 3) + (hasLabData ? 4 : 0)} />
                     </tr>
                   </tfoot>
                 </table>

@@ -17,11 +17,14 @@ export function TankTable({
   tanks,
   averageTemperature,
   varianceByTank,
+  hasLabData = true,
   onHistory,
 }: {
   tanks: TankLive[]
   averageTemperature: number | null
   varianceByTank: Map<string, LabVarianceAlert[]>
+  /** False for a site with no lab results: the lab columns are left out instead of filled with dashes. */
+  hasLabData?: boolean
   onHistory: (tankId: string, metric: HistoryMetric) => void
 }) {
   const { t, locale } = useLocale()
@@ -52,13 +55,13 @@ export function TankTable({
           <col className="tank-col tank-col--level" />
           <col className="tank-col tank-col--kg" />
           <col className="tank-col tank-col--kg" />
-          <col className="tank-col tank-col--kg" />
+          {SHOW_LOADABLE && <col className="tank-col tank-col--kg" />}
           <col className="tank-col tank-col--fill" />
           <col className="tank-col tank-col--temp" />
-          <col className="tank-col tank-col--lab" />
-          <col className="tank-col tank-col--lab" />
-          <col className="tank-col tank-col--lab" />
-          <col className="tank-col tank-col--lab" />
+          {hasLabData && <col className="tank-col tank-col--lab" />}
+          {hasLabData && <col className="tank-col tank-col--lab" />}
+          {hasLabData && <col className="tank-col tank-col--lab" />}
+          {hasLabData && <col className="tank-col tank-col--lab" />}
         </colgroup>
         <thead>
           <tr>
@@ -71,10 +74,10 @@ export function TankTable({
             {SHOW_LOADABLE && <SortHeader label={`${t.loadable} (${mass.symbol})`} column="loadable" sort={sort} align="right" />}
             <SortHeader label={t.tankLevelPct} column="levelPct" sort={sort} align="right" hint={t.levelFillHint} />
             <SortHeader label={t.tempAxis} column="temp" sort={sort} align="right" hint={t.tempSpikeHint} />
-            <SortHeader label="FFA" column="ffa" sort={sort} align="right" hint={t.ffaAgeHint} />
-            <SortHeader label="M&I" column="moisture" sort={sort} align="right" hint={t.ffaAgeHint} />
-            <SortHeader label={t.colourRLov} column="colorR" sort={sort} align="right" hint={t.ffaAgeHint} />
-            <SortHeader label={t.colourYLov} column="colorY" sort={sort} align="right" hint={t.ffaAgeHint} />
+            {hasLabData && <SortHeader label="FFA" column="ffa" sort={sort} align="right" hint={t.ffaAgeHint} />}
+            {hasLabData && <SortHeader label="M&I" column="moisture" sort={sort} align="right" hint={t.ffaAgeHint} />}
+            {hasLabData && <SortHeader label={t.colourRLov} column="colorR" sort={sort} align="right" hint={t.ffaAgeHint} />}
+            {hasLabData && <SortHeader label={t.colourYLov} column="colorY" sort={sort} align="right" hint={t.ffaAgeHint} />}
           </tr>
         </thead>
         <tbody>
@@ -88,6 +91,8 @@ export function TankTable({
             const alerts = varianceByTank.get(tank.tankId)
             const stale = qualityStale(tank)
             const ageTitle = stale ? qualityAgeTitle(tank, t.qualityAge, locale) : undefined
+            // A blank is either "not on this product's certificate" or "no certificate yet". The tooltip says which.
+            const missingTitle = tank.quality ? t.labNotOnCertificate : t.labNoResult
             const rowClass = [
               empty ? 'prod-row--empty' : '',
               quarantined ? 'prod-row--quarantine' : '',
@@ -107,10 +112,10 @@ export function TankTable({
                   </button>
                 </td>
                 <HistoryCell value={tank.temperatureC == null ? t.unavailable : formatMeasure(tank.temperatureC, 1)} missing={tank.temperatureC == null} alert={isTempAnomaly(tank.temperatureC, averageTemperature)} onClick={() => onHistory(tank.tankId, 'temperature')} />
-                <HistoryCell value={ffa == null ? t.unavailable : formatMeasure(ffa)} missing={ffa == null} alert={ffa != null && stale} title={ffa != null ? ageTitle : undefined} variance={findVariance(alerts, 'FFA')} onClick={() => onHistory(tank.tankId, 'ffa')} />
-                <HistoryCell value={moisture == null ? t.unavailable : formatMeasure(moisture)} missing={moisture == null} alert={moisture != null && stale} title={moisture != null ? ageTitle : undefined} variance={findVariance(alerts, 'MI')} onClick={() => onHistory(tank.tankId, 'moisture')} />
-                <HistoryCell value={colorR == null ? t.unavailable : formatMeasure(colorR, 1)} missing={colorR == null} alert={colorR != null && stale} title={colorR != null ? ageTitle : undefined} variance={findVariance(alerts, 'COLOR_R')} onClick={() => onHistory(tank.tankId, 'colorR')} />
-                <HistoryCell value={colorY == null ? t.unavailable : formatMeasure(colorY, 1)} missing={colorY == null} alert={colorY != null && stale} title={colorY != null ? ageTitle : undefined} variance={findVariance(alerts, 'COLOR_Y')} onClick={() => onHistory(tank.tankId, 'colorY')} />
+                {hasLabData && <HistoryCell value={ffa == null ? t.unavailable : formatMeasure(ffa)} missing={ffa == null} alert={ffa != null && stale} title={ffa != null ? ageTitle : missingTitle} variance={findVariance(alerts, 'FFA')} onClick={() => onHistory(tank.tankId, 'ffa')} />}
+                {hasLabData && <HistoryCell value={moisture == null ? t.unavailable : formatMeasure(moisture)} missing={moisture == null} alert={moisture != null && stale} title={moisture != null ? ageTitle : missingTitle} variance={findVariance(alerts, 'MI')} onClick={() => onHistory(tank.tankId, 'moisture')} />}
+                {hasLabData && <HistoryCell value={colorR == null ? t.unavailable : formatMeasure(colorR, 1)} missing={colorR == null} alert={colorR != null && stale} title={colorR != null ? ageTitle : missingTitle} variance={findVariance(alerts, 'COLOR_R')} onClick={() => onHistory(tank.tankId, 'colorR')} />}
+                {hasLabData && <HistoryCell value={colorY == null ? t.unavailable : formatMeasure(colorY, 1)} missing={colorY == null} alert={colorY != null && stale} title={colorY != null ? ageTitle : missingTitle} variance={findVariance(alerts, 'COLOR_Y')} onClick={() => onHistory(tank.tankId, 'colorY')} />}
               </tr>
             )
           })}

@@ -59,6 +59,16 @@ export interface CommodityStockRow {
   avgTemperatureC: number | null
   avgFfa: number | null
   avgMi: number | null
+  /** Lovibond colour over the tanks holding stock: the average, and the range behind it. */
+  colourR: ColourStat | null
+  colourY: ColourStat | null
+}
+
+export interface ColourStat {
+  average: number
+  min: number
+  max: number
+  count: number
 }
 
 export function stockGroupOf(productName: string): StockGroup | null {
@@ -154,8 +164,16 @@ export function commodityStock(tanks: TankLive[]): CommodityStockRow[] {
       avgTemperatureC: mean(bucket.holding.map((tank) => tank.temperatureC)),
       avgFfa: mean(bucket.holding.map((tank) => parameter(tank.quality?.parameters, 'FFA'))),
       avgMi: mean(bucket.holding.map((tank) => parameter(tank.quality?.parameters, 'MI'))),
+      colourR: colourStat(bucket.holding.map((tank) => parameter(tank.quality?.parameters, 'COLOR_R'))),
+      colourY: colourStat(bucket.holding.map((tank) => parameter(tank.quality?.parameters, 'COLOR_Y'))),
     }
   })
+}
+
+function colourStat(values: Array<number | null | undefined>): ColourStat | null {
+  const nums = values.filter((value): value is number => value != null && !Number.isNaN(value))
+  if (nums.length === 0) return null
+  return { average: nums.reduce((sum, value) => sum + value, 0) / nums.length, min: Math.min(...nums), max: Math.max(...nums), count: nums.length }
 }
 
 function mean(values: Array<number | null | undefined>): number | null {

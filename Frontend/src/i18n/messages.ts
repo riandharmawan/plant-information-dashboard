@@ -55,6 +55,16 @@ export interface Messages {
   tempSpikeHint: string
   ffaAgeHint: string
   emptySpace: string
+  labShort: string
+  labNotConnected: string
+  labNotOnCertificate: string
+  labNoResult: string
+  colourRangeHint: string
+  colourOneTank: string
+  tankEmptyWord: string
+  tankNoDataWord: string
+  capacityOf: string
+  capacityNotSet: string
   loadable: string
   rangeAverage: string
   rangeMax: string
@@ -850,6 +860,16 @@ export const MESSAGES: Record<Locale, Messages> = {
     tempSpikeHint: 'Red when the temperature is more than 30% above the average temperature.',
     ffaAgeHint: 'Red when the latest lab result is more than 7 days old.',
     emptySpace: 'Empty space',
+    labShort: 'Lab',
+    labNotConnected: 'Lab results are not connected for this site yet.',
+    labNotOnCertificate: 'Not on the latest certificate for this product',
+    labNoResult: 'No lab result yet',
+    colourRangeHint: 'Average. Range across tanks: R {r} · Y {y}',
+    colourOneTank: 'One tank: its latest certificate',
+    tankEmptyWord: 'Empty',
+    tankNoDataWord: 'No data',
+    capacityOf: 'of {cap}',
+    capacityNotSet: 'Capacity not set',
     loadable: 'Loadable',
     rangeAverage: 'Average',
     rangeMax: 'Max',
@@ -1643,6 +1663,16 @@ export const MESSAGES: Record<Locale, Messages> = {
     tempSpikeHint: 'Merah jika suhu lebih dari 30% di atas suhu rata-rata.',
     ffaAgeHint: 'Merah jika hasil lab terbaru berumur lebih dari 7 hari.',
     emptySpace: 'Ruang kosong',
+    labShort: 'Lab',
+    labNotConnected: 'Hasil lab belum terhubung untuk site ini.',
+    labNotOnCertificate: 'Tidak ada di sertifikat terbaru untuk produk ini',
+    labNoResult: 'Belum ada hasil lab',
+    colourRangeHint: 'Rata-rata. Rentang antar tangki: R {r} · Y {y}',
+    colourOneTank: 'Satu tangki: sertifikat terbarunya',
+    tankEmptyWord: 'Kosong',
+    tankNoDataWord: 'Tanpa data',
+    capacityOf: 'dari {cap}',
+    capacityNotSet: 'Kapasitas belum diatur',
     loadable: 'Loadable',
     rangeAverage: 'Rata-rata',
     rangeMax: 'Maks',
